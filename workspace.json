@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "projects": {
+    "admin-web": "apps/admin-web",
+    "admin-web-e2e": "apps/admin-web-e2e",
+    "api-interfaces": "libs/api-interfaces",
+    "core": "libs/core"
+  }
+}
