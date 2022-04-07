@@ -6,6 +6,7 @@ import { MiddlewareFn, RouteData, RouteModel, ServerOptions } from '../types';
 import * as express from 'express';
 import { Route } from '../models/route-model';
 import { addAdminEndpoints, addAdminStaticSite } from './admin';
+import { findRoute, findRouteIndex } from '../utils/routeMatchingUtils';
 
 function mezzo() {
   const userRoutes: RouteModel[] = [];
@@ -15,7 +16,11 @@ function mezzo() {
   const _resetRouteState = () => (userRoutes.length = 0);
 
   const _addRouteToExpress = (myRoute: RouteModel) => {
-    app[myRoute.method](myRoute.path, <MiddlewareFn>((req, res, next) => {
+    app[myRoute.method.toLowerCase()](myRoute.path, <MiddlewareFn>((
+      req,
+      res,
+      next
+    ) => {
       myRoute.processRequest(req, res, next);
     }));
   };
@@ -79,14 +84,19 @@ function mezzo() {
   };
 
   const setMockVariant = (method: string, path: string, variantId: string) => {
-    const found = userRoutes.find(
-      (route) =>
-        path === route.path &&
-        method.toUpperCase() === route.method.toUpperCase()
-    );
-    if (found) {
+    const index = findRouteIndex(method, path, userRoutes);
+    const foundRoute = userRoutes[index];
+    console.log('Inside set mock variant', foundRoute);
+    if (foundRoute) {
       // TODO log if variant cannot be set
-      found.setVariant(variantId);
+
+      // this is not actually updating entry in global state
+      const updatedItem = foundRoute.setVariant(variantId);
+
+      // So make sure to update hte array item
+      userRoutes[index] = updatedItem;
+
+      logger.info(`Set variant complete: ${foundRoute.activeVariant}`);
     } else {
       console.warn(
         `Could not find route for ${method} ${path} to set variant ${variantId}`

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { RouteModel } from '../types';
 import { getFileContentsForRequest } from './filePathUtils';
 import logger from './logger';
+import { findRoute } from './routeMatchingUtils';
 
 export class CommonUtils {
   private _routes: RouteModel[];
@@ -17,7 +18,19 @@ export class CommonUtils {
     const method = req.method;
     const path = req.path;
 
-    const fileContents = await getFileContentsForRequest(req);
-    res.json(JSON.parse(fileContents));
+    const foundRoute = findRoute(method, path, this._routes);
+    if (foundRoute) {
+      logger.debug(
+        `About to read file, active variant: ${foundRoute.activeVariant}`
+      );
+      const fileContents = await getFileContentsForRequest(
+        req,
+        foundRoute.activeVariant
+      );
+      res.json(JSON.parse(fileContents));
+    } else {
+      logger.error(`No route found for ${method} and ${path}`);
+      res.status(404);
+    }
   };
 }

@@ -8,12 +8,12 @@ export function getValidMethod(methodInput?: string) {
     method === 'delete' ||
     method === 'put'
   ) {
-    return method;
+    return method.toUpperCase();
   } else {
     if (method !== undefined) {
       // Undefined is safe to assume as /GET, but if mismatch let user know
       logger.warn(`${method} is not a supported method, treating as a GET`);
     }
-    return 'get';
+    return 'GET';
   }
 }

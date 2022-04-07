@@ -42,17 +42,26 @@ export function Route(routeData: RouteData): RouteModel {
     }
   };
 
-  const setVariant = (id: string) => {
-    if (_variants.has(id) || id === 'default') {
-      logger.info('Setting active variant for ' + path + ' to ' + id);
-      _activeVariant = id;
-      return id;
+  const setVariant = (variantId: string) => {
+    if (_variants.has(variantId) || variantId === 'default') {
+      logger.info('Setting active variant for ' + path + ' to ' + variantId);
+      _activeVariant = variantId;
     } else {
       logger.warn(
-        'Could not find id ' + id + ' in route, setting as active variant'
+        `Could not find variant "${variantId}" in route ${id} (${method} ${routeData.path}})`
       );
-      return new Error('no variants found with id: ' + id);
+      // return new Error('no variants found with id: ' + variantId);
     }
+    return {
+      id,
+      method,
+      path,
+      variant,
+      variants: _variants,
+      setVariant,
+      activeVariant: _activeVariant,
+      processRequest,
+    };
   };
 
   /**
@@ -71,6 +80,7 @@ export function Route(routeData: RouteData): RouteModel {
       variant,
       variants: _variants,
       setVariant,
+      activeVariant: _activeVariant,
       processRequest,
     };
   };
@@ -82,6 +92,7 @@ export function Route(routeData: RouteData): RouteModel {
     variant,
     variants: _variants,
     setVariant,
+    activeVariant: _activeVariant,
     processRequest,
   };
 }

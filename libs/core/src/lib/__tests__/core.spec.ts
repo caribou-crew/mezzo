@@ -14,9 +14,9 @@ describe('mezzo', () => {
   let server: Server;
   let mezzo: typeof mezzoObject;
   beforeEach(async () => {
-    jest.spyOn(console, 'log').mockImplementation(() => {
-      // Suppress console logging during test
-    });
+    // jest.spyOn(console, 'log').mockImplementation(() => {
+    // Suppress console logging during test
+    // });
     process.env.LOG_LEVEL = 'warn';
     server = await getTestServer();
     request = getSuperTest();
@@ -40,7 +40,30 @@ describe('mezzo', () => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ message: 'Responding with file' });
       });
-      it.skip('should read from variant file TODO', async () => {});
+      it('should read from variant file', async () => {
+        const path = '/respondWithVariantReplyFromFile';
+        mezzo
+          .route({
+            path,
+            callback: (req, res) => {
+              return mezzo.util.respondWithFile(req, res);
+            },
+          })
+          .variant({
+            id: 'variant1',
+            callback: (req, res) => {
+              return mezzo.util.respondWithFile(req, res);
+            },
+          });
+        const res = await request.get(path);
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ variant: 'default' });
+
+        mezzo.setMockVariant('GET', path, 'variant1');
+
+        const res2 = await request.get(path);
+        expect(res2.body).toEqual({ variant: 'variant1' });
+      });
       it.skip('should read session scoped variant from file TODO', async () => {});
       it.skip('should read header scoped variant from file TODO', async () => {});
     });
