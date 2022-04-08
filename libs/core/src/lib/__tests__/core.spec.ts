@@ -116,7 +116,7 @@ describe('mezzo', () => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ variant: 'default' });
 
-        mezzo.setMockVariant('GET', myPath, 'variant1');
+        mezzo.setMockVariant('someRoute', 'variant1');
 
         const res2 = await request.get(myPath);
         expect(res2.body).toEqual({ variant: 'variant1' });
@@ -135,30 +135,39 @@ describe('mezzo', () => {
         await request.get(path);
         expect(route).toBe(insideThis);
       });
-      it.skip('should read file with dynamic path', async () => {
+      it('should read file with dynamic path', async () => {
         vol.fromJSON(
           {
             './part1/:part2/GET/default.json': '{"variant": "default"}',
+            './part1/:part2/GET/variant1.json': '{"variant": "other"}',
           },
           mockedDirectory
         );
         const path = '/part1/:part2';
-        // const route = mezzo.route({
-        mezzo.route({
-          id: 'someRoute',
-          path,
-          handler(req, res, next) {
-            // logger.debug('Value (route) inside handler: ', route);
-            return mezzo.util.respondWithFile(this, res);
-          },
-        });
-        // logger.debug(
-        //   'Console.log value of route after full instantiation: ',
-        //   route
-        // );
+        const routeId = 'someRoute';
+        mezzo
+          .route({
+            id: routeId,
+            path,
+            handler(req, res, next) {
+              return mezzo.util.respondWithFile(this, res);
+            },
+          })
+          .variant({
+            id: 'variant1',
+            handler(req, res) {
+              mezzo.util.respondWithFile(this, res);
+            },
+          });
+
         const res = await request.get('/part1/someDynamicPart2Path');
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ variant: 'default' });
+        mezzo.setMockVariant(routeId, 'variant1');
+        const res2 = await request.get('/part1/someDynamicPart2Path');
+        expect(res2.body).toEqual({ variant: 'other' });
+        const res3 = await request.get('/part1/someDynamicPart2PathAlt');
+        expect(res3.body).toEqual({ variant: 'other' });
       });
       it('should support delay', async () => {
         // TODO: This test doesn't actually mock timers out so it's not perfect, it just confirms setTimeout was called accurate, could be improved
@@ -206,7 +215,6 @@ describe('mezzo', () => {
         });
 
         const res = await request.get(path);
-        // expect(spy).not.toBeCalled();
         expect(res.status).toBe(200);
         const timeoutArg = spy.mock.calls[0][1];
         expect(timeoutArg).toBe(0);
@@ -367,9 +375,10 @@ describe('mezzo', () => {
     it('should change the active variant of route', async () => {
       const myPath = '/some/path';
       const altVariantName = 'someVariantB';
+      const routeId = `GET ${myPath}`;
       mezzo
         .route({
-          id: `GET ${myPath}`,
+          id: routeId,
           path: myPath,
           handler: function (req, res) {
             res.json({ someKey: 'A' });
@@ -384,7 +393,7 @@ describe('mezzo', () => {
       const res = await request.get(myPath);
       expect(res.body).toEqual({ someKey: 'A' });
 
-      mezzo.setMockVariant('GET', myPath, altVariantName);
+      mezzo.setMockVariant(routeId, altVariantName);
       const res2 = await request.get(myPath);
       expect(res2.body).toEqual({ someKey: 'B' });
     });

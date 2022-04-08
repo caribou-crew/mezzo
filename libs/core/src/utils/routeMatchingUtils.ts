@@ -9,6 +9,9 @@ export function findRoute(method: string, path: string, userRoutes: Route[]) {
 export function findRouteById(id: string, userRoutes: Route[]) {
   return userRoutes.find((route) => id === route.id);
 }
+export function findRouteIndexById(id: string, userRoutes: Route[]) {
+  return userRoutes.findIndex((route) => id === route.id);
+}
 
 export function findRouteIndex(
   method: string,

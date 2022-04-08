@@ -6,7 +6,12 @@ import { MiddlewareFn, RouteData, ServerOptions } from '../types';
 import * as express from 'express';
 import { Route } from '../models/route-model';
 import { addAdminEndpoints, addAdminStaticSite } from './admin';
-import { findRoute, findRouteIndex } from '../utils/routeMatchingUtils';
+import {
+  findRoute,
+  findRouteById,
+  findRouteIndex,
+  findRouteIndexById,
+} from '../utils/routeMatchingUtils';
 import * as fsDefault from 'fs';
 
 // function mezzo() {
@@ -209,8 +214,9 @@ class Mezzo {
     return myRoute;
   };
 
-  public setMockVariant = (method: string, path: string, variantId: string) => {
-    const index = findRouteIndex(method, path, this.userRoutes);
+  public setMockVariant = (routeId: string, variantId: string) => {
+    // const index = findRouteIndex(method, path, this.userRoutes);
+    const index = findRouteIndexById(routeId, this.userRoutes);
     const foundRoute = this.userRoutes[index];
     // console.log('Inside set mock variant', foundRoute);
     if (foundRoute) {
@@ -225,7 +231,7 @@ class Mezzo {
       logger.info(`Set variant complete: ${foundRoute.activeVariant}`);
     } else {
       console.warn(
-        `Could not find route for ${method} ${path} to set variant ${variantId}`
+        `Could not find route for ${routeId} to set variant ${variantId}`
       );
     }
   };
