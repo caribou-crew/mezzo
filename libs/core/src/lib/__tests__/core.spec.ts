@@ -160,6 +160,58 @@ describe('mezzo', () => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ variant: 'default' });
       });
+      it('should support delay', async () => {
+        // TODO: This test doesn't actually mock timers out so it's not perfect, it just confirms setTimeout was called accurate, could be improved
+        const delay = 11;
+        const spy = jest.spyOn(global, 'setTimeout');
+        const path = '/respondWithFile';
+        vol.fromJSON(
+          {
+            './respondWithFile/GET/default.json':
+              '{"message": "Responding with file"}',
+          },
+          mockedDirectory
+        );
+        mezzo.route({
+          id: 'someRoute',
+          path,
+          async handler(req, res) {
+            mezzo.util.respondWithFile(this, res, { delay });
+          },
+        });
+
+        const res = await request.get(path);
+        const timeoutArg = spy.mock.calls[0][1];
+        expect(res.status).toBe(200);
+        expect(timeoutArg).toBe(delay);
+        spy.mockRestore();
+      });
+      it('should support no delay', async () => {
+        // TODO: This test doesn't actually mock timers out so it's not perfect, it just confirms setTimeout was called accurate, could be improved
+        const spy = jest.spyOn(global, 'setTimeout');
+        const path = '/respondWithFile';
+        vol.fromJSON(
+          {
+            './respondWithFile/GET/default.json':
+              '{"message": "Responding with file"}',
+          },
+          mockedDirectory
+        );
+        mezzo.route({
+          id: 'someRoute',
+          path,
+          async handler(req, res) {
+            mezzo.util.respondWithFile(this, res);
+          },
+        });
+
+        const res = await request.get(path);
+        // expect(spy).not.toBeCalled();
+        expect(res.status).toBe(200);
+        const timeoutArg = spy.mock.calls[0][1];
+        expect(timeoutArg).toBe(0);
+        spy.mockRestore();
+      });
       it.skip('should read session scoped variant from file TODO', async () => {});
       it.skip('should read header scoped variant from file TODO', async () => {});
     });

@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { Route } from '../models/route-model';
-import { RespondWithFileOptions } from '../types';
+import { FileHandlerOptions } from '../types';
 import { getFileContentsForRequest } from './filePathUtils';
 import logger from './logger';
 import { findRoute, findRouteById } from './routeMatchingUtils';
+import { timeout } from './timeoutUtils';
 
 export class CommonUtils {
   private _routes: Route[];
@@ -25,7 +26,7 @@ export class CommonUtils {
   public respondWithFile = async (
     route: Route,
     res: Response,
-    options?: RespondWithFileOptions
+    options?: FileHandlerOptions
   ) => {
     logger.debug(
       `respond with file for ${route?.method} at ${route?.path} of id ${route?.id}`
@@ -48,6 +49,7 @@ export class CommonUtils {
       this._fs,
       this._mockedDirectory
     );
+    await timeout(options?.delay ?? 0);
     res.json(JSON.parse(fileContents));
   };
 }

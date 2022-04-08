@@ -66,7 +66,17 @@ export type CallbackType = (
 //   processRequest: MiddlewareFn; // Executed when route is visited
 // }
 
-export interface RespondWithFileOptions {
-  code: number;
-  headers: Record<string, string>;
+// export interface RespondWithFileOptions {
+//   code: number;
+//   headers: Record<string, string>;
+// }
+
+export interface FileHandlerOptions {
+  code?: number;
+  headers?: Record<string, string | boolean>;
+  filePath?: string;
+  delay?: number;
+  cookies?: any;
+  // TODO
+  transpose?: any;
 }

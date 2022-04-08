@@ -10,22 +10,12 @@ import { resourcesPath } from './pathHelpers';
 export interface Variant {
   id: string;
 }
-export interface FileHandlerInput {
-  options: FileHandlerOptions;
-  //   h: Hapi.ResponseToolkit;
-  route: typeof Route;
-  variant: Variant;
-}
-
-export interface FileHandlerOptions {
-  code?: number;
-  headers?: Record<string, string | boolean>;
-  filePath?: string;
-  delay?: number;
-  cookies?: any;
-  // TODO
-  transpose?: any;
-}
+// export interface FileHandlerInput {
+//   options: FileHandlerOptions;
+//   //   h: Hapi.ResponseToolkit;
+//   route: typeof Route;
+//   variant: Variant;
+// }
 
 const fileExtensionOrder = ['.json', '.html', '.txt'];
 
