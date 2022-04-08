@@ -42,7 +42,7 @@ describe('mezzo', () => {
           id: 'someRoute',
           path: '/respondWithFile',
           handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+            return mezzo.util.respondWithFile(this, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -62,7 +62,7 @@ describe('mezzo', () => {
           path: '/respondWithFile',
           handler: (req, res) => {
             // Based on how scoping of `this` works, if you put it inside a fat arrow function it'll break the reference of this
-            return mezzo.util.respondWithFile(this, req, res);
+            return mezzo.util.respondWithFile(this, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -80,7 +80,7 @@ describe('mezzo', () => {
           id: 'someRoute',
           path: '/respondWithFile',
           callback: (req, res, route) => {
-            return mezzo.util.respondWithFile(route, req, res);
+            return mezzo.util.respondWithFile(route, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -103,13 +103,13 @@ describe('mezzo', () => {
             id: 'someRoute',
             path: myPath,
             handler(req, res) {
-              return mezzo.util.respondWithFile(this, req, res);
+              return mezzo.util.respondWithFile(this, res);
             },
           })
           .variant({
             id: 'variant1',
             handler(req, res) {
-              return mezzo.util.respondWithFile(this, req, res);
+              return mezzo.util.respondWithFile(this, res);
             },
           });
         const res = await request.get(myPath);
@@ -149,7 +149,7 @@ describe('mezzo', () => {
           path,
           handler(req, res, next) {
             // logger.debug('Value (route) inside handler: ', route);
-            return mezzo.util.respondWithFile(this, req, res);
+            return mezzo.util.respondWithFile(this, res);
           },
         });
         // logger.debug(

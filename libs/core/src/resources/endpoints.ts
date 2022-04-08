@@ -5,7 +5,7 @@ mezzo.route({
   id: 'GET /hi/mom',
   method: 'GET',
   path: '/hi/mom',
-  callback: function () {
+  handler: function () {
     return 'HI';
   },
 });
@@ -14,7 +14,7 @@ mezzo.route({
   id: 'GET /respondWithCustomCoding',
   method: 'GET',
   path: '/respondWithCustomCoding',
-  callback: function (req, res) {
+  handler: function (req, res) {
     res.send({ someCustomCodingResponse: true });
   },
 });
@@ -23,7 +23,7 @@ mezzo.route({
   id: 'GET /respondWithCustomCodingAndStatus',
   method: 'GET',
   path: '/respondWithCustomCodingAndStatus',
-  callback: function (req: Request, res: Response) {
+  handler: function (req: Request, res: Response) {
     res.status(401).json({ someCustomError: true });
   },
 });
@@ -35,7 +35,7 @@ mezzo.route({
   // handler: function () {
   //   return 'HI dynamic';
   // },
-  callback: (req, res, next) => {
+  handler: (req, res, next) => {
     res.send(req.params.somethingDynamic);
   },
 });
@@ -51,7 +51,7 @@ const someRoute = mezzo.route({
   callback: (req, res) => {
     // return mezzo.util.respondWithMockVariant(this, 'variant1', req, h); // make sure that the variant exist in the same route.
     // return mezzo.util.respondWithFile(this, 'variant1', req, h); // make sure that the variant exist in the same route.
-    return mezzo.util.respondWithFile(this, req, res); // make sure that the variant exist in the same route.
+    return mezzo.util.respondWithFile(this, res); // make sure that the variant exist in the same route.
   },
 });
 console.log('SomeRoute Before: ', someRoute);
@@ -59,7 +59,7 @@ someRoute.variant({
   id: 'variant1',
   label: 'Respond With Mock Variant From file - variant1',
   callback: function (req, res) {
-    return mezzo.util.respondWithFile(this, req, res);
+    return mezzo.util.respondWithFile(this, res);
   },
 });
 console.log('SomeRoute After: ', someRoute);
@@ -69,7 +69,7 @@ mezzo.route({
   path: '/respondWithFile',
   callback: (req: Request, res: Response) => {
     console.log('Value of this: ', this);
-    return mezzo.util.respondWithFile(this, req, res);
+    return mezzo.util.respondWithFile(this, res);
   },
 });
 

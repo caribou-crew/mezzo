@@ -8,6 +8,10 @@ Idea is once packaged both run from same endponit.
 
 This project was generated using [Nx](https://nx.dev).
 
+# Publishing
+
+cd to `dist/libs/core` and run `npm publish --access public`
+
 # Commands
 
 - Run dev api and web

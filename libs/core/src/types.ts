@@ -65,3 +65,8 @@ export type CallbackType = (
 //   activeVariant: string; // Active variant id for route, or default
 //   processRequest: MiddlewareFn; // Executed when route is visited
 // }
+
+export interface RespondWithFileOptions {
+  code: number;
+  headers: Record<string, string>;
+}

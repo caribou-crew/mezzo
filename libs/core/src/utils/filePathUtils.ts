@@ -34,18 +34,20 @@ const fileExtensionOrder = ['.json', '.html', '.txt'];
 // const exists = util.promisify(fs.exists);
 
 export const getFileContentsForRequest = async (
-  req: Request,
-  activeVariant: string,
+  // req: Request,
+  // activeVariant: string,
+  route: Route,
   fs: any,
   mockedDirectory: string
 ) => {
-  const endpoint = req.path.substring(1);
+  console.log('Got path of: ', route.path);
+  const endpoint = route.path.toString();
 
   const filePath = path.join(
     mockedDirectory,
     endpoint,
-    req.method.toUpperCase(),
-    `${activeVariant}.json`
+    route.method.toUpperCase(),
+    `${route.activeVariant}.json`
   );
   logger.debug('Reading File: ', filePath);
   const readFile = util.promisify(fs.readFile);
