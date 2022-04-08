@@ -1,9 +1,9 @@
 import { Route } from '../models/route-model';
 import logger from './logger';
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
-import { Request } from 'express';
+import { raw, Request } from 'express';
 import { resourcesPath } from './pathHelpers';
 
 // TODO
@@ -29,16 +29,17 @@ export interface FileHandlerOptions {
 
 const fileExtensionOrder = ['.json', '.html', '.txt'];
 
-const readFile = util.promisify(fs.readFile);
-const readDir = util.promisify(fs.readdir);
-const exists = util.promisify(fs.exists);
+// export const readFile = util.promisify(fs.readFile);
+// const readDir = util.promisify(fs.readdir);
+// const exists = util.promisify(fs.exists);
 
 export const getFileContentsForRequest = async (
   req: Request,
-  activeVariant: string
+  activeVariant: string,
+  fs: any,
+  mockedDirectory: string
 ) => {
   const endpoint = req.path.substring(1);
-  const mockedDirectory = path.join(resourcesPath, 'mocked-data');
 
   const filePath = path.join(
     mockedDirectory,
@@ -46,6 +47,8 @@ export const getFileContentsForRequest = async (
     req.method.toUpperCase(),
     `${activeVariant}.json`
   );
+  logger.debug('Reading File: ', filePath);
+  const readFile = util.promisify(fs.readFile);
   const rawFileData = await readFile(filePath, 'utf-8');
   return rawFileData;
 };

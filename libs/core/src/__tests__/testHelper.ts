@@ -24,5 +24,5 @@ export const stopTestServer = async (server?: Server) => {
 };
 
 export const getSuperTest = () => {
-  return SuperTestRequest('http://localhost:3000');
+  return SuperTestRequest(`http://localhost:${getHTTPPort()}`);
 };

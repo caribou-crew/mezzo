@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Route } from './models/route-model';
 
 /**
  * Express middleware function signature
@@ -16,6 +17,7 @@ export interface ServerOptions {
   port: number | string;
   adminEndpoint?: string;
   mockedDirectory: string;
+  fsOverride?: any;
 }
 
 /**
@@ -35,21 +37,31 @@ export interface VariantData extends RouteAndVariantData {
  * Shared interface between route and variant data
  */
 export interface RouteAndVariantData {
-  id?: string;
+  id: string;
   label?: string;
-  callback?: RequestHandler;
+  // callback?: any;
+  callback?: CallbackType;
+  handler?: HandlerType;
 }
+
+export type HandlerType = RequestHandler;
+
+export type CallbackType = (
+  req: Request,
+  res: Response,
+  route: Route
+) => Promise<any>;
 
 /**
  * Model representation of a route
  */
-export interface RouteModel {
-  id: string; // Unique ID given to a route
-  method: string; // HTTP method of route
-  path: string | RegExp; // Endpoint match of route, must be compatible with express
-  variant: (v: VariantData) => RouteModel; // Adds a variant to the route
-  variants: Map<string, VariantData>; // Map of key:value pairs of variant id to variant data
-  setVariant: (id: string) => RouteModel; // Sets the variant for given route
-  activeVariant: string; // Active variant id for route, or default
-  processRequest: MiddlewareFn; // Executed when route is visited
-}
+// export interface RouteModel {
+//   id: string; // Unique ID given to a route
+//   method: string; // HTTP method of route
+//   path: string | RegExp; // Endpoint match of route, must be compatible with express
+//   variant: (v: VariantData) => RouteModel; // Adds a variant to the route
+//   variants: Map<string, VariantData>; // Map of key:value pairs of variant id to variant data
+//   setVariant: (id: string) => RouteModel; // Sets the variant for given route
+//   activeVariant: string; // Active variant id for route, or default
+//   processRequest: MiddlewareFn; // Executed when route is visited
+// }

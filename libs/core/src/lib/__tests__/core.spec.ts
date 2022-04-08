@@ -1,39 +1,86 @@
 import * as SuperTestRequest from 'supertest';
-
-import { Server } from 'http';
-import {
-  getTestServer,
-  getSuperTest,
-  stopTestServer,
-  getMezzo,
-} from '../../__tests__/testHelper';
-import mezzoObject from '../../index';
+import { fs, vol } from 'memfs';
+import mezzo from '../core';
+import * as path from 'path';
+import { resourcesPath } from '../../utils/pathHelpers';
+import logger from '../../utils/logger';
 
 describe('mezzo', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
-  let server: Server;
-  let mezzo: typeof mezzoObject;
+  beforeAll(() => {
+    global.console = require('console'); // Don't stack trace out all console logs
+  });
+
+  let mockedDirectory;
   beforeEach(async () => {
-    // jest.spyOn(console, 'log').mockImplementation(() => {
-    // Suppress console logging during test
-    // });
     process.env.LOG_LEVEL = 'warn';
-    server = await getTestServer();
-    request = getSuperTest();
-    mezzo = getMezzo();
-    // require('../resources/endpoints');
+    const port = 3000;
+    request = SuperTestRequest(`http://localhost:${port}`);
+    mockedDirectory = path.join(resourcesPath, 'some-custom-mocked-data');
+    await mezzo.start({
+      port,
+      mockedDirectory,
+      fsOverride: fs,
+    });
   });
   afterEach(async () => {
-    await stopTestServer(server);
+    await mezzo.stop();
+    vol.reset();
   });
 
   describe('.route', () => {
     describe('file response', () => {
-      it('should read from default file', async () => {
+      it('should read from default file using backwards compatible handler', async () => {
+        vol.fromJSON(
+          {
+            './respondWithFile/GET/default.json':
+              '{"message": "Responding with file"}',
+          },
+          mockedDirectory
+        );
         mezzo.route({
+          id: 'someRoute',
           path: '/respondWithFile',
-          callback: (req, res) => {
-            return mezzo.util.respondWithFile(req, res);
+          handler(req, res) {
+            return mezzo.util.respondWithFile(this, req, res);
+          },
+        });
+        const res = await request.get('/respondWithFile');
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ message: 'Responding with file' });
+      });
+      it('cannot read file using handler with fat arrow function (likely unexpected behavior to users)', async () => {
+        vol.fromJSON(
+          {
+            './respondWithFile/GET/default.json':
+              '{"message": "Responding with file"}',
+          },
+          mockedDirectory
+        );
+        mezzo.route({
+          id: 'someRoute',
+          path: '/respondWithFile',
+          handler: (req, res) => {
+            // Based on how scoping of `this` works, if you put it inside a fat arrow function it'll break the reference of this
+            return mezzo.util.respondWithFile(this, req, res);
+          },
+        });
+        const res = await request.get('/respondWithFile');
+        expect(res.status).toBe(500);
+      });
+      it('should read from default file using explicit callback', async () => {
+        vol.fromJSON(
+          {
+            './respondWithFile/GET/default.json':
+              '{"message": "Responding with file"}',
+          },
+          mockedDirectory
+        );
+        mezzo.route({
+          id: 'someRoute',
+          path: '/respondWithFile',
+          callback: (req, res, route) => {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -41,28 +88,77 @@ describe('mezzo', () => {
         expect(res.body).toEqual({ message: 'Responding with file' });
       });
       it('should read from variant file', async () => {
-        const path = '/respondWithVariantReplyFromFile';
+        vol.fromJSON(
+          {
+            './respondWithVariantReplyFromFile/GET/default.json':
+              '{"variant": "default"}',
+            './respondWithVariantReplyFromFile/GET/variant1.json':
+              '{"variant": "variant1"}',
+          },
+          mockedDirectory
+        );
+        const myPath = '/respondWithVariantReplyFromFile';
         mezzo
           .route({
-            path,
-            callback: (req, res) => {
-              return mezzo.util.respondWithFile(req, res);
+            id: 'someRoute',
+            path: myPath,
+            handler(req, res) {
+              return mezzo.util.respondWithFile(this, req, res);
             },
           })
           .variant({
             id: 'variant1',
-            callback: (req, res) => {
-              return mezzo.util.respondWithFile(req, res);
+            handler(req, res) {
+              return mezzo.util.respondWithFile(this, req, res);
             },
           });
-        const res = await request.get(path);
+        const res = await request.get(myPath);
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ variant: 'default' });
 
-        mezzo.setMockVariant('GET', path, 'variant1');
+        mezzo.setMockVariant('GET', myPath, 'variant1');
 
-        const res2 = await request.get(path);
+        const res2 = await request.get(myPath);
         expect(res2.body).toEqual({ variant: 'variant1' });
+      });
+      it("handler's this and route are the same", async () => {
+        const path = '/part1';
+        let insideThis;
+        const route = mezzo.route({
+          id: 'someRoute',
+          path,
+          handler(req, res) {
+            insideThis = this;
+            res.sendStatus(200);
+          },
+        });
+        await request.get(path);
+        expect(route).toBe(insideThis);
+      });
+      it.skip('should read file with dynamic path', async () => {
+        vol.fromJSON(
+          {
+            './part1/:part2/GET/default.json': '{"variant": "default"}',
+          },
+          mockedDirectory
+        );
+        const path = '/part1/:part2';
+        // const route = mezzo.route({
+        mezzo.route({
+          id: 'someRoute',
+          path,
+          handler(req, res, next) {
+            // logger.debug('Value (route) inside handler: ', route);
+            return mezzo.util.respondWithFile(this, req, res);
+          },
+        });
+        // logger.debug(
+        //   'Console.log value of route after full instantiation: ',
+        //   route
+        // );
+        const res = await request.get('/part1/someDynamicPart2Path');
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ variant: 'default' });
       });
       it.skip('should read session scoped variant from file TODO', async () => {});
       it.skip('should read header scoped variant from file TODO', async () => {});
@@ -71,8 +167,9 @@ describe('mezzo', () => {
       describe('with regexp', () => {
         it('should read from default file with regex in path', async () => {
           mezzo.route({
+            id: 'someRoute',
             path: /.*fly$/,
-            callback: (req, res) => {
+            handler: (req, res) => {
               res.json({ message: 'hi' });
             },
           });
@@ -86,8 +183,9 @@ describe('mezzo', () => {
         it('should be able to extrac parameters from url', async () => {
           let stuff;
           mezzo.route({
+            id: 'someRoute',
             path: '/docs/:stuff',
-            callback: (req, res) => {
+            handler: (req, res) => {
               res.json({ message: 'hi' });
               stuff = req.params.stuff;
             },
@@ -98,8 +196,9 @@ describe('mezzo', () => {
         it('should be able to extrac parameters from regex', async () => {
           let params;
           mezzo.route({
+            id: 'someRoute',
             path: /docs\/termsAndConditions_(.*)_(.*)\.json$/,
-            callback: (req, res) => {
+            handler: (req, res) => {
               params = req.params;
               res.json({ message: 'hi' });
             },
@@ -113,9 +212,10 @@ describe('mezzo', () => {
       });
       it('should use default resopnse', async () => {
         mezzo.route({
+          id: 'someRoute',
           method: 'GET',
           path: '/respondWithCustomCoding',
-          callback: function (req, res) {
+          handler: function (req, res) {
             res.send({ someCustomCodingResponse: true });
           },
         });
@@ -127,8 +227,9 @@ describe('mezzo', () => {
 
       it('should work with dynamic path', async () => {
         mezzo.route({
+          id: 'someRoute',
           path: '/:someDynamicValue',
-          callback: (req, res) => {
+          handler: (req, res) => {
             res.json({ someCustomCodingResponse: 'hi' });
           },
         });
@@ -138,9 +239,10 @@ describe('mezzo', () => {
       });
       it('should allow custom status codes', async () => {
         mezzo.route({
+          id: 'someRoute',
           method: 'GET',
           path: '/respondWithCustomCodingAndStatus',
-          callback: function (req, res) {
+          handler: function (req, res) {
             res.status(401).json({ someCustomError: true });
           },
         });
@@ -153,14 +255,14 @@ describe('mezzo', () => {
           .route({
             id: 'GET /some/path',
             path: '/some/path',
-            callback: function (req, res) {
+            handler: function (req, res) {
               console.log('Got request for default!!!');
               res.json({ someKey: 'A' });
             },
           })
           .variant({
             id: 'someVariantId',
-            callback: function (req, res) {
+            handler: function (req, res) {
               console.log('Got request for variant!!!');
               res.json({ someKey: 'B' });
             },
@@ -174,7 +276,7 @@ describe('mezzo', () => {
         const someRoute = mezzo.route({
           id: 'GET /some/path',
           path: '/some/path',
-          callback: function (req, res) {
+          handler: function (req, res) {
             console.log('Got request for default!!!');
             res.json({ someKey: 'A' });
           },
@@ -182,14 +284,14 @@ describe('mezzo', () => {
         someRoute
           .variant({
             id: 'someVariantId',
-            callback: function (req, res) {
+            handler: function (req, res) {
               console.log('Got request for variant!!!');
               res.json({ someKey: 'B' });
             },
           })
           .variant({
             id: 'someVariantC',
-            callback: function (req, res) {
+            handler: function (req, res) {
               res.json({ someKey: 'C' });
             },
           });
@@ -217,13 +319,13 @@ describe('mezzo', () => {
         .route({
           id: `GET ${myPath}`,
           path: myPath,
-          callback: function (req, res) {
+          handler: function (req, res) {
             res.json({ someKey: 'A' });
           },
         })
         .variant({
           id: altVariantName,
-          callback: function (req, res) {
+          handler: function (req, res) {
             res.json({ someKey: 'B' });
           },
         });

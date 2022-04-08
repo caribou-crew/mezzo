@@ -11,6 +11,7 @@ mezzo.route({
 });
 
 mezzo.route({
+  id: 'GET /respondWithCustomCoding',
   method: 'GET',
   path: '/respondWithCustomCoding',
   callback: function (req, res) {
@@ -19,6 +20,7 @@ mezzo.route({
 });
 
 mezzo.route({
+  id: 'GET /respondWithCustomCodingAndStatus',
   method: 'GET',
   path: '/respondWithCustomCodingAndStatus',
   callback: function (req: Request, res: Response) {
@@ -27,6 +29,7 @@ mezzo.route({
 });
 
 mezzo.route({
+  id: 'GET /hi/bob/stuff',
   method: 'GET',
   path: '/hi/bob/:somethingDynamic',
   // handler: function () {
@@ -48,7 +51,7 @@ const someRoute = mezzo.route({
   callback: (req, res) => {
     // return mezzo.util.respondWithMockVariant(this, 'variant1', req, h); // make sure that the variant exist in the same route.
     // return mezzo.util.respondWithFile(this, 'variant1', req, h); // make sure that the variant exist in the same route.
-    return mezzo.util.respondWithFile(req, res); // make sure that the variant exist in the same route.
+    return mezzo.util.respondWithFile(this, req, res); // make sure that the variant exist in the same route.
   },
 });
 console.log('SomeRoute Before: ', someRoute);
@@ -56,15 +59,17 @@ someRoute.variant({
   id: 'variant1',
   label: 'Respond With Mock Variant From file - variant1',
   callback: function (req, res) {
-    return mezzo.util.respondWithFile(this, res);
+    return mezzo.util.respondWithFile(this, req, res);
   },
 });
 console.log('SomeRoute After: ', someRoute);
 
 mezzo.route({
+  id: 'GET /respondWithFile',
   path: '/respondWithFile',
   callback: (req: Request, res: Response) => {
-    return mezzo.util.respondWithFile(req, res);
+    console.log('Value of this: ', this);
+    return mezzo.util.respondWithFile(this, req, res);
   },
 });
 
