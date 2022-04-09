@@ -6,27 +6,15 @@ import * as util from 'util';
 import { raw, Request } from 'express';
 import { resourcesPath } from './pathHelpers';
 
-// TODO
 export interface Variant {
   id: string;
 }
-// export interface FileHandlerInput {
-//   options: FileHandlerOptions;
-//   //   h: Hapi.ResponseToolkit;
-//   route: typeof Route;
-//   variant: Variant;
-// }
-
 const fileExtensionOrder = ['.json', '.html', '.txt'];
 
-// export const readFile = util.promisify(fs.readFile);
-// const readDir = util.promisify(fs.readdir);
-// const exists = util.promisify(fs.exists);
-
 export const getFileContentsForRequest = async (
-  // req: Request,
   // activeVariant: string,
   route: Route,
+  req: Request | null,
   fs: any,
   mockedDirectory: string
 ) => {
@@ -37,7 +25,7 @@ export const getFileContentsForRequest = async (
     mockedDirectory,
     endpoint,
     route.method.toUpperCase(),
-    `${route.activeVariant}.json`
+    `${route.getActiveVariantId(req)}.json`
   );
   logger.debug('Reading File: ', filePath);
   const readFile = util.promisify(fs.readFile);

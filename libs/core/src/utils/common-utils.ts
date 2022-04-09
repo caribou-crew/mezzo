@@ -3,7 +3,6 @@ import { Route } from '../models/route-model';
 import { FileHandlerOptions } from '../types';
 import { getFileContentsForRequest } from './filePathUtils';
 import logger from './logger';
-import { findRoute, findRouteById } from './routeMatchingUtils';
 import { timeout } from './timeoutUtils';
 
 export class CommonUtils {
@@ -18,13 +17,9 @@ export class CommonUtils {
   /**
    *  Called by user defined routes in mezzo.utils.respondWithFile
    */
-  // public respondWithFile = async (
-  //   route: Route,
-  //   req: Request,
-  //   res: Response
-  // ) => {
   public respondWithFile = async (
     route: Route,
+    req: Request | null,
     res: Response,
     options?: FileHandlerOptions
   ) => {
@@ -43,13 +38,23 @@ export class CommonUtils {
     // TODO identify why route is coming in as null, we need route ID w/out user redefining it
     // const foundRoute = findRouteById(route.id, this._routes);
 
-    logger.debug(`About to read file, active variant: ${route.activeVariant}`);
+    // logger.debug(`About to read file, active variant: ${route.activeVariant}`);
     const fileContents = await getFileContentsForRequest(
       route,
+      req,
       this._fs,
       this._mockedDirectory
     );
     await timeout(options?.delay ?? 0);
     res.json(JSON.parse(fileContents));
+  };
+
+  // This one is backwards compatible
+  public respondWithFileLegacy = async (
+    route: Route,
+    res: Response,
+    options?: FileHandlerOptions
+  ) => {
+    this.respondWithFile(route, null, res, options);
   };
 }

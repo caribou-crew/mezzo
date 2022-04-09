@@ -3,7 +3,7 @@ import { fs, vol } from 'memfs';
 import mezzo from '../core';
 import * as path from 'path';
 import { resourcesPath } from '../../utils/pathHelpers';
-import logger from '../../utils/logger';
+import { X_REQUEST_SESSION, X_REQUEST_VARIANT } from '../../utils/constants';
 
 describe('mezzo', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
@@ -29,6 +29,108 @@ describe('mezzo', () => {
   });
 
   describe('.route', () => {
+    describe('variant headers', () => {
+      const routePath = '/something';
+      const routeId = 'someRoute';
+      beforeEach(() => {
+        mezzo
+          .route({
+            id: routeId,
+            path: routePath,
+            handler(req, res) {
+              res.send({ variant: 'default' });
+            },
+          })
+          .variant({
+            id: 'v1',
+            handler(req, res) {
+              res.send({ variant: 'v1' });
+            },
+          })
+          .variant({
+            id: 'v2',
+            handler(req, res) {
+              res.send({ variant: 'v2' });
+            },
+          });
+      });
+      it('should respect variant from request header', async () => {
+        const res = await request.get(routePath).set(X_REQUEST_VARIANT, 'v1');
+        expect(res.status).toBe(200);
+        expect(res.body.variant).toBe('v1');
+
+        const res2 = await request
+          .get(routePath)
+          .set(X_REQUEST_VARIANT, 'default');
+        expect(res2.status).toBe(200);
+        expect(res2.body.variant).toBe('default');
+
+        const res3 = await request
+          .get(routePath)
+          .set(X_REQUEST_VARIANT, 'mismatch');
+        expect(res3.status).toBe(200);
+        expect(res3.body.variant).toBe('default');
+      });
+      it('should respect session from request header', async () => {
+        const sessionId = '123';
+        mezzo.setMockVariantForSession(sessionId, {
+          [routeId]: 'v2',
+        });
+        const res1 = await request
+          .get(routePath)
+          .set(X_REQUEST_SESSION, sessionId);
+        expect(res1.status).toBe(200);
+        expect(res1.body.variant).toBe('v2');
+
+        mezzo.setMockVariantForSession(sessionId, {
+          [routeId]: 'v1',
+        });
+        const res2 = await request
+          .get(routePath)
+          .set(X_REQUEST_SESSION, sessionId);
+        expect(res2.status).toBe(200);
+        expect(res2.body.variant).toBe('v1');
+      });
+      it('should use default for invalid session id', async () => {
+        const res1 = await request.get(routePath).set(X_REQUEST_SESSION, '123');
+        expect(res1.status).toBe(200);
+        expect(res1.body.variant).toBe('default');
+      });
+      it('should use default if invalid variant is set in matching session', async () => {
+        const sessionId = '123';
+        mezzo.setMockVariantForSession(sessionId, {
+          [routeId]: 'bogus',
+        });
+        const res1 = await request.get(routePath).set(X_REQUEST_SESSION, '123');
+        expect(res1.status).toBe(200);
+        expect(res1.body.variant).toBe('default');
+      });
+      it('should prefer request variant header over session and route state', async () => {
+        const sessionId = '123';
+        mezzo.setMockVariantForSession(sessionId, {
+          [routeId]: 'v2',
+        });
+        mezzo.setMockVariant(routeId, 'v2');
+        const res1 = await request
+          .get(routePath)
+          .set(X_REQUEST_SESSION, sessionId)
+          .set(X_REQUEST_VARIANT, 'v1');
+        expect(res1.status).toBe(200);
+        expect(res1.body.variant).toBe('v1');
+      });
+      it('should prefer session variant header over route state', async () => {
+        const sessionId = '123';
+        mezzo.setMockVariantForSession(sessionId, {
+          [routeId]: 'v1',
+        });
+        mezzo.setMockVariant(routeId, 'v2');
+        const res1 = await request
+          .get(routePath)
+          .set(X_REQUEST_SESSION, sessionId);
+        expect(res1.status).toBe(200);
+        expect(res1.body.variant).toBe('v1');
+      });
+    });
     describe('file response', () => {
       it('should read from default file using backwards compatible handler', async () => {
         vol.fromJSON(
@@ -42,7 +144,7 @@ describe('mezzo', () => {
           id: 'someRoute',
           path: '/respondWithFile',
           handler(req, res) {
-            return mezzo.util.respondWithFile(this, res);
+            return mezzo.util.respondWithFile(this, req, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -62,7 +164,7 @@ describe('mezzo', () => {
           path: '/respondWithFile',
           handler: (req, res) => {
             // Based on how scoping of `this` works, if you put it inside a fat arrow function it'll break the reference of this
-            return mezzo.util.respondWithFile(this, res);
+            return mezzo.util.respondWithFile(this, req, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -80,7 +182,7 @@ describe('mezzo', () => {
           id: 'someRoute',
           path: '/respondWithFile',
           callback: (req, res, route) => {
-            return mezzo.util.respondWithFile(route, res);
+            return mezzo.util.respondWithFile(route, req, res);
           },
         });
         const res = await request.get('/respondWithFile');
@@ -103,13 +205,13 @@ describe('mezzo', () => {
             id: 'someRoute',
             path: myPath,
             handler(req, res) {
-              return mezzo.util.respondWithFile(this, res);
+              return mezzo.util.respondWithFile(this, req, res);
             },
           })
           .variant({
             id: 'variant1',
             handler(req, res) {
-              return mezzo.util.respondWithFile(this, res);
+              return mezzo.util.respondWithFile(this, req, res);
             },
           });
         const res = await request.get(myPath);
@@ -149,14 +251,14 @@ describe('mezzo', () => {
           .route({
             id: routeId,
             path,
-            handler(req, res, next) {
-              return mezzo.util.respondWithFile(this, res);
+            handler(req, res) {
+              return mezzo.util.respondWithFile(this, req, res);
             },
           })
           .variant({
             id: 'variant1',
             handler(req, res) {
-              mezzo.util.respondWithFile(this, res);
+              mezzo.util.respondWithFile(this, req, res);
             },
           });
 
@@ -185,7 +287,7 @@ describe('mezzo', () => {
           id: 'someRoute',
           path,
           async handler(req, res) {
-            mezzo.util.respondWithFile(this, res, { delay });
+            mezzo.util.respondWithFile(this, req, res, { delay });
           },
         });
 
@@ -210,7 +312,7 @@ describe('mezzo', () => {
           id: 'someRoute',
           path,
           async handler(req, res) {
-            mezzo.util.respondWithFile(this, res);
+            mezzo.util.respondWithFile(this, req, res);
           },
         });
 

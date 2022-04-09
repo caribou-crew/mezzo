@@ -1,26 +1,50 @@
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import { CallbackType, HandlerType, RouteData, VariantData } from '../types';
+import {
+  DEFAULT_VARIANT,
+  X_REQUEST_SESSION,
+  X_REQUEST_VARIANT,
+} from '../utils/constants';
 import logger from '../utils/logger';
 import { getValidMethod } from '../utils/method-utils';
+import { SessionState } from './sessionState';
 
 export class Route {
   private _activeVariant = 'default';
   private _variants: Map<string, VariantData> = new Map<string, VariantData>();
-  private routeData;
+  private routeData: RouteData;
+  private sessionState: SessionState;
 
-  public get activeVariant() {
-    return this._activeVariant;
+  public getActiveVariantId(request: Request | null) {
+    const variantRequestHeader = request?.get(X_REQUEST_VARIANT);
+    const sessionVariantRequestHeader = request?.get(X_REQUEST_SESSION);
+    const routeStateVariant = this._activeVariant;
+    let sessionVariant = undefined;
+
+    if (sessionVariantRequestHeader) {
+      sessionVariant = this.sessionState.getSessionVariantStateForRoute(
+        sessionVariantRequestHeader,
+        this.id
+      );
+    }
+
+    return variantRequestHeader || sessionVariant || routeStateVariant;
+  }
+
+  public getActiveVariant(activeVariantId: string) {
+    return this._variants.get(activeVariantId);
   }
 
   public id: string;
   public method: string;
   public path: string | RegExp;
 
-  constructor(routeData: RouteData) {
+  constructor(routeData: RouteData, sessionState: SessionState) {
     this.routeData = routeData;
     this.id = routeData.id;
     this.method = getValidMethod(routeData.method);
     this.path = routeData.path;
+    this.sessionState = sessionState;
   }
 
   /**
@@ -31,20 +55,17 @@ export class Route {
    */
   public processRequest: RequestHandler = (req, res, next) => {
     let callback: CallbackType;
-    // let callback: any;
     let handler: HandlerType;
 
-    // 1. Read variant from request header
-    //  const variantFromRequestHeader = request.headers['x-request-variant'];
-    // 2. Read variant from session state
-    //  const sessionFromRequestHeader = request.headers['x-request-session'];
-    // 3. Read variant from route state
-    if (this._activeVariant === 'default') {
+    const activeVariant = this.getActiveVariantId(req);
+    const hasVariant = this._variants.has(activeVariant);
+
+    if (!hasVariant || activeVariant === DEFAULT_VARIANT) {
       callback = this.routeData.callback;
       handler = this.routeData.handler;
     } else {
-      callback = this._variants.get(this._activeVariant).callback;
-      handler = this._variants.get(this._activeVariant).handler;
+      callback = this.getActiveVariant(activeVariant).callback;
+      handler = this.getActiveVariant(activeVariant).handler;
     }
 
     logger.info(
@@ -60,16 +81,6 @@ export class Route {
     }
   };
 
-  public executionContext(req: any) {
-    return {
-      state: () => {},
-      input: () => {},
-      meta: () => {},
-      route: this.routeData,
-      variant: 'Hi',
-    };
-  }
-
   public setVariant = (variantId: string) => {
     if (this._variants.has(variantId) || variantId === 'default') {
       logger.info(
@@ -82,16 +93,6 @@ export class Route {
       );
       // return new Error('no variants found with id: ' + variantId);
     }
-    // return {
-    //   id,
-    //   method,
-    //   path,
-    //   variant,
-    //   variants: _variants,
-    //   setVariant,
-    //   activeVariant: _activeVariant,
-    //   processRequest,
-    // };
     return this;
   };
 
@@ -107,15 +108,5 @@ export class Route {
       `Adding to variants, size of ${this.path} is now ${this._variants.size}`
     );
     return this;
-    // return {
-    //   id,
-    //   method,
-    //   path,
-    //   variant,
-    //   variants: _variants,
-    //   setVariant,
-    //   activeVariant: _activeVariant,
-    //   processRequest,
-    // };
   };
 }
