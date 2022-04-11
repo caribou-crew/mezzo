@@ -73,7 +73,7 @@ describe('mezzo', () => {
       });
       it('should respect session from request header', async () => {
         const sessionId = '123';
-        mezzo.setMockVariantForSession(sessionId, {
+        await mezzo.setMockVariantForSession(sessionId, {
           [routeId]: 'v2',
         });
         const res1 = await request
@@ -82,7 +82,7 @@ describe('mezzo', () => {
         expect(res1.status).toBe(200);
         expect(res1.body.variant).toBe('v2');
 
-        mezzo.setMockVariantForSession(sessionId, {
+        await mezzo.setMockVariantForSession(sessionId, {
           [routeId]: 'v1',
         });
         const res2 = await request
@@ -98,7 +98,7 @@ describe('mezzo', () => {
       });
       it('should use default if invalid variant is set in matching session', async () => {
         const sessionId = '123';
-        mezzo.setMockVariantForSession(sessionId, {
+        await mezzo.setMockVariantForSession(sessionId, {
           [routeId]: 'bogus',
         });
         const res1 = await request.get(routePath).set(X_REQUEST_SESSION, '123');
@@ -107,7 +107,7 @@ describe('mezzo', () => {
       });
       it('should prefer request variant header over session and route state', async () => {
         const sessionId = '123';
-        // mezzo.setMockVariantForSession(sessionId, {
+        // await mezzo.setMockVariantForSession(sessionId, {
         //   [routeId]: 'v2',
         // });
         await mezzo.setMockVariant({ routeId, variantId: 'v2' });
@@ -120,7 +120,7 @@ describe('mezzo', () => {
       });
       it('should prefer session variant header over route state', async () => {
         const sessionId = '123';
-        mezzo.setMockVariantForSession(sessionId, {
+        await mezzo.setMockVariantForSession(sessionId, {
           [routeId]: 'v1',
         });
         await mezzo.setMockVariant({ routeId, variantId: 'v2' });
@@ -478,6 +478,128 @@ describe('mezzo', () => {
     });
   });
 
+  describe('.setMockVariantForSession', () => {
+    it('should reset all variants for session when setting new values', async () => {
+      const route1 = 'someId';
+      const route1Path = '/somePath';
+      const variant1 = 'A2';
+
+      const route2 = 'someOtherId';
+      const route2Path = '/someOtherPath';
+      const variant2 = 'B2';
+
+      mezzo
+        .route({
+          id: route1,
+          path: route1Path,
+          handler: function (req, res) {
+            res.json({ someKey: 'A1-default' });
+          },
+        })
+        .variant({
+          id: variant1,
+          handler: function (req, res) {
+            res.json({ someKey: variant1 });
+          },
+        });
+
+      mezzo
+        .route({
+          id: route2,
+          path: route2Path,
+          handler: function (req, res) {
+            res.json({ someKey: 'B1-default' });
+          },
+        })
+        .variant({
+          id: variant2,
+          handler: function (req, res) {
+            res.json({ someKey: variant2 });
+          },
+        });
+
+      const sessionId = '123';
+      await mezzo.setMockVariantForSession(sessionId, {
+        [route1]: variant1,
+        [route2]: variant2,
+      });
+
+      const res1 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res1.body.someKey).toBe(variant1);
+
+      await mezzo.setMockVariantForSession(sessionId, {
+        [route2]: variant2,
+      });
+
+      const res2 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res2.body.someKey).toBe('A1-default');
+    });
+  });
+  describe('.updateMockVariantForSession', () => {
+    it('should preserve prior variants without collision for session when setting new values', async () => {
+      const route1 = 'someId';
+      const route1Path = '/somePath';
+      const variant1 = 'A2';
+
+      const route2 = 'someOtherId';
+      const route2Path = '/someOtherPath';
+      const variant2 = 'B2';
+
+      mezzo
+        .route({
+          id: route1,
+          path: route1Path,
+          handler: function (req, res) {
+            res.json({ someKey: 'A1-default' });
+          },
+        })
+        .variant({
+          id: variant1,
+          handler: function (req, res) {
+            res.json({ someKey: variant1 });
+          },
+        });
+
+      mezzo
+        .route({
+          id: route2,
+          path: route2Path,
+          handler: function (req, res) {
+            res.json({ someKey: 'B1-default' });
+          },
+        })
+        .variant({
+          id: variant2,
+          handler: function (req, res) {
+            res.json({ someKey: variant2 });
+          },
+        });
+
+      const sessionId = '123';
+      await mezzo.setMockVariantForSession(sessionId, {
+        [route1]: variant1,
+        [route2]: variant2,
+      });
+
+      const res1 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res1.body.someKey).toBe(variant1);
+
+      await mezzo.updateMockVariantForSession(sessionId, {
+        [route2]: variant2,
+      });
+
+      const res2 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res2.body.someKey).toBe(variant1);
+    });
+  });
   describe('.setMockVariant', () => {
     it('should change the active variant of route', async () => {
       const myPath = '/some/path';

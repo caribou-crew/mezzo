@@ -7,6 +7,7 @@ import {
   MiddlewareFn,
   MockVariantOptions,
   RouteData,
+  RouteVariants,
   ServerOptions,
 } from '../types';
 import * as express from 'express';
@@ -124,11 +125,18 @@ export class Mezzo {
 
   public setMockVariantForSession = async (
     sessionId: string,
-    payload: Record<string, string>
+    payload: RouteVariants
   ) => {
-    // TODO make API call
+    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/set/${sessionId}`;
+    await axios.post(url, payload);
+  };
 
-    this.sessionState.setSessionVariantStateByKey(sessionId, payload);
+  public updateMockVariantForSession = async (
+    sessionId: string,
+    payload: RouteVariants
+  ) => {
+    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/update/${sessionId}`;
+    await axios.post(url, payload);
   };
 }
 
