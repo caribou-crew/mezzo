@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
+    "importHelpers": false,
     "target": "es2015",
     "module": "esnext",
     "lib": ["es2017", "dom"],
@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@mezzo-labs/api-interfaces": ["libs/api-interfaces/src/index.ts"],
-      "@mezzo-labs/core": ["libs/core/src/index.ts"]
+      "@caribou-crew/mezzo-api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@caribou-crew/mezzo-core": ["libs/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
