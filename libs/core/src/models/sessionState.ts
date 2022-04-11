@@ -1,3 +1,5 @@
+import { RouteVariants } from '../types';
+
 export class SessionState {
   private state = {};
 
@@ -18,9 +20,20 @@ export class SessionState {
   }
 
   public setSessionVariantStateByKey(
-    key: string,
-    payload: Record<string, string>
+    sessionId: string,
+    payload: RouteVariants
   ) {
-    this.state[key] = payload;
+    this.state[sessionId] = payload;
+  }
+
+  public updateSessionVariantStateByKey(
+    sessionId: string,
+    payload: RouteVariants
+  ) {
+    const currentData = this.state[sessionId] || {};
+    this.state[sessionId] = {
+      ...currentData,
+      ...payload,
+    };
   }
 }

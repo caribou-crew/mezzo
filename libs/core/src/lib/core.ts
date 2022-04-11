@@ -1,16 +1,25 @@
 import { createServer, Server } from 'http';
 import logger from '../utils/logger';
+import axios from 'axios';
 
 import { CommonUtils } from '../utils/common-utils';
-import { MiddlewareFn, RouteData, ServerOptions } from '../types';
+import {
+  MiddlewareFn,
+  MockVariantOptions,
+  RouteData,
+  ServerOptions,
+} from '../types';
 import * as express from 'express';
 import { Route } from '../models/route-model';
 import { addAdminEndpoints, addAdminStaticSite } from './admin';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import * as fsDefault from 'fs';
 import { SessionState } from '../models/sessionState';
+import { DEFAULT_PORT, MEZZO_API_PATH } from '../utils/constants';
 
-class Mezzo {
+import * as bodyParser from 'body-parser';
+
+export class Mezzo {
   public userRoutes: Route[] = [];
   public sessionState: SessionState;
   private server: Server;
@@ -18,6 +27,7 @@ class Mezzo {
   private fs;
   public util: CommonUtils;
   public mockedDirectory;
+  public port;
 
   private _resetRouteState = () => (this.userRoutes.length = 0);
 
@@ -35,24 +45,29 @@ class Mezzo {
     this.userRoutes.push(myRoute);
   };
 
+  private initializeMiddleware = () => {
+    this.app.use(bodyParser.json({ limit: '5mb' }));
+  };
+
   public start = async (options?: ServerOptions): Promise<Server> => {
     this.app = express();
     this._resetRouteState();
-    addAdminEndpoints(this.app);
+    this.initializeMiddleware();
+    addAdminEndpoints(this.app, this);
     addAdminStaticSite(this.app, options);
     this.fs = options?.fsOverride ?? fsDefault;
     this.mockedDirectory = options.mockedDirectory;
     this.util = new CommonUtils(this.userRoutes, this.fs, this.mockedDirectory);
     this.sessionState = new SessionState();
+    this.port = options?.port ?? DEFAULT_PORT;
     // if (options.fsOverride) {
     //   fs = options.fsOverride;
     // }
 
     return new Promise((resolve) => {
-      const port = options?.port ?? 8000;
-      this.server = createServer(this.app).listen(port, () => {
+      this.server = createServer(this.app).listen(this.port, () => {
         logger.debug(
-          `***************Server running on port ${port} ***************`
+          `***************Server running on port ${this.port} ***************`
         );
         resolve(this.server);
       });
@@ -96,32 +111,23 @@ class Mezzo {
     return myRoute;
   };
 
-  public setMockVariant = (routeId: string, variantId: string) => {
-    // const index = findRouteIndex(method, path, this.userRoutes);
-    const index = findRouteIndexById(routeId, this.userRoutes);
-    const foundRoute = this.userRoutes[index];
-    // console.log('Inside set mock variant', foundRoute);
-    if (foundRoute) {
-      // TODO log if variant cannot be set
+  // https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356
+  public setMockVariant = async (options: MockVariantOptions) => {
+    const url = `http://localhost:${
+      this.port
+    }${MEZZO_API_PATH}/route/${encodeURIComponent(options.routeId)}`;
 
-      // this is not actually updating entry in global state
-      const updatedItem = foundRoute.setVariant(variantId);
-
-      // So make sure to update hte array item
-      this.userRoutes[index] = updatedItem;
-
-      // logger.info(`Set variant complete: ${foundRoute.activeVariant}`);
-    } else {
-      console.warn(
-        `Could not find route for ${routeId} to set variant ${variantId}`
-      );
-    }
+    await axios.post(url, {
+      variant: options.variantId,
+    });
   };
 
-  public setMockVariantForSession = (
+  public setMockVariantForSession = async (
     sessionId: string,
     payload: Record<string, string>
   ) => {
+    // TODO make API call
+
     this.sessionState.setSessionVariantStateByKey(sessionId, payload);
   };
 }

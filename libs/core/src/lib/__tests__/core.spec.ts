@@ -107,10 +107,10 @@ describe('mezzo', () => {
       });
       it('should prefer request variant header over session and route state', async () => {
         const sessionId = '123';
-        mezzo.setMockVariantForSession(sessionId, {
-          [routeId]: 'v2',
-        });
-        mezzo.setMockVariant(routeId, 'v2');
+        // mezzo.setMockVariantForSession(sessionId, {
+        //   [routeId]: 'v2',
+        // });
+        await mezzo.setMockVariant({ routeId, variantId: 'v2' });
         const res1 = await request
           .get(routePath)
           .set(X_REQUEST_SESSION, sessionId)
@@ -123,7 +123,7 @@ describe('mezzo', () => {
         mezzo.setMockVariantForSession(sessionId, {
           [routeId]: 'v1',
         });
-        mezzo.setMockVariant(routeId, 'v2');
+        await mezzo.setMockVariant({ routeId, variantId: 'v2' });
         const res1 = await request
           .get(routePath)
           .set(X_REQUEST_SESSION, sessionId);
@@ -190,6 +190,8 @@ describe('mezzo', () => {
         expect(res.body).toEqual({ message: 'Responding with file' });
       });
       it('should read from variant file', async () => {
+        const routeId = 'GET /someRoute';
+        const variantId = 'variant1';
         vol.fromJSON(
           {
             './respondWithVariantReplyFromFile/GET/default.json':
@@ -202,14 +204,14 @@ describe('mezzo', () => {
         const myPath = '/respondWithVariantReplyFromFile';
         mezzo
           .route({
-            id: 'someRoute',
+            id: routeId,
             path: myPath,
             handler(req, res) {
               return mezzo.util.respondWithFile(this, req, res);
             },
           })
           .variant({
-            id: 'variant1',
+            id: variantId,
             handler(req, res) {
               return mezzo.util.respondWithFile(this, req, res);
             },
@@ -218,10 +220,13 @@ describe('mezzo', () => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ variant: 'default' });
 
-        mezzo.setMockVariant('someRoute', 'variant1');
+        await mezzo.setMockVariant({
+          routeId,
+          variantId,
+        });
 
         const res2 = await request.get(myPath);
-        expect(res2.body).toEqual({ variant: 'variant1' });
+        expect(res2.body).toEqual({ variant: variantId });
       });
       it("handler's this and route are the same", async () => {
         const path = '/part1';
@@ -265,7 +270,7 @@ describe('mezzo', () => {
         const res = await request.get('/part1/someDynamicPart2Path');
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ variant: 'default' });
-        mezzo.setMockVariant(routeId, 'variant1');
+        await mezzo.setMockVariant({ routeId, variantId: 'variant1' });
         const res2 = await request.get('/part1/someDynamicPart2Path');
         expect(res2.body).toEqual({ variant: 'other' });
         const res3 = await request.get('/part1/someDynamicPart2PathAlt');
@@ -495,7 +500,7 @@ describe('mezzo', () => {
       const res = await request.get(myPath);
       expect(res.body).toEqual({ someKey: 'A' });
 
-      mezzo.setMockVariant(routeId, altVariantName);
+      await mezzo.setMockVariant({ routeId, variantId: altVariantName });
       const res2 = await request.get(myPath);
       expect(res2.body).toEqual({ someKey: 'B' });
     });
