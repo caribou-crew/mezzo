@@ -635,4 +635,58 @@ describe('mezzo', () => {
       expect(res.text).toBe('TODO HTML Site');
     });
   });
+
+  describe('/mezzo/routes', () => {
+    it.only('should return all routes for admin GUI', async () => {
+      mezzo
+        .route({
+          id: 'GET /route1',
+          path: 'route1',
+          handler: function (req, res) {
+            res.json({ someKey: 'A' });
+          },
+        })
+        .variant({
+          id: 'variant1',
+          handler: function (req, res) {
+            res.json({ someKey: 'B' });
+          },
+        });
+      mezzo.route({
+        id: 'POST /route2',
+        path: 'route2',
+        method: 'POST',
+        handler: function (req, res) {
+          res.json({ someKey: 'C' });
+        },
+      });
+      await mezzo.setMockVariant({
+        routeId: 'GET /route1',
+        variantId: 'variant1',
+      });
+
+      const res = await request.get('/mezzo/routes');
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual([
+        {
+          _activeVariant: 'variant1',
+          _variants: {},
+          id: 'GET /route1',
+          method: 'GET',
+          path: 'route1',
+          routeData: { id: 'GET /route1', path: 'route1' },
+          sessionState: { state: {} },
+        },
+        {
+          _activeVariant: 'default',
+          _variants: {},
+          id: 'POST /route2',
+          method: 'POST',
+          path: 'route2',
+          routeData: { id: 'POST /route2', method: 'POST', path: 'route2' },
+          sessionState: { state: {} },
+        },
+      ]);
+    });
+  });
 });
