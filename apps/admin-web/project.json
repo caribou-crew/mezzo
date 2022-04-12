@@ -43,7 +43,7 @@
     "serve": {
       "executor": "@nrwl/web:dev-server",
       "options": {
-        "buildTarget": "admin-web:build",
+        "buildTarget": "admin-web:build:development",
         "hmr": true,
         "proxyConfig": "apps/admin-web/proxy.conf.json"
       },
