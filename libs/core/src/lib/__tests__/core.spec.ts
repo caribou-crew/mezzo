@@ -637,7 +637,7 @@ describe('mezzo', () => {
   });
 
   describe('/mezzo/routes', () => {
-    it.only('should return all routes for admin GUI', async () => {
+    it('should return all routes for admin GUI', async () => {
       mezzo
         .route({
           id: 'GET /route1',
