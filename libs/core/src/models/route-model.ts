@@ -15,7 +15,11 @@ export class Route {
   private routeData: RouteData;
   private sessionState: SessionState;
 
-  public getActiveVariantId(request: Request | null) {
+  public getVariants() {
+    return this._variants;
+  }
+
+  public getActiveVariantId(request?: Request) {
     const variantRequestHeader = request?.get(X_REQUEST_VARIANT);
     const sessionVariantRequestHeader = request?.get(X_REQUEST_SESSION);
     const routeStateVariant = this._activeVariant;
@@ -31,8 +35,10 @@ export class Route {
     return variantRequestHeader || sessionVariant || routeStateVariant;
   }
 
-  public getActiveVariant(activeVariantId: string) {
-    return this._variants.get(activeVariantId);
+  // public getActiveVariant(activeVariantId: string) {
+  public getActiveVariant() {
+    // return this._variants.get(activeVariantId);
+    return this._activeVariant;
   }
 
   public id: string;
@@ -64,8 +70,8 @@ export class Route {
       callback = this.routeData.callback;
       handler = this.routeData.handler;
     } else {
-      callback = this.getActiveVariant(activeVariant).callback;
-      handler = this.getActiveVariant(activeVariant).handler;
+      callback = this._variants.get(activeVariant).callback;
+      handler = this._variants.get(activeVariant).handler;
     }
 
     logger.info(

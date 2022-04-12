@@ -669,22 +669,23 @@ describe('mezzo', () => {
       expect(res.status).toBe(200);
       expect(res.body).toEqual([
         {
-          _activeVariant: 'variant1',
-          _variants: {},
+          activeVariant: 'variant1',
           id: 'GET /route1',
           method: 'GET',
           path: 'route1',
-          routeData: { id: 'GET /route1', path: 'route1' },
-          sessionState: { state: {} },
+          variants: [
+            {
+              id: 'variant1',
+              label: 'variant1',
+            },
+          ],
         },
         {
-          _activeVariant: 'default',
-          _variants: {},
+          activeVariant: 'default',
           id: 'POST /route2',
           method: 'POST',
           path: 'route2',
-          routeData: { id: 'POST /route2', method: 'POST', path: 'route2' },
-          sessionState: { state: {} },
+          variants: [],
         },
       ]);
     });

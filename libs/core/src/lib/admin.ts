@@ -28,7 +28,7 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`/mezzo/routes`, (req, res) => {
     // const routes = mezzo.userRoutes;
     // TODO: format and return data
-    res.json(mezzo.userRoutes);
+    res.json(mezzo.serialiazeRoutes());
     // res.json({
     //   id: 'todoId',
     //   routes: 'todoRoutes',

@@ -138,6 +138,33 @@ export class Mezzo {
     const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/update/${sessionId}`;
     await axios.post(url, payload);
   };
+
+  public serialiazeRoutes = () => {
+    return this.userRoutes.map((route) => {
+      // const variants = route.getVariants();
+      // console.log('KEYS: ', variants);
+      const variantRetVal = [];
+      route.getVariants().forEach((value, key) => {
+        console.log('Id: ' + key + ' label: ' + value.id);
+        variantRetVal.push({
+          id: key,
+          label: value.id,
+        });
+        // variantRetVal[key] = {
+        //   label: value.id,
+        // };
+      });
+
+      return {
+        id: route.id,
+        method: route.method,
+        path: route.path,
+        // variants: Object.fromEntries(variants),
+        variants: variantRetVal,
+        activeVariant: route.getActiveVariant(),
+      };
+    });
+  };
 }
 
 export default new Mezzo();
