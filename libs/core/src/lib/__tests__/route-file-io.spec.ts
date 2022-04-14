@@ -53,7 +53,7 @@ describe('route-file-io', () => {
     vol.reset();
   });
 
-  describe('file response', () => {
+  describe('json', () => {
     it('should read from default file using backwards compatible handler', async () => {
       mezzo.route({
         id: routeId,

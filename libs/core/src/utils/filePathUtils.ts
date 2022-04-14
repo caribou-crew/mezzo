@@ -28,7 +28,14 @@ export const getFileContentsForRequest = async (
     `${route.getActiveVariantId(req)}.json`
   );
   logger.debug('Reading File: ', filePath);
+
+  // TODO lookup mime type?
+
   const readFile = util.promisify(fs.readFile);
   const rawFileData = await readFile(filePath, 'utf-8');
   return rawFileData;
 };
+
+function getFilePath() {
+  const defaultFileName = 'default';
+}

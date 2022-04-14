@@ -32,13 +32,6 @@ export class CommonUtils {
       // return;
     }
 
-    // This works for non-dynamic URL paths, hence we need ID approach
-    // const foundRoute = findRoute(req.method, req.path, this._routes);
-
-    // TODO identify why route is coming in as null, we need route ID w/out user redefining it
-    // const foundRoute = findRouteById(route.id, this._routes);
-
-    // logger.debug(`About to read file, active variant: ${route.activeVariant}`);
     const fileContents = await getFileContentsForRequest(
       route,
       req,
@@ -49,12 +42,12 @@ export class CommonUtils {
     res.json(JSON.parse(fileContents));
   };
 
-  // This one is backwards compatible
-  public respondWithFileLegacy = async (
-    route: Route,
-    res: Response,
-    options?: FileHandlerOptions
-  ) => {
-    this.respondWithFile(route, null, res, options);
-  };
+  // // This one is backwards compatible
+  // public respondWithFileLegacy = async (
+  //   route: Route,
+  //   res: Response,
+  //   options?: FileHandlerOptions
+  // ) => {
+  //   this.respondWithFile(route, null, res, options);
+  // };
 }
