@@ -83,12 +83,16 @@ describe('route-express', () => {
       id: 'someRoute',
       path: '/:someDynamicValue',
       handler: (req, res) => {
-        res.json({ someCustomCodingResponse: 'hi' });
+        res.json({
+          someCustomCodingResponse: 'hi ' + req.params.someDynamicValue,
+        });
       },
     });
     const res = await request.get('/someDynamicEndpoint');
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ someCustomCodingResponse: 'hi' });
+    expect(res.body).toEqual({
+      someCustomCodingResponse: 'hi someDynamicEndpoint',
+    });
   });
   it('should allow custom status codes', async () => {
     mezzo.route({
