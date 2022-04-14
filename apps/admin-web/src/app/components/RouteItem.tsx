@@ -61,7 +61,14 @@ const RouteItem = ({ route }: Props) => {
               variant="contained"
               sx={{ mr: 2, backgroundColor: textColor }}
               onClick={() =>
-                fetch(route.path)
+                fetch(route.path, {
+                  method: route.method,
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: route.method === 'GET' ? undefined : '{}'
+                })
                   .then((r) => r.json())
                   .then(openJsonInNewTab)
               }
