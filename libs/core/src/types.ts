@@ -16,7 +16,7 @@ export type MiddlewareFn = (
 export interface ServerOptions {
   port: number | string;
   adminEndpoint?: string;
-  mockedDirectory: string;
+  mockedDirectory?: string;
   fsOverride?: any;
 }
 

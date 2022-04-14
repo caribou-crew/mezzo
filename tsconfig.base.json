@@ -15,8 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@caribou-crew/mezzo-api-interfaces": ["libs/api-interfaces/src/index.ts"],
-      "@caribou-crew/mezzo-core": ["libs/core/src/index.ts"]
+      "@caribou-crew/mezzo-api-interfaces": [
+        "libs/api-interfaces/src/index.ts"
+      ],
+      "@caribou-crew/mezzo-core": ["libs/core/src/index.ts"],
+      "@caribou-crew/mezzo-interfaces": ["libs/interfaces/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

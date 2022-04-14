@@ -43,6 +43,7 @@ export class Route {
 
   public id: string;
   public method: string;
+  public label: string;
   public path: string | RegExp;
 
   constructor(routeData: RouteData, sessionState: SessionState) {
@@ -50,6 +51,7 @@ export class Route {
     this.id = routeData.id;
     this.method = getValidMethod(routeData.method);
     this.path = routeData.path;
+    this.label = routeData.label;
     this.sessionState = sessionState;
   }
 

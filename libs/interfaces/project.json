@@ -1,0 +1,34 @@
+{
+  "root": "libs/interfaces",
+  "sourceRoot": "libs/interfaces/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/interfaces/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/interfaces"],
+      "options": {
+        "jestConfig": "libs/interfaces/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/interfaces",
+        "tsConfig": "libs/interfaces/tsconfig.lib.json",
+        "packageJson": "libs/interfaces/package.json",
+        "main": "libs/interfaces/src/index.ts",
+        "assets": ["libs/interfaces/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

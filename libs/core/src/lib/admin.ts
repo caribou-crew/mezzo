@@ -26,15 +26,7 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   });
 
   app.get(`/mezzo/routes`, (req, res) => {
-    // const routes = mezzo.userRoutes;
-    // TODO: format and return data
     res.json(mezzo.serialiazeRoutes());
-    // res.json({
-    //   id: 'todoId',
-    //   routes: 'todoRoutes',
-    //   profiles: 'todoProfiles',
-    //   actions: 'todoActions',
-    // });
   });
 
   // setMockVariahttps://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356nt

@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'core',
+  displayName: 'interfaces',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,6 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/core',
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.js'],
+  coverageDirectory: '../../coverage/libs/interfaces',
 };

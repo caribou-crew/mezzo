@@ -13,12 +13,16 @@ import {
 import * as express from 'express';
 import { Route } from '../models/route-model';
 import { addAdminEndpoints, addAdminStaticSite } from './admin';
-import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import * as fsDefault from 'fs';
 import { SessionState } from '../models/sessionState';
 import { DEFAULT_PORT, MEZZO_API_PATH } from '../utils/constants';
 
 import * as bodyParser from 'body-parser';
+import {
+  GetMezzoRoutes,
+  GetMezzoRoutesRouteData,
+  GetMezzoRoutesVariantData,
+} from '@caribou-crew/mezzo-interfaces';
 
 export class Mezzo {
   public userRoutes: Route[] = [];
@@ -139,31 +143,34 @@ export class Mezzo {
     await axios.post(url, payload);
   };
 
-  public serialiazeRoutes = () => {
-    return this.userRoutes.map((route) => {
-      // const variants = route.getVariants();
-      // console.log('KEYS: ', variants);
-      const variantRetVal = [];
+  public serialiazeRoutes = (): GetMezzoRoutes => {
+    const routes: GetMezzoRoutesRouteData[] = this.userRoutes.map((route) => {
+      const variantRetVal: GetMezzoRoutesVariantData[] = [];
+
+      // add default variant
+      variantRetVal.push({
+        id: 'default',
+      });
+
+      // add route specific variants
       route.getVariants().forEach((value, key) => {
-        console.log('Id: ' + key + ' label: ' + value.id);
         variantRetVal.push({
           id: key,
-          label: value.id,
+          label: value.label,
         });
-        // variantRetVal[key] = {
-        //   label: value.id,
-        // };
       });
 
       return {
         id: route.id,
         method: route.method,
         path: route.path,
-        // variants: Object.fromEntries(variants),
         variants: variantRetVal,
         activeVariant: route.getActiveVariant(),
       };
     });
+    return {
+      routes,
+    };
   };
 }
 
