@@ -2,5 +2,13 @@
   "/": {
     "target": "http://localhost:8000",
     "secure": false
+  },
+  "/mezzo/routes": {
+    "target": "http://localhost:8000",
+    "secure": false
+  },
+  "/mezzo/api/*": {
+    "target": "http://localhost:8000",
+    "secure": false
   }
 }

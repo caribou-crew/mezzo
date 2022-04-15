@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { UserRoute } from '@caribou-crew/mezzo-api-interfaces';
+import { GetMezzoRoutes, GetMezzoRoutesRouteData} from '@caribou-crew/mezzo-interfaces';
 
 import {
   TextField,
   Stack,
-  Paper,
   Autocomplete,
   Grid,
   Box,
@@ -14,12 +13,16 @@ import RouteItem from './components/RouteItem';
 import Header from './components/Header';
 
 export const App = () => {
-  const [routes, setRoutes] = useState<UserRoute[]>([]);
+  const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
 
   useEffect(() => {
-    fetch('/mezzo/routes')
-      .then((r) => r.json())
-      .then((r) => setRoutes(r.routes));
+    const fetchData = async() => {
+      const response = await fetch('/mezzo/routes')
+      const data = await response.json();
+      setRoutes(data.routes);
+    }
+
+    fetchData().catch(console.error);
   }, []);
 
   const list = () => {
