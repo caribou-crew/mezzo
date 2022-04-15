@@ -39,7 +39,11 @@ export class CommonUtils {
       this._mockedDirectory
     );
     await timeout(options?.delay ?? 0);
-    res.json(JSON.parse(fileContents));
+    if (fileContents.mimeType === '.json') {
+      res.json(JSON.parse(fileContents.rawFileData));
+    } else if (fileContents.mimeType === '.html') {
+      res.send(fileContents.rawFileData);
+    }
   };
 
   // // This one is backwards compatible
