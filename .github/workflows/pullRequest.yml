@@ -17,5 +17,7 @@ jobs:
           node-version: 16.x
       - name: Npm install
         run: npm install
+      - name: Install nx
+        run: npm install -g nx
       - name: Unit test core
         run: nx test core
