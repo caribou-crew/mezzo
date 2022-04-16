@@ -55,7 +55,7 @@ const RouteItem = ({ route }: Props) => {
           </Typography>
         </Grid>
         <Grid item xs={4}></Grid>
-        <Grid item xs={4} sx={{pr:2}}>
+        <Grid item xs={4} sx={{ pr: 2 }}>
           <Grid container xs={12} justifyContent="flex-end">
             <Button
               variant="contained"
@@ -64,10 +64,10 @@ const RouteItem = ({ route }: Props) => {
                 fetch(route.path, {
                   method: route.method,
                   headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
                   },
-                  body: route.method === 'GET' ? undefined : '{}'
+                  body: route.method === 'GET' ? undefined : '{}',
                 })
                   .then((r) => r.json())
                   .then(openJsonInNewTab)
