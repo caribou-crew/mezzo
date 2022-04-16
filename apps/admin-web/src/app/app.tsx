@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  GetMezzoRoutes,
-  GetMezzoRoutesRouteData,
-} from '@caribou-crew/mezzo-interfaces';
+import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
 
 import {
   TextField,
@@ -29,7 +26,7 @@ export const App = () => {
   }, []);
 
   const list = () => {
-    const listOfRoutes: any[] = [];
+    const listOfRoutes: JSX.Element[] = [];
     if (Array.isArray(routes) && routes.length > 0) {
       routes.forEach((route) => {
         listOfRoutes.push(<RouteItem route={route} key={route.id}></RouteItem>);
