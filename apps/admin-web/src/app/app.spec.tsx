@@ -10,11 +10,15 @@ describe('App', () => {
 
   it('should render successfully', async () => {
     global['fetch'] = jest.fn().mockResolvedValueOnce({
-      json: () => ({ routes: [{
+      json: () => ({
+        routes: [
+          {
             id: 'GET /route1',
             path: '/route1',
             handler: jest.fn(),
-          }]}),
+          },
+        ],
+      }),
     });
 
     const { baseElement } = render(<App />);
