@@ -1,5 +1,4 @@
 import * as express from 'express';
-import { Session } from 'inspector';
 import { RouteVariants, ServerOptions } from '../types';
 import { MEZZO_API_PATH } from '../utils/constants';
 import logger from '../utils/logger';
