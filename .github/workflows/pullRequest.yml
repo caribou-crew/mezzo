@@ -18,7 +18,7 @@ jobs:
       - name: Npm install
         run: npm install
       - name: Unit test
-        run: npx nx run-many --all --target=test --parallel
+        run: npm run listAll
   linting:
     name: Linting
     runs-on: ubuntu-latest
@@ -33,4 +33,19 @@ jobs:
       - name: Npm install
         run: npm install
       - name: lint
-        run: npx nx run-many --all --target=lint --parallel
+        run: npm run lint
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: Npm install
+        run: npm install
+      - name: lint
+        run: npm run format:check
