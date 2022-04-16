@@ -9,7 +9,7 @@ if (arg === 'start') {
   (async () => {
     await mezzo.start({
       port: 8000,
-      mockedDirectory, // TODO not yet implemented
+      mockedDirectory,
       adminEndpoint: 'mezzo',
     });
 
@@ -66,6 +66,54 @@ if (arg === 'start') {
         method: 'PATCH',
         handler: function (req, res) {
           res.json({ someKey: '6' });
+        },
+      });
+      mezzo.route({
+        id: 'GET /respondWithJSONFile',
+        path: '/respondWithJSONFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
+        },
+      });
+      mezzo.route({
+        id: 'GET /respondWithTXTFile',
+        path: '/respondWithTXTFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
+        },
+      });
+      mezzo.route({
+        id: 'GET /respondWithPNGFile',
+        path: '/respondWithPNGFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
+        },
+      });
+      mezzo.route({
+        id: 'GET /respondWithHTMLFile',
+        path: '/respondWithHTMLFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
+        },
+      });
+      mezzo.route({
+        id: 'GET /respondWithPDFFile',
+        path: '/respondWithPDFFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
+        },
+      });
+      mezzo.route({
+        id: 'GET /respondWithGIFFile',
+        path: '/respondWithGIFFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
         },
       });
     }
