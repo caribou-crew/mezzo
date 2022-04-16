@@ -60,18 +60,24 @@ const RouteItem = ({ route }: Props) => {
             <Button
               variant="contained"
               sx={{ mr: 2, backgroundColor: textColor }}
-              onClick={() =>
-                fetch(route.path.toString(), {
-                  method: route.method,
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: route.method === 'GET' ? undefined : '{}',
-                })
-                  .then((r) => r.json())
-                  .then(openJsonInNewTab)
-              }
+              onClick={() => {
+                if (route.method?.toUpperCase() === 'GET') {
+                  // open externally if a GET (keeps non-json assets simple)
+                  window.open(route.path.toString());
+                } else {
+                  // If not a POST, currently assumes response is always JSON, fetch via API then open
+                  fetch(route.path.toString(), {
+                    method: route.method,
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: route.method === 'GET' ? undefined : '{}',
+                  })
+                    .then((r) => r.json())
+                    .then(openJsonInNewTab);
+                }
+              }}
             >
               <Visibility></Visibility>
             </Button>
