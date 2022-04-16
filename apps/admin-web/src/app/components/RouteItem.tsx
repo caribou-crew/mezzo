@@ -1,13 +1,13 @@
 import { Paper, Typography } from '@mui/material';
-import { UserRoute } from '@caribou-crew/mezzo-api-interfaces';
 
 import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { Chip, Grid, Button } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 import { openJsonInNewTab } from '../utils/urlHelper';
+import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
 
 type Props = {
-  route: UserRoute;
+  route: GetMezzoRoutesRouteData;
 };
 
 const RouteItem = ({ route }: Props) => {
@@ -61,7 +61,7 @@ const RouteItem = ({ route }: Props) => {
               variant="contained"
               sx={{ mr: 2, backgroundColor: textColor }}
               onClick={() =>
-                fetch(route.path, {
+                fetch(route.path.toString(), {
                   method: route.method,
                   headers: {
                     Accept: 'application/json',
@@ -83,6 +83,31 @@ const RouteItem = ({ route }: Props) => {
           </Grid>
         </Grid>
       </Grid>
+      {route.variants.map((variant) => {
+        return (
+          <Grid
+            key={variant.id}
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Button
+              onClick={() => {
+                fetch(`mezzo/api/route/${encodeURIComponent(route.id)}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ variant: variant.id }),
+                });
+              }}
+            >
+              {variant.label ?? variant.id}
+            </Button>
+          </Grid>
+        );
+      })}
     </Paper>
   );
 };
