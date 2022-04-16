@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { GetMezzoRoutes, GetMezzoRoutesRouteData} from '@caribou-crew/mezzo-interfaces';
+import {
+  GetMezzoRoutes,
+  GetMezzoRoutesRouteData,
+} from '@caribou-crew/mezzo-interfaces';
 
 import {
   TextField,
@@ -16,11 +19,11 @@ export const App = () => {
   const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
 
   useEffect(() => {
-    const fetchData = async() => {
-      const response = await fetch('/mezzo/routes')
+    const fetchData = async () => {
+      const response = await fetch('/mezzo/routes');
       const data = await response.json();
       setRoutes(data.routes);
-    }
+    };
 
     fetchData().catch(console.error);
   }, []);
