@@ -3,7 +3,7 @@ import { Paper, Typography } from '@mui/material';
 import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { Chip, Grid, Button } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
-import { openJsonInNewTab } from '../utils/urlHelper';
+import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
 
 type Props = {
@@ -62,8 +62,7 @@ const RouteItem = ({ route }: Props) => {
               sx={{ mr: 2, backgroundColor: textColor }}
               onClick={() => {
                 if (route.method?.toUpperCase() === 'GET') {
-                  // open externally if a GET (keeps non-json assets simple)
-                  window.open(route.path.toString());
+                  openInNewTab(route.path.toString());
                 } else {
                   // If not a POST, currently assumes response is always JSON, fetch via API then open
                   fetch(route.path.toString(), {
