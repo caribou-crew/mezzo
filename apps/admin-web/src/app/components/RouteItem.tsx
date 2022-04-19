@@ -3,7 +3,7 @@ import { Paper, Typography } from '@mui/material';
 import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { Chip, Grid, Button } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
-import { openJsonInNewTab } from '../utils/urlHelper';
+import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
 
 type Props = {
@@ -60,18 +60,23 @@ const RouteItem = ({ route }: Props) => {
             <Button
               variant="contained"
               sx={{ mr: 2, backgroundColor: textColor }}
-              onClick={() =>
-                fetch(route.path.toString(), {
-                  method: route.method,
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: route.method === 'GET' ? undefined : '{}',
-                })
-                  .then((r) => r.json())
-                  .then(openJsonInNewTab)
-              }
+              onClick={() => {
+                if (route.method?.toUpperCase() === 'GET') {
+                  openInNewTab(route.path.toString());
+                } else {
+                  // If not a POST, currently assumes response is always JSON, fetch via API then open
+                  fetch(route.path.toString(), {
+                    method: route.method,
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: route.method === 'GET' ? undefined : '{}',
+                  })
+                    .then((r) => r.json())
+                    .then(openJsonInNewTab);
+                }
+              }}
             >
               <Visibility></Visibility>
             </Button>

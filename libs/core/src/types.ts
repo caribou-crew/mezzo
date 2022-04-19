@@ -50,7 +50,7 @@ export type CallbackType = (
   req: Request,
   res: Response,
   route: Route
-) => Promise<any>;
+) => Promise<any> | void;
 
 /**
  * Model representation of a route

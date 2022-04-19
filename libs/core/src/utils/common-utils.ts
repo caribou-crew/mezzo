@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 import { Route } from '../models/route-model';
 import { FileHandlerOptions } from '../types';
-import { getFileContentsForRequest } from './filePathUtils';
+import { getFileContents, getFilePathForRequest } from './filePathUtils';
 import logger from './logger';
 import { timeout } from './timeoutUtils';
+import * as nodeFs from 'fs';
 
 export class CommonUtils {
   private _routes: Route[];
-  private _fs: any;
+  private _fs: typeof nodeFs;
   private _mockedDirectory: string;
-  constructor(routes: Route[], fs: any, mockedDirectory: string) {
+  constructor(routes: Route[], fs: typeof nodeFs, mockedDirectory: string) {
     this._routes = routes;
     this._fs = fs;
     this._mockedDirectory = mockedDirectory;
@@ -32,26 +33,33 @@ export class CommonUtils {
       // return;
     }
 
-    const fileContents = await getFileContentsForRequest(
-      route,
-      req,
+    const filePathInfo = await getFilePathForRequest(
       this._fs,
-      this._mockedDirectory
+      this._mockedDirectory,
+      route,
+      req
     );
+
+    const sendTypes = ['.txt', '.html'];
+    const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg'];
     await timeout(options?.delay ?? 0);
-    if (fileContents.mimeType === '.json') {
-      res.json(JSON.parse(fileContents.rawFileData));
-    } else if (fileContents.mimeType === '.html') {
-      res.send(fileContents.rawFileData);
+    if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
+      res.sendFile(filePathInfo.filePath);
+    } else {
+      const rawFileData = await getFileContents(
+        this._fs,
+        filePathInfo.filePath
+      );
+      if (filePathInfo.mimeType === '.json') {
+        res.json(JSON.parse(rawFileData));
+      } else if (sendTypes.includes(filePathInfo.mimeType.toLowerCase())) {
+        res.send(rawFileData);
+      } else {
+        logger.warn(
+          `Filetype ${filePathInfo.mimeType} not officially supported yet`
+        );
+        res.send(rawFileData);
+      }
     }
   };
-
-  // // This one is backwards compatible
-  // public respondWithFileLegacy = async (
-  //   route: Route,
-  //   res: Response,
-  //   options?: FileHandlerOptions
-  // ) => {
-  //   this.respondWithFile(route, null, res, options);
-  // };
 }

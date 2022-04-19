@@ -2,6 +2,7 @@ import { Route } from '../models/route-model';
 import logger from './logger';
 import * as path from 'path';
 import * as util from 'util';
+import * as nodeFs from 'fs';
 import { Request } from 'express';
 
 export interface Variant {
@@ -10,7 +11,7 @@ export interface Variant {
 const fileExtensionOrder = ['.json', '.html', '.txt'];
 
 const filterActiveVariantsFromDirectory = async (
-  fs: any,
+  fs: typeof nodeFs,
   dirLocation: string,
   variant?: string
 ): Promise<string[]> => {
@@ -20,12 +21,11 @@ const filterActiveVariantsFromDirectory = async (
   return filesInDir.filter((name) => name.match(variant));
 };
 
-export const getFileContentsForRequest = async (
-  // activeVariant: string,
+export const getFilePathForRequest = async (
+  fs: typeof nodeFs,
+  mockedDirectory: string,
   route: Route,
-  req: Request | null,
-  fs: any,
-  mockedDirectory: string
+  req: Request | null
 ) => {
   console.log('Got path of: ', route.path);
   const endpoint = route.path.toString();
@@ -69,10 +69,14 @@ export const getFileContentsForRequest = async (
   const filePath = path.join(fileDir, fileToUse);
   logger.debug('Full path: ', filePath);
 
-  const readFile = util.promisify(fs.readFile);
-  const rawFileData = await readFile(filePath, 'utf-8');
   return {
-    rawFileData,
+    filePath,
     mimeType: path.extname(filePath),
   };
+};
+
+export const getFileContents = async (fs: typeof nodeFs, filePath: string) => {
+  const readFile = util.promisify(fs.readFile);
+  const rawFileData = await readFile(filePath, 'utf-8');
+  return rawFileData;
 };
