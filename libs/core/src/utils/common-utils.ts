@@ -41,7 +41,7 @@ export class CommonUtils {
     );
 
     const sendTypes = ['.txt', '.html'];
-    const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg'];
+    const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg', '.svg'];
     await timeout(options?.delay ?? 0);
     if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
       res.sendFile(filePathInfo.filePath);
