@@ -116,6 +116,14 @@ if (arg === 'start') {
           mezzo.util.respondWithFile(route, req, res);
         },
       });
+      mezzo.route({
+        id: 'GET /respondWithSVGFile',
+        path: '/respondWithSVGFile',
+        method: 'GET',
+        callback: function (req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
+        },
+      });
     }
   })();
 }
