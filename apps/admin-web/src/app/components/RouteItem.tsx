@@ -99,7 +99,8 @@ const RouteItem = ({ route }: Props) => {
           >
             <Button
               onClick={() => {
-                fetch(`mezzo/api/route/${encodeURIComponent(route.id)}`, {
+                // TODO investigate why this works with ../
+                fetch(`../_admin/api/route/${encodeURIComponent(route.id)}`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
