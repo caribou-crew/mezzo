@@ -11,20 +11,24 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     res.json(mezzo.serialiazeRoutes());
   });
 
-  // setMockVariahttps://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356nt
-  app.post(`${MEZZO_API_PATH}/route/:id`, (req, res) => {
-    const routeId = req.params.id;
-    const variantId = req.body.variant;
-    const index = findRouteIndexById(routeId, mezzo.userRoutes);
-    const foundRoute = mezzo.userRoutes[index];
-    if (foundRoute) {
-      const updatedItem = foundRoute.setVariant(variantId);
-      mezzo.userRoutes[index] = updatedItem;
-    } else {
-      logger.warn(
-        `Could not find route for ${routeId} to set variant ${variantId}`
-      );
-    }
+  app.post(`${MEZZO_API_PATH}/routeVariants/set`, (req, res) => {
+    const payload: RouteVariants = req.body;
+
+    Object.keys(payload).forEach((routeId) => {
+      const variantId = payload[routeId];
+
+      const index = findRouteIndexById(routeId, mezzo.userRoutes);
+      const foundRoute = mezzo.userRoutes[index];
+      if (foundRoute) {
+        const updatedItem = foundRoute.setVariant(variantId);
+        mezzo.userRoutes[index] = updatedItem;
+      } else {
+        logger.warn(
+          `Could not find route for ${routeId} to set variant ${variantId}`
+        );
+      }
+    });
+
     res.sendStatus(200);
   });
 

@@ -81,13 +81,5 @@ export interface FileHandlerOptions {
   transpose?: any;
 }
 
-export interface MockVariantOptions {
-  mockPort?: number;
-  // fixture: string,
-  routeId: string;
-  variantId: string;
-  mezzoSessionId?: string;
-}
-
 // export type SessionPayload = Record<string, RouteVariants>; // Session to RotueVariants mapping
 export type RouteVariants = Record<string, string>; // route id to variant id mapping
