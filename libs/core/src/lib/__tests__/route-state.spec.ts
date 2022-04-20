@@ -33,19 +33,19 @@ describe('route-state', () => {
       .route({
         id: routeId,
         path: routePath,
-        handler(req, res) {
+        callback(req, res) {
           res.send({ variant: _default });
         },
       })
       .variant({
         id: variant1,
-        handler(req, res) {
+        callback(req, res) {
           res.send({ variant: variant1 });
         },
       })
       .variant({
         id: variant2,
-        handler(req, res) {
+        callback(req, res) {
           res.send({ variant: variant2 });
         },
       });

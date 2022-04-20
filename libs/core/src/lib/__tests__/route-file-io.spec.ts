@@ -172,14 +172,14 @@ describe('route-file-io', () => {
         .route({
           id: routeId2,
           path: routePath2,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         })
         .variant({
           id: variant1,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         });
       const res = await request.get(routePath2);
@@ -213,14 +213,14 @@ describe('route-file-io', () => {
         .route({
           id: routeId3Dynamic,
           path: routePath3Dynamic,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         })
         .variant({
           id: variant1,
-          handler(req, res) {
-            mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            mezzo.util.respondWithFile(route, req, res);
           },
         });
 
@@ -243,8 +243,8 @@ describe('route-file-io', () => {
       mezzo.route({
         id: routeId1,
         path: routePath1,
-        async handler(req, res) {
-          mezzo.util.respondWithFile(this, req, res, { delay });
+        async callback(req, res, route) {
+          mezzo.util.respondWithFile(route, req, res, { delay });
         },
       });
 
@@ -260,8 +260,8 @@ describe('route-file-io', () => {
       mezzo.route({
         id: routeId1,
         path: routePath1,
-        async handler(req, res) {
-          mezzo.util.respondWithFile(this, req, res);
+        async callback(req, res, route) {
+          mezzo.util.respondWithFile(route, req, res);
         },
       });
 
@@ -276,14 +276,14 @@ describe('route-file-io', () => {
         .route({
           id: routeId2,
           path: routePath2,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         })
         .variant({
           id: variant1,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         });
 
@@ -305,14 +305,14 @@ describe('route-file-io', () => {
         .route({
           id: routeId2,
           path: routePath2,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         })
         .variant({
           id: variant1,
-          handler(req, res) {
-            return mezzo.util.respondWithFile(this, req, res);
+          callback(req, res, route) {
+            return mezzo.util.respondWithFile(route, req, res);
           },
         });
 
