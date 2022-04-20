@@ -100,12 +100,12 @@ const RouteItem = ({ route }: Props) => {
             <Button
               onClick={() => {
                 // TODO investigate why this works with ../
-                fetch(`../_admin/api/route/${encodeURIComponent(route.id)}`, {
+                fetch(`../_admin/api/routeVariants/set`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({ variant: variant.id }),
+                  body: JSON.stringify({ [route.id]: variant.id }),
                 });
               }}
             >
