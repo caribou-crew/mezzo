@@ -1,8 +1,6 @@
 // npx tsc tools/executors/buildCoreWithWeb/impl
 
 import { ExecutorContext, runExecutor } from '@nrwl/devkit';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -34,11 +32,11 @@ export default async function echoExecutor(
   options: ExecutorOptions,
   context: ExecutorContext
 ): Promise<{ success: boolean }> {
-  console.log('Running executor 1');
+  console.log('Running admin-web to core executor');
 
   const buildClient = await runExecutor(
     { project: 'admin-web', target: 'build' },
-    {},
+    options,
     context
   );
 
