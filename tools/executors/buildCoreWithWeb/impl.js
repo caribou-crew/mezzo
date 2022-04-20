@@ -208,12 +208,12 @@ function echoExecutor(options, context) {
     return __generator(this, function (_c) {
       switch (_c.label) {
         case 0:
-          console.log('Running executor 1');
+          console.log('Running admin-web to core executor');
           return [
             4 /*yield*/,
             (0, devkit_1.runExecutor)(
               { project: 'admin-web', target: 'build' },
-              {},
+              options,
               context
             ),
           ];
