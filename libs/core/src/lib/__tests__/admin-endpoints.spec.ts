@@ -47,14 +47,6 @@ describe('admin-endpoints', () => {
     await mezzo.stop();
   });
 
-  describe('/admin', () => {
-    it('should have stubbed out admin site (move out of common)', async () => {
-      const res = await request.get('/mezzo');
-      expect(res.status).toBe(200);
-      expect(res.text).toBe('TODO HTML Site');
-    });
-  });
-
   describe('/_admin/routes', () => {
     it('should return all routes for admin GUI', async () => {
       await mezzo.setMockVariant({
