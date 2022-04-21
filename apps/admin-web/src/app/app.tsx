@@ -13,17 +13,16 @@ import {
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import RouteItem from './components/RouteItem';
 import Header from './components/Header';
+import { useSort } from './utils/useSort';
 
 type SortProperty = 'method' | 'path';
 export const App = () => {
-  const sortAsc = 1;
   const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
   const [displayedRoutes, setDisplayedRoutes] = useState<
     GetMezzoRoutesRouteData[]
   >([]);
-  const [sortedBy, setSortedBy] = useState('');
-  const [sortDirection, setSortDirection] = useState(sortAsc);
   const [selectedItem, setSelectedItem] = useState('');
+  const { sortBy, getSortDirection } = useSort();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,40 +36,20 @@ export const App = () => {
   }, []);
 
   const renderRoutelist = () => {
-    const listOfRoutes: JSX.Element[] = [];
-    if (Array.isArray(displayedRoutes) && displayedRoutes.length > 0) {
-      displayedRoutes.forEach((route) => {
-        listOfRoutes.push(
-          <RouteItem
-            route={route}
-            key={route.id}
-            selectedItem={selectedItem}
-            setSelectedItem={(id) => setSelectedItem(id)}
-          ></RouteItem>
-        );
-      });
-    }
-    return listOfRoutes;
-  };
-
-  const sortBy = (property: SortProperty) => {
-    let mySortDirection = sortDirection;
-    if (sortedBy === property) {
-      mySortDirection *= -1;
-      setSortDirection(mySortDirection);
-    } else {
-      setSortedBy(property);
-    }
-
-    const sortedRoutes = [...displayedRoutes].sort((a, b) =>
-      a?.[property] < b?.[property] ? -1 * mySortDirection : mySortDirection
-    );
-    setDisplayedRoutes(sortedRoutes);
+    return displayedRoutes.map((route) => (
+      <RouteItem
+        route={route}
+        key={route.id}
+        selectedItem={selectedItem}
+        setSelectedItem={(id) => setSelectedItem(id)}
+      ></RouteItem>
+    ));
   };
 
   const getSortIcon = (property: SortProperty) => {
-    if (sortedBy === property) {
-      return sortDirection === sortAsc ? <ArrowDropDown /> : <ArrowDropUp />;
+    const sortDirection = getSortDirection(property);
+    if (sortDirection != null) {
+      return sortDirection > 0 ? <ArrowDropDown /> : <ArrowDropUp />;
     } else {
       return null;
     }
@@ -104,14 +83,14 @@ export const App = () => {
         </Typography>
         <Button
           variant="outlined"
-          onClick={() => sortBy('method')}
+          onClick={() => setDisplayedRoutes(sortBy('method', displayedRoutes))}
           startIcon={getSortIcon('method')}
         >
           Method
         </Button>
         <Button
           variant="outlined"
-          onClick={() => sortBy('path')}
+          onClick={() => setDisplayedRoutes(sortBy('path', displayedRoutes))}
           startIcon={getSortIcon('path')}
         >
           Route Path

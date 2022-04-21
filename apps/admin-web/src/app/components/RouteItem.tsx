@@ -58,12 +58,13 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
   const _renderInteractiveButtons = () => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-        {selectedItem === route.id && (
+        {/* I think this is too much, I thought it was a button and was confused when it didn't work, accordion is enough */}
+        {/* {selectedItem === route.id && (
           <Visibility
             color="primary"
             sx={{ alignSelf: 'center', mr: 1 }}
           ></Visibility>
-        )}
+        )} */}
         <Button
           variant="contained"
           size="small"
