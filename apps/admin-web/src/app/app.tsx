@@ -4,26 +4,33 @@ import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
 import {
   TextField,
   Stack,
-  Autocomplete,
   Grid,
   Box,
   Container,
   Button,
   Typography,
 } from '@mui/material';
+import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import RouteItem from './components/RouteItem';
 import Header from './components/Header';
 
+type SortProperty = 'method' | 'path';
 export const App = () => {
+  const sortAsc = 1;
   const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
+  const [displayedRoutes, setDisplayedRoutes] = useState<
+    GetMezzoRoutesRouteData[]
+  >([]);
+  const [sortedBy, setSortedBy] = useState('');
+  const [sortDirection, setSortDirection] = useState(sortAsc);
   const [selectedItem, setSelectedItem] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/_admin/routes');
       const data = await response.json();
       setRoutes(data.routes);
+      setDisplayedRoutes(data.routes);
     };
 
     fetchData().catch(console.error);
@@ -31,8 +38,8 @@ export const App = () => {
 
   const renderRoutelist = () => {
     const listOfRoutes: JSX.Element[] = [];
-    if (Array.isArray(routes) && routes.length > 0) {
-      routes.forEach((route) => {
+    if (Array.isArray(displayedRoutes) && displayedRoutes.length > 0) {
+      displayedRoutes.forEach((route) => {
         listOfRoutes.push(
           <RouteItem
             route={route}
@@ -46,34 +53,39 @@ export const App = () => {
     return listOfRoutes;
   };
 
-  const sortByMethod = () => {
-    const sortedRoutes = [...routes].sort((a, b) =>
-      // @ts-ignore
-      a.method < b.method ? -1 : 1
-    );
-    setRoutes(sortedRoutes);
-  };
-
-  const sortByPath = () => {
-    // @ts-ignore
-    const sortedRoutes = [...routes].sort((a, b) => (a.path < b.path ? -1 : 1));
-    setRoutes(sortedRoutes);
-  };
-
-  const search = (value: any) => {
-    const routeIndex = [...routes].findIndex(
-      (routeData) => (value?.label ?? value) === routeData.path
-    );
-
-    if (routeIndex !== -1) {
-      const searchedRoute = routes[routeIndex];
-      routes.splice(routeIndex, 1);
-      routes.splice(0, 0, searchedRoute);
-      setRoutes(routes);
-      setSelectedItem(searchedRoute?.id);
+  const sortBy = (property: SortProperty) => {
+    let mySortDirection = sortDirection;
+    if (sortedBy === property) {
+      mySortDirection *= -1;
+      setSortDirection(mySortDirection);
     } else {
-      setErrorMessage('Unable to find the route.');
+      setSortedBy(property);
     }
+
+    const sortedRoutes = [...displayedRoutes].sort((a, b) =>
+      a?.[property] < b?.[property] ? -1 * mySortDirection : mySortDirection
+    );
+    setDisplayedRoutes(sortedRoutes);
+  };
+
+  const getSortIcon = (property: SortProperty) => {
+    if (sortedBy === property) {
+      return sortDirection === sortAsc ? <ArrowDropDown /> : <ArrowDropUp />;
+    } else {
+      return null;
+    }
+  };
+
+  const filter = (event: any) => {
+    const value = event?.target?.value;
+    const filteredRoutes = routes.filter((route) => {
+      return (
+        route?.id?.includes(value) ||
+        route?.label?.includes(value) ||
+        route?.method?.includes(value)
+      );
+    });
+    setDisplayedRoutes(filteredRoutes);
   };
 
   const _renderShowByContainer = () => {
@@ -90,10 +102,18 @@ export const App = () => {
         <Typography align="center" variant="h6">
           Sort By:
         </Typography>
-        <Button variant="outlined" onClick={() => sortByMethod()}>
+        <Button
+          variant="outlined"
+          onClick={() => sortBy('method')}
+          startIcon={getSortIcon('method')}
+        >
           Method
         </Button>
-        <Button variant="outlined" onClick={() => sortByPath()}>
+        <Button
+          variant="outlined"
+          onClick={() => sortBy('path')}
+          startIcon={getSortIcon('path')}
+        >
           Route Path
         </Button>
       </Container>
@@ -103,24 +123,14 @@ export const App = () => {
   const _renderAutoCompleteTextInput = () => {
     return (
       <Container>
-        <Autocomplete
-          disablePortal
-          freeSolo
-          id="combo-box-search"
-          options={routes.map((route) => ({
-            label: route.path,
-            id: route.id,
-          }))}
-          renderInput={(params) => <TextField {...params} label="Search..." />}
-          value=""
-          onChange={(_event, searchParam) => {
-            setErrorMessage('');
-            !!searchParam && search(searchParam);
-          }}
+        <TextField
+          fullWidth
+          id="outlined-search"
+          type="search"
+          label="Filter"
+          variant="outlined"
+          onChange={filter}
         />
-        {errorMessage !== '' && (
-          <Typography sx={{ pt: 1, color: 'red' }}>{errorMessage}</Typography>
-        )}
       </Container>
     );
   };

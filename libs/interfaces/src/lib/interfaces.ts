@@ -20,7 +20,7 @@ export interface GetMezzoRoutesRouteData {
   activeVariant: string; // default
   // input: {},
   label?: string; // /appium
-  method?: string; // GET
+  method: string; // GET
   path: string | RegExp; // /appium
   variants: GetMezzoRoutesVariantData[];
   // gitUrl: string; // This is custom, add custom scope with any key/value?
