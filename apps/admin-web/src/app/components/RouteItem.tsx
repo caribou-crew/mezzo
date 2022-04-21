@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, Paper, Typography, Box, Divider } from '@mui/material';
 
 import { red, purple, green, blue, orange } from '@mui/material/colors';
-import { Chip, Grid, Button } from '@mui/material';
-import { Bookmark, SpaceBar, Visibility } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { Bookmark, Visibility } from '@mui/icons-material';
 import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
-import { color } from '@mui/system';
 
 type Props = {
   route: GetMezzoRoutesRouteData;
@@ -17,12 +16,6 @@ type Props = {
 const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
   const [activeVariant, setActiveVariant] = useState('default');
 
-  const [selected, setSelected] = useState(false);
-
-  // const [colors, setColors] = useState({
-  //   backgroundColor: '',
-  //   textColor: '',
-  // });
   const getColors = () => {
     let backgroundColor;
     let textColor;
@@ -65,6 +58,12 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
   const _renderInteractiveButtons = () => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+        {selectedItem === route.id && (
+          <Visibility
+            color="primary"
+            sx={{ alignSelf: 'center', mr: 1 }}
+          ></Visibility>
+        )}
         <Button
           variant="contained"
           size="small"
@@ -101,7 +100,9 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             width: '100px',
           }}
         >
-          <Typography sx={{ color: 'white' }}>{route.method} </Typography>
+          <Typography sx={{ color: 'white', textAlign: 'center' }}>
+            {route.method}
+          </Typography>
         </Container>
       </Box>
     );
@@ -129,57 +130,59 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
         <Box>
           <Divider></Divider>
           <Container sx={{ pt: 2 }}>
-            <Typography variant="subtitle2">
+            <Typography variant="subtitle2">Details</Typography>
+            <Typography variant="body2">
               Route Id: {<span style={{ color: 'green' }}>{route.id}</span>}
             </Typography>
-            <Typography variant="subtitle2">
+            <Typography variant="body2">
               Active Variant Id:{' '}
               {<span style={{ color: 'green' }}>{activeVariant}</span>}
             </Typography>
-            <Box
+            <Typography variant="subtitle2" sx={{ pt: 2 }}>
+              Variants
+            </Typography>
+            <Container
+              disableGutters
               sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 1,
                 pb: 2,
-                pt: 2,
+                mt: 2,
+                ml: 8,
               }}
             >
               {route.variants.map((variant, index) => {
                 const activeRouteVariant = activeVariant === variant.id;
                 return (
-                  <Box key={variant.id}>
-                    <Button
-                      endIcon={activeRouteVariant && <Visibility />}
-                      variant="contained"
-                      sx={{
-                        backgroundColor: activeRouteVariant
-                          ? blue[900]
-                          : blue[300],
-                        minWidth: '200px',
-                      }}
-                      onClick={() => {
-                        console.log('variant', variant.id);
-                        // TODO investigate why this works with ../
-                        fetch(
-                          `../_admin/api/route/${encodeURIComponent(route.id)}`,
-                          {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ variant: variant.id }),
-                          }
-                        );
-                        setActiveVariant(variant.id);
-                      }}
-                    >
-                      {variant.label ?? variant.id}
-                    </Button>
-                  </Box>
+                  <Button
+                    key={variant.id}
+                    variant="contained"
+                    sx={{
+                      backgroundColor: activeRouteVariant
+                        ? blue[900]
+                        : blue[300],
+                      width: '40%',
+                      mr: '1%',
+                      mb: 1,
+                    }}
+                    onClick={() => {
+                      // TODO investigate why this works with ../
+                      fetch(
+                        `../_admin/api/route/${encodeURIComponent(route.id)}`,
+                        {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ variant: variant.id }),
+                        }
+                      );
+                      setActiveVariant(variant.id);
+                    }}
+                  >
+                    {variant.label ?? variant.id}
+                  </Button>
                 );
               })}
-            </Box>
+            </Container>
           </Container>
         </Box>
       )}

@@ -17,6 +17,7 @@ import Header from './components/Header';
 export const App = () => {
   const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
   const [selectedItem, setSelectedItem] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +30,6 @@ export const App = () => {
   }, []);
 
   const renderRoutelist = () => {
-    console.log('List Rendered');
     const listOfRoutes: JSX.Element[] = [];
     if (Array.isArray(routes) && routes.length > 0) {
       routes.forEach((route) => {
@@ -47,19 +47,33 @@ export const App = () => {
   };
 
   const sortByMethod = () => {
-    console.log('Original', routes);
-    // @ts-ignore
-    const sortedRoutes = routes.sort((a, b) => (a.method < b.method ? 1 : -1));
-    console.log('Sorted', sortedRoutes);
+    const sortedRoutes = [...routes].sort((a, b) =>
+      // @ts-ignore
+      a.method < b.method ? -1 : 1
+    );
     setRoutes(sortedRoutes);
   };
 
   const sortByPath = () => {
-    console.log('Original', routes);
     // @ts-ignore
-    const sortedRoutes = routes.sort((a, b) => (a.path < b.path ? -1 : 1));
-    console.log('Sorted', sortedRoutes);
+    const sortedRoutes = [...routes].sort((a, b) => (a.path < b.path ? -1 : 1));
     setRoutes(sortedRoutes);
+  };
+
+  const search = (value: any) => {
+    const routeIndex = [...routes].findIndex(
+      (routeData) => (value?.label ?? value) === routeData.path
+    );
+
+    if (routeIndex !== -1) {
+      const searchedRoute = routes[routeIndex];
+      routes.splice(routeIndex, 1);
+      routes.splice(0, 0, searchedRoute);
+      setRoutes(routes);
+      setSelectedItem(searchedRoute?.id);
+    } else {
+      setErrorMessage('Unable to find the route.');
+    }
   };
 
   const _renderShowByContainer = () => {
@@ -68,13 +82,13 @@ export const App = () => {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
+          alignItems: 'flex-start',
+          mt: 1.1,
           gap: 1,
         }}
       >
         <Typography align="center" variant="h6">
-          Show By:
+          Sort By:
         </Typography>
         <Button variant="outlined" onClick={() => sortByMethod()}>
           Method
@@ -98,7 +112,15 @@ export const App = () => {
             id: route.id,
           }))}
           renderInput={(params) => <TextField {...params} label="Search..." />}
+          value=""
+          onChange={(_event, searchParam) => {
+            setErrorMessage('');
+            !!searchParam && search(searchParam);
+          }}
         />
+        {errorMessage !== '' && (
+          <Typography sx={{ pt: 1, color: 'red' }}>{errorMessage}</Typography>
+        )}
       </Container>
     );
   };
