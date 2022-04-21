@@ -27,6 +27,48 @@ if (arg === 'start') {
           handler: function (req, res) {
             res.json({ someKey: 'B' });
           },
+        })
+        .variant({
+          id: 'variant2',
+          handler: function (req, res) {
+            res.json({ someKey: 'C' });
+          },
+        })
+        .variant({
+          id: 'variant3',
+          handler: function (req, res) {
+            res.json({ someKey: 'D' });
+          },
+        })
+        .variant({
+          id: 'variant4',
+          handler: function (req, res) {
+            res.json({ someKey: 'E' });
+          },
+        })
+        .variant({
+          id: 'variant5',
+          handler: function (req, res) {
+            res.json({ someKey: 'F' });
+          },
+        })
+        .variant({
+          id: 'variant6',
+          handler: function (req, res) {
+            res.json({ someKey: 'G' });
+          },
+        })
+        .variant({
+          id: 'variant7',
+          handler: function (req, res) {
+            res.json({ someKey: 'H' });
+          },
+        })
+        .variant({
+          id: 'variant8',
+          handler: function (req, res) {
+            res.json({ someKey: 'I' });
+          },
         });
       mezzo.route({
         id: 'POST /route2',
