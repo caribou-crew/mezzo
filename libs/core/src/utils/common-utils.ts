@@ -25,7 +25,7 @@ export class CommonUtils {
     options?: FileHandlerOptions
   ) => {
     logger.debug(
-      `respond with file for ${route?.method} at ${route?.path} of id ${route?.id}`
+      `respond with file for ${route?.method} ${route?.path} of id ${route?.id}`
     );
     if (route == null) {
       return res.status(500).send('Route must be defined to respond from file');
@@ -37,7 +37,8 @@ export class CommonUtils {
       this._fs,
       this._mockedDirectory,
       route,
-      req
+      req,
+      options?.filePath
     );
 
     const sendTypes = ['.txt', '.html'];

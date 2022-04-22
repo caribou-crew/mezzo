@@ -17,7 +17,7 @@ const filterActiveVariantsFromDirectory = async (
 ): Promise<string[]> => {
   const readDir = util.promisify(fs.readdir);
   const filesInDir = await readDir(dirLocation);
-  logger.debug('Files in dir: ', filesInDir);
+  logger.debug('Available variant files: ', filesInDir);
   return filesInDir.filter((name) => name.match(variant));
 };
 
@@ -25,10 +25,10 @@ export const getFilePathForRequest = async (
   fs: typeof nodeFs,
   mockedDirectory: string,
   route: Route,
-  req: Request | null
+  req?: Request,
+  userSpecifiedFilePath?: string
 ) => {
-  console.log('Got path of: ', route.path);
-  const endpoint = route.path.toString();
+  const endpoint = userSpecifiedFilePath || route.path.toString();
 
   const fileDir = path.join(
     mockedDirectory,
@@ -36,17 +36,20 @@ export const getFilePathForRequest = async (
     route.method.toUpperCase()
   );
   const variantId = route.getActiveVariantId(req);
-
-  logger.debug('Route Method: ', route.method);
-  logger.debug('Path: ', route.path);
-  logger.debug('Variant: ', variantId);
+  logger.debug(`respondWithFile
+    API Endpoint: ${route.method} ${endpoint} ${
+    userSpecifiedFilePath
+      ? `(FilePath Override of ${route.path.toString()})`
+      : ''
+  }
+    Scanning: ${fileDir}
+    Filtering on variant: ${variantId}`);
 
   const activeVariantFiles = await filterActiveVariantsFromDirectory(
     fs,
     fileDir,
     variantId
   );
-  logger.debug('Found variant matched files to use: ', activeVariantFiles);
 
   let fileToUse;
   if (activeVariantFiles.length === 0) {
@@ -65,9 +68,8 @@ export const getFilePathForRequest = async (
       return false;
     });
   }
-  logger.debug('Using file', fileToUse);
   const filePath = path.join(fileDir, fileToUse);
-  logger.debug('Full path: ', filePath);
+  logger.debug(`Fulfilling with: ${filePath}`);
 
   return {
     filePath,
