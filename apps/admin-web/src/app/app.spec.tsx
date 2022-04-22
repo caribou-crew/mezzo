@@ -22,6 +22,6 @@ describe('App', () => {
     });
 
     const { baseElement } = render(<App />);
-    await waitFor(() => getAllByText(baseElement, 'Search...'));
+    await waitFor(() => getAllByText(baseElement, 'Filter'));
   });
 });
