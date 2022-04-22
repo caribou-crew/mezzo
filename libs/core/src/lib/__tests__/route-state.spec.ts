@@ -77,7 +77,7 @@ describe('route-state', () => {
       await mezzo.setMockVariantForSession(sessionId, {
         [routeId]: variant2,
       });
-      await mezzo.setMockVariant({ routeId, variantId: variant2 });
+      await mezzo.setMockVariant({ [routeId]: variant2 });
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId)
@@ -128,7 +128,7 @@ describe('route-state', () => {
       await mezzo.setMockVariantForSession(sessionId, {
         [routeId]: variant1,
       });
-      await mezzo.setMockVariant({ routeId, variantId: variant2 });
+      await mezzo.setMockVariant({ [routeId]: variant2 });
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId);

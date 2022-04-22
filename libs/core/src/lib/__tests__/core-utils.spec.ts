@@ -112,7 +112,7 @@ describe('core-utils', () => {
       const res = await request.get(route1Path);
       expect(res.body).toEqual({ someKey: a1Default });
 
-      await mezzo.setMockVariant({ routeId: route1, variantId: variant1 });
+      await mezzo.setMockVariant({ [route1]: variant1 });
       const res2 = await request.get(route1Path);
       expect(res2.body).toEqual({ someKey: variant1 });
     });

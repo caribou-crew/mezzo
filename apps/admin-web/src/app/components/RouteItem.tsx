@@ -166,16 +166,13 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
                     }}
                     onClick={() => {
                       // TODO investigate why this works with ../
-                      fetch(
-                        `../_admin/api/route/${encodeURIComponent(route.id)}`,
-                        {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                          body: JSON.stringify({ variant: variant.id }),
-                        }
-                      );
+                      fetch(`../_admin/api/routeVariants/set`, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ [route.id]: variant.id }),
+                      });
                       setActiveVariant(variant.id);
                     }}
                   >

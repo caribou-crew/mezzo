@@ -5,7 +5,6 @@ import axios from 'axios';
 import { CommonUtils } from '../utils/common-utils';
 import {
   MiddlewareFn,
-  MockVariantOptions,
   RouteData,
   RouteVariants,
   ServerOptions,
@@ -117,14 +116,9 @@ export class Mezzo {
   };
 
   // https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356
-  public setMockVariant = async (options: MockVariantOptions) => {
-    const url = `http://localhost:${
-      this.port
-    }${MEZZO_API_PATH}/route/${encodeURIComponent(options.routeId)}`;
-
-    await axios.post(url, {
-      variant: options.variantId,
-    });
+  public setMockVariant = async (payload: RouteVariants) => {
+    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/routeVariants/set`;
+    await axios.post(url, payload);
   };
 
   public setMockVariantForSession = async (
