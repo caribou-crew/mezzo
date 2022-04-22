@@ -41,7 +41,7 @@ export default function Headers(props: Props) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ mr: 2, mb: 0.5, display: { xs: 'none', md: 'flex' } }}
           >
             {props.name}
           </Typography>
