@@ -87,6 +87,21 @@ describe('route-file-io', () => {
       expect(res.text).toEqual(defaultHtml);
     });
   });
+  describe('custom status code option', () => {
+    it.only('should read from file from user defined path', async () => {
+      mezzo.route({
+        id: routeId4Html,
+        path: routePath4Html,
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            code: 201,
+          });
+        },
+      });
+      const res = await request.get(routePath4Html);
+      expect(res.status).toBe(201);
+    });
+  });
   describe('html', () => {
     it('should read from file', async () => {
       mezzo.route({

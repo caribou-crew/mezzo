@@ -43,23 +43,24 @@ export class CommonUtils {
 
     const sendTypes = ['.txt', '.html'];
     const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg', '.svg'];
+    const statusCode = options?.code ?? 200;
     await timeout(options?.delay ?? 0);
     if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
-      res.sendFile(filePathInfo.filePath);
+      res.status(statusCode).sendFile(filePathInfo.filePath);
     } else {
       const rawFileData = await getFileContents(
         this._fs,
         filePathInfo.filePath
       );
       if (filePathInfo.mimeType === '.json') {
-        res.json(JSON.parse(rawFileData));
+        res.status(statusCode).json(JSON.parse(rawFileData));
       } else if (sendTypes.includes(filePathInfo.mimeType.toLowerCase())) {
-        res.send(rawFileData);
+        res.status(statusCode).send(rawFileData);
       } else {
         logger.warn(
           `Filetype ${filePathInfo.mimeType} not officially supported yet`
         );
-        res.send(rawFileData);
+        res.status(statusCode).send(rawFileData);
       }
     }
   };
