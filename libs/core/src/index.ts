@@ -70,14 +70,21 @@ if (arg === 'start') {
             res.json({ someKey: 'I' });
           },
         });
-      mezzo.route({
-        id: 'POST /route2',
-        path: '/route2',
-        method: 'POST',
-        handler: function (req, res) {
-          res.json({ someKey: 'C' });
-        },
-      });
+      mezzo
+        .route({
+          id: 'POST /route2',
+          path: '/route2',
+          method: 'POST',
+          handler: function (req, res) {
+            res.json({ someKey: 'C' });
+          },
+        })
+        .variant({
+          id: 'variant-with-a-very-descriptive-name-for-testing-purposes',
+          handler: function (req, res) {
+            res.json({ someKey: 'I' });
+          },
+        });
       mezzo.route({
         id: 'GET /route3',
         path: '/route3',
@@ -110,6 +117,21 @@ if (arg === 'start') {
           res.json({ someKey: '6' });
         },
       });
+      mezzo
+        .route({
+          id: 'GET /route7/serviceHandler/otherInformation/excessivelylongroutename',
+          path: '/route7/serviceHandler/otherInformation/excessivelylongroutename',
+          method: 'GET',
+          handler: function (req, res) {
+            res.json({ someKey: '7' });
+          },
+        })
+        .variant({
+          id: 'variant-with-a-very-descriptive-name-for-testing-purposes',
+          handler: function (req, res) {
+            res.json({ someKey: 'I' });
+          },
+        });
       mezzo.route({
         id: 'GET /respondWithJSONFile',
         path: '/respondWithJSONFile',

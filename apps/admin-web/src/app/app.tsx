@@ -23,6 +23,7 @@ export const App = () => {
   >([]);
   const [selectedItem, setSelectedItem] = useState('');
   const { sortBy, getSortDirection } = useSort();
+  const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +65,7 @@ export const App = () => {
         route?.method?.includes(value)
       );
     });
+    setFilterValue(value);
     setDisplayedRoutes(filteredRoutes);
   };
 
@@ -93,13 +95,20 @@ export const App = () => {
           onClick={() => setDisplayedRoutes(sortBy('path', displayedRoutes))}
           startIcon={getSortIcon('path')}
         >
-          Route Path
+          Path
+        </Button>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => setDisplayedRoutes(routes)}
+        >
+          Default
         </Button>
       </Container>
     );
   };
 
-  const _renderAutoCompleteTextInput = () => {
+  const _renderSearchInput = () => {
     return (
       <Container>
         <TextField
@@ -111,6 +120,18 @@ export const App = () => {
           onChange={filter}
         />
       </Container>
+    );
+  };
+
+  const _renderTypography = () => {
+    const hasBeenFiltered = filterValue !== '';
+    const displayText = hasBeenFiltered
+      ? 'No Results Found. Please confirm the value that has been entered is correct.'
+      : 'No Routes Available.';
+    return (
+      <Typography align="center" sx={{ mt: 10 }}>
+        {displayText}
+      </Typography>
     );
   };
 
@@ -135,11 +156,15 @@ export const App = () => {
               }}
             >
               {_renderShowByContainer()}
-              {_renderAutoCompleteTextInput()}
+              {_renderSearchInput()}
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Stack spacing={2}>{renderRoutelist()}</Stack>
+            {displayedRoutes.length > 0 ? (
+              <Stack spacing={2}>{renderRoutelist()}</Stack>
+            ) : (
+              _renderTypography()
+            )}
           </Grid>
         </Grid>
       </Box>
