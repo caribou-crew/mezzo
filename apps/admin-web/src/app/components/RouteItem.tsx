@@ -3,7 +3,7 @@ import { Container, Paper, Typography, Box, Divider } from '@mui/material';
 
 import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { Button } from '@mui/material';
-import { Bookmark, Visibility } from '@mui/icons-material';
+import { OpenInNew } from '@mui/icons-material';
 import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
 
@@ -74,7 +74,8 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             maxHeight: 30,
             alignSelf: 'center',
           }}
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation();
             if (route.method?.toUpperCase() === 'GET') {
               openInNewTab(route.path.toString());
             } else {
@@ -92,7 +93,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             }
           }}
         >
-          <Bookmark />
+          <OpenInNew />
         </Button>
         <Container
           sx={{
@@ -134,7 +135,12 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
       {selectedItem === route.id && (
         <Box>
           <Divider></Divider>
-          <Container sx={{ pt: 2 }}>
+          <Container
+            sx={{ pt: 2 }}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
             <Typography variant="subtitle2">Details</Typography>
             <Typography variant="body2">
               Route Id: {<span style={{ color: 'green' }}>{route.id}</span>}
