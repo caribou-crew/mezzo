@@ -1,3 +1,4 @@
+import { RouteOrVariantIcon } from '@caribou-crew/mezzo-interfaces';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { Route } from './models/route-model';
 
@@ -39,9 +40,10 @@ export interface VariantData extends RouteAndVariantData {
 export interface RouteAndVariantData {
   id: string;
   label?: string;
-  // callback?: any;
   callback?: CallbackType;
   handler?: HandlerType;
+  titleIcons?: RouteOrVariantIcon[];
+  icons?: RouteOrVariantIcon[];
 }
 
 export type HandlerType = RequestHandler;

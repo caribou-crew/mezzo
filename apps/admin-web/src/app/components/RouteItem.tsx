@@ -1,11 +1,21 @@
 import { useState } from 'react';
-import { Container, Paper, Typography, Box, Divider } from '@mui/material';
+import {
+  Container,
+  Button,
+  Paper,
+  Typography,
+  Box,
+  Divider,
+} from '@mui/material';
 
 import { red, purple, green, blue, orange } from '@mui/material/colors';
-import { Button } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
-import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
+import {
+  GetMezzoRoutesRouteData,
+  RouteOrVariantIcon,
+} from '@caribou-crew/mezzo-interfaces';
+import GetIcon from './GetIcon';
 
 type Props = {
   route: GetMezzoRoutesRouteData;
@@ -72,9 +82,38 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
     );
   };
 
+  const GetLinkableIcon = (icon: RouteOrVariantIcon) => {
+    if (icon.link) {
+      return (
+        <Button
+          onClick={(event) => {
+            event.stopPropagation();
+            icon?.link && openInNewTab(icon.link);
+          }}
+        >
+          <GetIcon {...icon} />
+        </Button>
+      );
+    } else {
+      return (
+        <Container
+          sx={{
+            width: 60,
+            alignSelf: 'center',
+          }}
+        >
+          <GetIcon {...icon} />
+        </Container>
+      );
+    }
+  };
+
   const _renderInteractiveButtons = () => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+        {route?.titleIcons?.map((icon) => (
+          <GetLinkableIcon {...icon} />
+        ))}
         {selectedItem === route.id && (
           <Button
             variant="contained"
@@ -200,6 +239,9 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
                     <Typography noWrap>
                       {variant.label ?? variant.id}
                     </Typography>
+                    {variant?.icons?.map((icon) => (
+                      <GetIcon style={{ marginLeft: 5 }} {...icon} />
+                    ))}
                   </Button>
                 );
               })}

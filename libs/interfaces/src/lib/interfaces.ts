@@ -6,14 +6,20 @@ export interface GetMezzoRoutes {
   routes: GetMezzoRoutesRouteData[];
 }
 
+export interface RouteOrVariantIcon {
+  name: string;
+  link?: string;
+  color?: string;
+}
+
+// TODO, this is almost a duplicate of core/src/types VariantData, address? This is the html facing API return value though
 export interface GetMezzoRoutesVariantData {
   id: string;
-  // isPACT: boolean, // TODO make this in custom variant section?
-  // isPostman: boolean,
-  custom?: Record<any, any>;
   label?: string;
-  // input
+  icons?: RouteOrVariantIcon[];
 }
+
+// TODO, this is almost a duplicate of core/src/types RouteData, address? This is the html facing API return value though
 export interface GetMezzoRoutesRouteData {
   id: string; // GET /appium
   actions?: [];
@@ -25,4 +31,5 @@ export interface GetMezzoRoutesRouteData {
   variants: GetMezzoRoutesVariantData[];
   // gitUrl: string; // This is custom, add custom scope with any key/value?
   custom?: Record<any, any>;
+  titleIcons?: RouteOrVariantIcon[];
 }
