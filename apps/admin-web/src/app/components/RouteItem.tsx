@@ -115,7 +115,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
         backgroundColor: getColors().backgroundColor,
         overflow: 'hidden',
       }}
-      onClick={() => setSelectedItem(route.id)}
+      onClick={() => route.id === selectedItem ? setSelectedItem("") : setSelectedItem(route.id)}
     >
       <Box
         sx={{
