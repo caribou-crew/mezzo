@@ -22,6 +22,8 @@ import {
   GetMezzoRoutesRouteData,
   GetMezzoRoutesVariantData,
 } from '@caribou-crew/mezzo-interfaces';
+import { addRedirect } from './redirect';
+import curry from '../utils/curry';
 
 export class Mezzo {
   public userRoutes: Route[] = [];
@@ -32,6 +34,7 @@ export class Mezzo {
   public util: CommonUtils;
   public mockedDirectory;
   public port;
+  public redirect;
 
   private _resetRouteState = () => (this.userRoutes.length = 0);
 
@@ -55,6 +58,7 @@ export class Mezzo {
 
   public start = async (options?: ServerOptions): Promise<Server> => {
     this.app = express();
+    this.redirect = curry(addRedirect)(this.app);
     this._resetRouteState();
     this.initializeMiddleware();
     addAdminEndpoints(this.app, this);
