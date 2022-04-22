@@ -1,9 +1,15 @@
 # Mezzo
 
-### Run dev project
+### Build & Run dev project
 
-- Build interfaces: `nx build interfaces`
-- Run dev project `npm run dev`
+- Install all dependencies
+  - `npm i`
+- Make sure you have nx installed globally
+  - `npm i -g nx`
+- Build interfaces
+  - `nx build interfaces`
+- Run dev project
+  - `npm run dev`
 
 In development web runs on `http://localhost:4200/` while API runs on `http://localhost:8000/`
 
