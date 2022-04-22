@@ -38,29 +38,30 @@ export class CommonUtils {
       this._mockedDirectory,
       route,
       req,
-      options?.filePath
+      options
     );
 
     const sendTypes = ['.txt', '.html'];
     const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg', '.svg'];
     const statusCode = options?.code ?? 200;
+    const headers = options?.headers ?? {};
     await timeout(options?.delay ?? 0);
     if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
-      res.status(statusCode).sendFile(filePathInfo.filePath);
+      res.status(statusCode).header(headers).sendFile(filePathInfo.filePath);
     } else {
       const rawFileData = await getFileContents(
         this._fs,
         filePathInfo.filePath
       );
       if (filePathInfo.mimeType === '.json') {
-        res.status(statusCode).json(JSON.parse(rawFileData));
+        res.status(statusCode).header(headers).json(JSON.parse(rawFileData));
       } else if (sendTypes.includes(filePathInfo.mimeType.toLowerCase())) {
-        res.status(statusCode).send(rawFileData);
+        res.status(statusCode).header(headers).send(rawFileData);
       } else {
         logger.warn(
           `Filetype ${filePathInfo.mimeType} not officially supported yet`
         );
-        res.status(statusCode).send(rawFileData);
+        res.status(statusCode).header(headers).send(rawFileData);
       }
     }
   };

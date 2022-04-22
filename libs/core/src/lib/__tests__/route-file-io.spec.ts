@@ -71,14 +71,14 @@ describe('route-file-io', () => {
     await mezzo.stop();
     vol.reset();
   });
-  describe('custom filePath option', () => {
-    it('should read from file from user defined path', async () => {
+  describe('custom options', () => {
+    it('should read from file from custom base dir', async () => {
       mezzo.route({
         id: 'GET /emptyPath',
         path: '/emptyPath',
         callback: (req, res, route) => {
           return mezzo.util.respondWithFile(route, req, res, {
-            filePath: routePath4Html,
+            baseDir: routePath4Html,
           });
         },
       });
@@ -86,9 +86,21 @@ describe('route-file-io', () => {
       expect(res.status).toBe(200);
       expect(res.text).toEqual(defaultHtml);
     });
-  });
-  describe('custom status code option', () => {
-    it.only('should read from file from user defined path', async () => {
+    it('should read exact file from custom filePath', async () => {
+      mezzo.route({
+        id: 'GET /emptyPath',
+        path: '/emptyPath',
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            filePath: '/somePath/terms.html/GET/variant1.html',
+          });
+        },
+      });
+      const res = await request.get(`/emptyPath`);
+      expect(res.status).toBe(200);
+      expect(res.text).toEqual(variantHtml);
+    });
+    it('should use custom code', async () => {
       mezzo.route({
         id: routeId4Html,
         path: routePath4Html,
@@ -100,6 +112,22 @@ describe('route-file-io', () => {
       });
       const res = await request.get(routePath4Html);
       expect(res.status).toBe(201);
+    });
+    it('should send custom headers', async () => {
+      mezzo.route({
+        id: routeId4Html,
+        path: routePath4Html,
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            headers: {
+              someKey: 'someValue',
+            },
+          });
+        },
+      });
+      const res = await request.get(routePath4Html);
+      expect(res.status).toBe(200);
+      expect(res.get('someKey')).toBe('someValue');
     });
   });
   describe('html', () => {
