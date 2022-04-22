@@ -49,52 +49,63 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
 
   const _renderRouteTitle = () => {
     return (
-      <Typography variant="body1" sx={{ p: 2 }} style={{ color: 'black' }}>
-        {route.path}
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          overflow: 'hidden',
+          p: 2,
+          gap: 2,
+        }}
+      >
+        <Typography noWrap variant="body1">
+          <b>Path: </b>
+          {route.path}
+        </Typography>
+        {selectedItem !== route.id && activeVariant !== 'default' && (
+          <Typography noWrap variant="body1">
+            <b>Variant: </b>
+            {activeVariant}
+          </Typography>
+        )}
+      </Box>
     );
   };
 
   const _renderInteractiveButtons = () => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-        {/* I think this is too much, I thought it was a button and was confused when it didn't work, accordion is enough */}
-        {/* {selectedItem === route.id && (
-          <Visibility
-            color="primary"
-            sx={{ alignSelf: 'center', mr: 1 }}
-          ></Visibility>
-        )} */}
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            mr: 2,
-            backgroundColor: getColors().textColor,
-            maxHeight: 30,
-            alignSelf: 'center',
-          }}
-          onClick={(event) => {
-            event.stopPropagation();
-            if (route.method?.toUpperCase() === 'GET') {
-              openInNewTab(route.path.toString());
-            } else {
-              // If not a POST, currently assumes response is always JSON, fetch via API then open
-              fetch(route.path.toString(), {
-                method: route.method,
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: route.method === 'GET' ? undefined : '{}',
-              })
-                .then((r) => r.json())
-                .then(openJsonInNewTab);
-            }
-          }}
-        >
-          <OpenInNew />
-        </Button>
+        {selectedItem === route.id && (
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              mr: 2,
+              backgroundColor: getColors().textColor,
+              maxHeight: 30,
+              alignSelf: 'center',
+            }}
+            onClick={() => {
+              if (route.method?.toUpperCase() === 'GET') {
+                openInNewTab(route.path.toString());
+              } else {
+                // If not a POST, currently assumes response is always JSON, fetch via API then open
+                fetch(route.path.toString(), {
+                  method: route.method,
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: route.method === 'GET' ? undefined : '{}',
+                })
+                  .then((r) => r.json())
+                  .then(openJsonInNewTab);
+              }
+            }}
+          >
+            <OpenInNew />
+          </Button>
+        )}
         <Container
           sx={{
             backgroundColor: getColors().textColor,
@@ -145,7 +156,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             <Typography variant="body2">
               Route Id: {<span style={{ color: 'green' }}>{route.id}</span>}
             </Typography>
-            <Typography variant="body2">
+            <Typography noWrap variant="body2">
               Active Variant Id:{' '}
               {<span style={{ color: 'green' }}>{activeVariant}</span>}
             </Typography>
@@ -186,7 +197,9 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
                       setActiveVariant(variant.id);
                     }}
                   >
-                    {variant.label ?? variant.id}
+                    <Typography noWrap>
+                      {variant.label ?? variant.id}
+                    </Typography>
                   </Button>
                 );
               })}
