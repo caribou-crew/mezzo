@@ -1,5 +1,5 @@
 import { createServer, Server } from 'http';
-import logger from '../utils/logger';
+import logger, { setLogLevel } from '../utils/logger';
 import axios from 'axios';
 
 import { CommonUtils } from '../utils/common-utils';
@@ -30,6 +30,9 @@ export class Mezzo {
   private app: express.Express;
   private fs;
   public util: CommonUtils;
+  public log = {
+    setLogLevel,
+  };
   public mockedDirectory;
   public port;
 
@@ -64,9 +67,6 @@ export class Mezzo {
     this.util = new CommonUtils(this.userRoutes, this.fs, this.mockedDirectory);
     this.sessionState = new SessionState();
     this.port = options?.port ?? DEFAULT_PORT;
-    // if (options.fsOverride) {
-    //   fs = options.fsOverride;
-    // }
 
     return new Promise((resolve) => {
       this.server = createServer(this.app).listen(this.port, () => {

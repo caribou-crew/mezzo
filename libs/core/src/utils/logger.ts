@@ -1,17 +1,3 @@
-// import './env';
-
-// import * as winston from 'winston';
-
-// const logger = winston.createLogger({
-//   level: 'info',
-//   format: winston.format.json(),
-//   transports: [new winston.transports.Console()],
-// });
-
-// export default logger;
-
-// import 'source-map-support/register';
-
 import * as tracer from 'tracer';
 import * as Colors from 'colors';
 
@@ -56,6 +42,22 @@ function getLogTimeStamp() {
     '.' +
     date.getMilliseconds()
   );
+}
+
+const LEVELS = ['warn', 'info', 'debug', 'error'];
+const LEVEL_OFF = 'off';
+
+export function setLogLevel(level: string) {
+  const levelLower = level.toLowerCase();
+  if (LEVELS.includes(levelLower)) {
+    tracer.setLevel(level);
+  } else if (levelLower === LEVEL_OFF) {
+    tracer.close();
+  } else {
+    throw new Error(
+      `${levelLower} is not a supported log level, use one of: ${LEVELS}`
+    );
+  }
 }
 
 const logLevel = process.env.LOG_LEVEL || 'info';
