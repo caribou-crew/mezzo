@@ -14,6 +14,7 @@ if (arg === 'start') {
     });
 
     if (process.env.NODE_ENV === 'development') {
+      mezzo.log.setLogLevel('debug');
       mezzo
         .route({
           id: 'GET /route1',
