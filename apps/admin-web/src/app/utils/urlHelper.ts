@@ -8,7 +8,7 @@ export const openInNewTab = (url: string): void => {
 };
 
 export const openJsonInNewTab = (data: object): void => {
-  const _data = JSON.stringify(data);
+  const _data = JSON.stringify(data, null, 2);
   const w = window.open();
   if (w) {
     w.document.write('<html><body><pre>' + _data + '</pre></body></html>');
