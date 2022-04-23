@@ -1,6 +1,6 @@
 import * as SuperTestRequest from 'supertest';
 import mezzo from '../core';
-import { X_REQUEST_SESSION } from '../../utils/constants';
+import { X_REQUEST_SESSION } from '@caribou-crew/mezzo-constants';
 
 describe('core-utils', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
