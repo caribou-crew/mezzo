@@ -1,3 +1,4 @@
+import { RouteOrVariantIcon } from '@caribou-crew/mezzo-interfaces';
 import { Request, RequestHandler } from 'express';
 import { CallbackType, HandlerType, RouteData, VariantData } from '../types';
 import {
@@ -45,9 +46,13 @@ export class Route {
   public method: string;
   public label: string;
   public path: string | RegExp;
+  public icons: RouteOrVariantIcon[];
+  public titleIcons: RouteOrVariantIcon[];
 
   constructor(routeData: RouteData, sessionState: SessionState) {
     this.routeData = routeData;
+    this.titleIcons = routeData.titleIcons;
+    this.icons = routeData.icons;
     this.id = routeData.id;
     this.method = getValidMethod(routeData.method);
     this.path = routeData.path;

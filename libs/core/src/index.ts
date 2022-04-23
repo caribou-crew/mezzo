@@ -4,6 +4,7 @@ import * as path from 'path';
 import { resourcesPath } from './utils/pathHelpers';
 
 const [arg] = process.argv.slice(2);
+
 if (arg === 'start') {
   const mockedDirectory = path.join(resourcesPath, 'mocked-data');
   (async () => {
@@ -15,16 +16,28 @@ if (arg === 'start') {
 
     if (process.env.NODE_ENV === 'development') {
       mezzo.log.setLogLevel('debug');
+      const dynamicFeed = { name: 'dynamic_feed' };
+      const link = { name: 'link' };
+      const database = { name: 'storage' };
       mezzo
         .route({
           id: 'GET /route1',
           path: '/route1',
+          titleIcons: [
+            {
+              name: 'github',
+              link: 'https://github.com/caribou-crew/mezzo',
+              color: 'action',
+            },
+          ],
+          icons: [database, dynamicFeed, link],
           handler: function (req, res) {
             res.json({ someKey: 'A' });
           },
         })
         .variant({
           id: 'variant1',
+          icons: [database],
           handler: function (req, res) {
             res.json({ someKey: 'B' });
           },

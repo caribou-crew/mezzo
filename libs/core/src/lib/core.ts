@@ -165,13 +165,15 @@ export class Mezzo {
       // add default variant
       variantRetVal.push({
         id: 'default',
+        icons: route.icons,
       });
 
       // add route specific variants
-      route.getVariants().forEach((value, key) => {
+      route.getVariants().forEach((variant, key) => {
         variantRetVal.push({
           id: key,
-          label: value.label,
+          label: variant.label,
+          icons: variant.icons,
         });
       });
 
@@ -181,6 +183,7 @@ export class Mezzo {
         path: route.path,
         variants: variantRetVal,
         activeVariant: route.getActiveVariant(),
+        titleIcons: route.titleIcons,
       };
     });
     return {
