@@ -138,7 +138,7 @@ export class Mezzo {
   };
 
   private getConnectionFromOptions(options?: ConnectionOptions) {
-    const protocol = options.useHttps ? 'https' : 'http';
+    const protocol = options?.useHttps ? 'https' : 'http';
     const hostname = options?.hostname ?? LOCAL_HOST;
     const port = options?.port ?? this.port;
     return `${protocol}://${hostname}:${port}${MEZZO_API_PATH}`;
