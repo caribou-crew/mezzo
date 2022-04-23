@@ -15,7 +15,7 @@ import { Route } from '../models/route-model';
 import { addAdminEndpoints, addAdminStaticSite } from './admin';
 import * as fsDefault from 'fs';
 import { SessionState } from '../models/sessionState';
-import { DEFAULT_PORT, MEZZO_API_PATH } from '../utils/constants';
+import { DEFAULT_PORT, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 
 import * as bodyParser from 'body-parser';
 import {
@@ -156,6 +156,20 @@ export class Mezzo {
   ) => {
     const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/update/${sessionId}`;
     await axios.post(url, payload);
+  };
+
+  public resetMockVariant = async () => {
+    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/routeVariants`;
+    await axios.delete(url);
+  };
+
+  public resetMockVariantForSession = async (sessionId: string) => {
+    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/${sessionId}`;
+    await axios.delete(url);
+  };
+  public resetMockVariantForAllSessions = async () => {
+    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState`;
+    await axios.delete(url);
   };
 
   public serialiazeRoutes = (): GetMezzoRoutes => {

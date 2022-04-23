@@ -117,4 +117,56 @@ describe('core-utils', () => {
       expect(res2.body).toEqual({ someKey: variant1 });
     });
   });
+
+  describe('.resetMockVariantForSession', () => {
+    it('should reset all variants for session', async () => {
+      await mezzo.setMockVariantForSession(sessionId, {
+        [route1]: variant1,
+        [route2]: variant2,
+      });
+
+      const res1 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res1.body.someKey).toBe(variant1);
+
+      await mezzo.resetMockVariantForSession(sessionId);
+
+      const res2 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res2.body.someKey).toBe(a1Default);
+    });
+  });
+  describe('.resetMockVariantForAllSessions', () => {
+    it('should reset all variants for session', async () => {
+      await mezzo.setMockVariantForSession(sessionId, {
+        [route1]: variant1,
+        [route2]: variant2,
+      });
+
+      const res1 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res1.body.someKey).toBe(variant1);
+
+      await mezzo.resetMockVariantForAllSessions();
+
+      const res2 = await request
+        .get(route1Path)
+        .set(X_REQUEST_SESSION, sessionId);
+      expect(res2.body.someKey).toBe(a1Default);
+    });
+  });
+  describe('.resetMockVariant', () => {
+    it('should reset all variants', async () => {
+      await mezzo.setMockVariant({ [route1]: variant1 });
+      const res1 = await request.get(route1Path);
+      expect(res1.body).toEqual({ someKey: variant1 });
+
+      await mezzo.resetMockVariant();
+      const res2 = await request.get(route1Path);
+      expect(res2.body).toEqual({ someKey: a1Default });
+    });
+  });
 });

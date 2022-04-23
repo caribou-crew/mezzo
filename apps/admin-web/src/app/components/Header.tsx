@@ -9,6 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 
 type Props = {
   name: string;
@@ -16,8 +17,12 @@ type Props = {
 
 export default function Headers(props: Props) {
   const navItems = [
-    { label: 'Reset State', path: '/state/reset' },
-    { label: 'Reset Route Settings', path: '/state/reset' },
+    {
+      label: 'Reset State',
+      path: `${MEZZO_API_PATH}/routeVariants`,
+      method: 'DELETE',
+    },
+    // { label: 'Reset Route Settings', path: '/state/reset' },
   ];
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -26,9 +31,14 @@ export default function Headers(props: Props) {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = (navItem?: { label: string; path: string }) => {
+  const handleCloseNavMenu = (navItem?: {
+    label: string;
+    path: string;
+    method: string;
+  }) => {
     if (navItem) {
-      fetch(navItem.path);
+      fetch(navItem.path, { method: navItem.method });
+      // TODO refresh UI now that server has reset the state of all variants back to default
     }
     setAnchorElNav(null);
   };
