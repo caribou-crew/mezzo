@@ -55,7 +55,7 @@ export type CallbackType = (
 export interface FileHandlerOptions {
   code?: number;
   headers?: Record<string, string | boolean>;
-  baseDir?: string; // Base directory to scan metod + variant for
+  baseDir?: string; // Base directory to scan method + variant for
   filePath?: string; // Exact file to read (bypasses variant logic)
   delay?: number;
   cookies?: any;
