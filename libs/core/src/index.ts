@@ -25,7 +25,7 @@ if (arg === 'start') {
           path: '/route1',
           titleIcons: [
             {
-              name: 'github',
+              name: 'code',
               link: 'https://github.com/caribou-crew/mezzo',
               color: 'action',
             },

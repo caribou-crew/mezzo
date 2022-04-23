@@ -24,7 +24,6 @@
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
     "express": "4.17.2",
-    "memoizee": "^0.4.15",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-is": "18.0.0",
