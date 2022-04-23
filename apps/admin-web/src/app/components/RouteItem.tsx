@@ -164,6 +164,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
       style={{
         backgroundColor: getColors().backgroundColor,
         overflow: 'hidden',
+        cursor: 'pointer',
       }}
       onClick={() =>
         route.id === selectedItem
