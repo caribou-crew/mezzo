@@ -124,10 +124,12 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             maxHeight: 30,
             alignSelf: 'center',
           }}
-          onClick={() => {
+          onClick={(event) => {
             if (route.method?.toUpperCase() === 'GET') {
+              event.stopPropagation();
               openInNewTab(route.path.toString());
             } else {
+              event.stopPropagation();
               // If not a POST, currently assumes response is always JSON, fetch via API then open
               fetch(route.path.toString(), {
                 method: route.method,
