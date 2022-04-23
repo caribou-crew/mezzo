@@ -62,6 +62,7 @@ describe('route-file-io', () => {
         './part1/:part2/GET/variant1.json': '{"variant": "other"}',
         './somePath/terms.html/GET/default.html': defaultHtml,
         './somePath/terms.html/GET/variant1.html': variantHtml,
+        './some/path/stuff_*.*.json/GET/default.json': '{"someJson": "stuff2"}',
       },
       mockedDirectory
     );
@@ -69,6 +70,65 @@ describe('route-file-io', () => {
   afterEach(async () => {
     await mezzo.stop();
     vol.reset();
+  });
+  describe('custom options', () => {
+    it('should read from file from custom base dir', async () => {
+      mezzo.route({
+        id: 'GET /emptyPath',
+        path: '/emptyPath',
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            baseDir: routePath4Html,
+          });
+        },
+      });
+      const res = await request.get(`/emptyPath`);
+      expect(res.status).toBe(200);
+      expect(res.text).toEqual(defaultHtml);
+    });
+    it('should read exact file from custom filePath', async () => {
+      mezzo.route({
+        id: 'GET /emptyPath',
+        path: '/emptyPath',
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            filePath: '/somePath/terms.html/GET/variant1.html',
+          });
+        },
+      });
+      const res = await request.get(`/emptyPath`);
+      expect(res.status).toBe(200);
+      expect(res.text).toEqual(variantHtml);
+    });
+    it('should use custom code', async () => {
+      mezzo.route({
+        id: routeId4Html,
+        path: routePath4Html,
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            code: 201,
+          });
+        },
+      });
+      const res = await request.get(routePath4Html);
+      expect(res.status).toBe(201);
+    });
+    it('should send custom headers', async () => {
+      mezzo.route({
+        id: routeId4Html,
+        path: routePath4Html,
+        callback: (req, res, route) => {
+          return mezzo.util.respondWithFile(route, req, res, {
+            headers: {
+              someKey: 'someValue',
+            },
+          });
+        },
+      });
+      const res = await request.get(routePath4Html);
+      expect(res.status).toBe(200);
+      expect(res.get('someKey')).toBe('someValue');
+    });
   });
   describe('html', () => {
     it('should read from file', async () => {
@@ -226,6 +286,26 @@ describe('route-file-io', () => {
       expect(res2.body).toEqual({ variant: 'other' });
       const res3 = await request.get('/part1/someDynamicPart2PathAlt');
       expect(res3.body).toEqual({ variant: 'other' });
+    });
+    it('should read file with highly dynamic path', async () => {
+      const wildcardRoute = `/some/path/stuff_*.*.json`;
+      const wildCardRouteId = `GET ${wildcardRoute}`;
+      let param1;
+      let param2;
+      mezzo.route({
+        id: wildCardRouteId,
+        path: wildcardRoute,
+        callback(req, res, route) {
+          param1 = req.params[0];
+          param2 = req.params[1];
+          return mezzo.util.respondWithFile(route, req, res);
+        },
+      });
+
+      const res = await request.get('/some/path/stuff_1.2.3.ios.json');
+      expect(res.status).toBe(200);
+      expect(param1).toBe('1.2.3');
+      expect(param2).toBe('ios');
     });
     it('should support delay', async () => {
       // TODO: This test doesn't actually mock timers out so it's not perfect, it just confirms setTimeout was called accurate, could be improved

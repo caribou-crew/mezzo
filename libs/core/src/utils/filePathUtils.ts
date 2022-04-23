@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as util from 'util';
 import * as nodeFs from 'fs';
 import { Request } from 'express';
+import { FileHandlerOptions } from '../types';
 
 export interface Variant {
   id: string;
@@ -17,7 +18,7 @@ const filterActiveVariantsFromDirectory = async (
 ): Promise<string[]> => {
   const readDir = util.promisify(fs.readdir);
   const filesInDir = await readDir(dirLocation);
-  logger.debug('Files in dir: ', filesInDir);
+  logger.debug('Available variant files: ', filesInDir);
   return filesInDir.filter((name) => name.match(variant));
 };
 
@@ -25,50 +26,60 @@ export const getFilePathForRequest = async (
   fs: typeof nodeFs,
   mockedDirectory: string,
   route: Route,
-  req: Request | null
+  req: Request | null,
+  options: FileHandlerOptions
 ) => {
-  console.log('Got path of: ', route.path);
-  const endpoint = route.path.toString();
+  const userSpecifiedBaseDir = options?.baseDir;
+  const userSpecifiedFileToUse = options?.filePath;
 
-  const fileDir = path.join(
-    mockedDirectory,
-    endpoint,
-    route.method.toUpperCase()
-  );
-  const variantId = route.getActiveVariantId(req);
+  let filePath;
 
-  logger.debug('Route Method: ', route.method);
-  logger.debug('Path: ', route.path);
-  logger.debug('Variant: ', variantId);
-
-  const activeVariantFiles = await filterActiveVariantsFromDirectory(
-    fs,
-    fileDir,
-    variantId
-  );
-  logger.debug('Found variant matched files to use: ', activeVariantFiles);
-
-  let fileToUse;
-  if (activeVariantFiles.length === 0) {
-    logger.error(`No files found at ${fileDir}`);
-  } else if (activeVariantFiles.length === 1) {
-    fileToUse = activeVariantFiles[0];
+  if (userSpecifiedFileToUse) {
+    logger.debug(
+      `respondWithFile blindly returning user defined <mockedDirectory>${userSpecifiedFileToUse}`
+    );
+    filePath = path.join(mockedDirectory, userSpecifiedFileToUse);
   } else {
-    fileExtensionOrder.some((fileExtension) => {
-      const fileIndex = activeVariantFiles.indexOf(
-        `${variantId}${fileExtension}`
-      );
-      if (fileIndex >= 0) {
-        fileToUse = activeVariantFiles[fileIndex];
-        return true;
-      }
-      return false;
-    });
-  }
-  logger.debug('Using file', fileToUse);
-  const filePath = path.join(fileDir, fileToUse);
-  logger.debug('Full path: ', filePath);
+    const baseDir = options?.baseDir || route.path.toString();
 
+    const fileDir = path.join(
+      mockedDirectory,
+      baseDir,
+      route.method.toUpperCase()
+    );
+    const variantId = route.getActiveVariantId(req);
+    logger.debug(`respondWithFile
+    Base Dir: <mockedDirectory>${baseDir} ${
+      userSpecifiedBaseDir ? `(User Specified)` : ''
+    }
+    Filtering on variant: ${variantId}`);
+
+    const activeVariantFiles = await filterActiveVariantsFromDirectory(
+      fs,
+      fileDir,
+      variantId
+    );
+
+    let fileToUse;
+    if (activeVariantFiles.length === 0) {
+      logger.error(`No files found at ${fileDir}`);
+    } else if (activeVariantFiles.length === 1) {
+      fileToUse = activeVariantFiles[0];
+    } else {
+      fileExtensionOrder.some((fileExtension) => {
+        const fileIndex = activeVariantFiles.indexOf(
+          `${variantId}${fileExtension}`
+        );
+        if (fileIndex >= 0) {
+          fileToUse = activeVariantFiles[fileIndex];
+          return true;
+        }
+        return false;
+      });
+    }
+    filePath = path.join(fileDir, fileToUse);
+    logger.debug(`Fulfilling with: ${filePath}`);
+  }
   return {
     filePath,
     mimeType: path.extname(filePath),

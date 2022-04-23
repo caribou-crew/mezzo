@@ -25,7 +25,7 @@ export class CommonUtils {
     options?: FileHandlerOptions
   ) => {
     logger.debug(
-      `respond with file for ${route?.method} at ${route?.path} of id ${route?.id}`
+      `respond with file for ${route?.method} ${route?.path} of id ${route?.id}`
     );
     if (route == null) {
       return res.status(500).send('Route must be defined to respond from file');
@@ -37,28 +37,31 @@ export class CommonUtils {
       this._fs,
       this._mockedDirectory,
       route,
-      req
+      req,
+      options
     );
 
     const sendTypes = ['.txt', '.html'];
     const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg', '.svg'];
+    const statusCode = options?.code ?? 200;
+    const headers = options?.headers ?? {};
     await timeout(options?.delay ?? 0);
     if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
-      res.sendFile(filePathInfo.filePath);
+      res.status(statusCode).header(headers).sendFile(filePathInfo.filePath);
     } else {
       const rawFileData = await getFileContents(
         this._fs,
         filePathInfo.filePath
       );
       if (filePathInfo.mimeType === '.json') {
-        res.json(JSON.parse(rawFileData));
+        res.status(statusCode).header(headers).json(JSON.parse(rawFileData));
       } else if (sendTypes.includes(filePathInfo.mimeType.toLowerCase())) {
-        res.send(rawFileData);
+        res.status(statusCode).header(headers).send(rawFileData);
       } else {
         logger.warn(
           `Filetype ${filePathInfo.mimeType} not officially supported yet`
         );
-        res.send(rawFileData);
+        res.status(statusCode).header(headers).send(rawFileData);
       }
     }
   };

@@ -52,34 +52,15 @@ export type CallbackType = (
   route: Route
 ) => Promise<any> | void;
 
-/**
- * Model representation of a route
- */
-// export interface RouteModel {
-//   id: string; // Unique ID given to a route
-//   method: string; // HTTP method of route
-//   path: string | RegExp; // Endpoint match of route, must be compatible with express
-//   variant: (v: VariantData) => RouteModel; // Adds a variant to the route
-//   variants: Map<string, VariantData>; // Map of key:value pairs of variant id to variant data
-//   setVariant: (id: string) => RouteModel; // Sets the variant for given route
-//   activeVariant: string; // Active variant id for route, or default
-//   processRequest: MiddlewareFn; // Executed when route is visited
-// }
-
-// export interface RespondWithFileOptions {
-//   code: number;
-//   headers: Record<string, string>;
-// }
-
 export interface FileHandlerOptions {
   code?: number;
   headers?: Record<string, string | boolean>;
-  filePath?: string;
+  baseDir?: string; // Base directory to scan method + variant for
+  filePath?: string; // Exact file to read (bypasses variant logic)
   delay?: number;
   cookies?: any;
   // TODO
   transpose?: any;
 }
 
-// export type SessionPayload = Record<string, RouteVariants>; // Session to RotueVariants mapping
 export type RouteVariants = Record<string, string>; // route id to variant id mapping

@@ -18,6 +18,41 @@ describe('route-express', () => {
   afterEach(async () => {
     await mezzo.stop();
   });
+  describe('async callback', () => {
+    it.only('works when callback is async', async () => {
+      mezzo.route({
+        id: 'someRoute',
+        path: '/someRoute',
+        callback: async (req, res) => {
+          res.json({ message: 'hi' });
+        },
+      });
+      const res = await request.get('/someRoute');
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ message: 'hi' });
+    });
+  });
+  describe('with query string', () => {
+    it('should interact with querystring params', async () => {
+      mezzo.route({
+        id: 'someRoute',
+        path: '/someRoute',
+        handler: (req, res) => {
+          if (req.query?.message === 'notHi') {
+            res.json({ message: 'bye' });
+          } else {
+            res.json({ message: 'hi' });
+          }
+        },
+      });
+      const res = await request.get('/someRoute');
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ message: 'hi' });
+
+      const res2 = await request.get('/someRoute?message=notHi');
+      expect(res2.body).toEqual({ message: 'bye' });
+    });
+  });
 
   describe('with regexp', () => {
     it('should read from default file with regex in path', async () => {
