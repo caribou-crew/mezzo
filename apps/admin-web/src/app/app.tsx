@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
+import { debounce } from 'lodash-es';
 
 import {
   TextField,
@@ -15,6 +16,7 @@ import RouteItem from './components/RouteItem';
 import Header from './components/Header';
 import { useSort } from './utils/useSort';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import stringSimilarity from 'string-similarity';
 
 type SortProperty = 'method' | 'path';
 export const App = () => {
@@ -24,7 +26,6 @@ export const App = () => {
   >([]);
   const [selectedItem, setSelectedItem] = useState('');
   const { sortBy, getSortDirection } = useSort();
-  const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +38,7 @@ export const App = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const renderRoutelist = () => {
+  const renderRouteList = () => {
     return displayedRoutes.map((route) => (
       <RouteItem
         route={route}
@@ -57,17 +58,17 @@ export const App = () => {
     }
   };
 
-  const filter = (event: any) => {
+  const sort = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event?.target?.value;
-    const filteredRoutes = routes.filter((route) => {
-      return (
-        route?.id?.includes(value) ||
-        route?.label?.includes(value) ||
-        route?.method?.includes(value)
-      );
-    });
-    setFilterValue(value);
-    setDisplayedRoutes(filteredRoutes);
+    console.count();
+    const compare = (a: string, b: string) =>
+      stringSimilarity.compareTwoStrings(a.toLowerCase(), b.toLowerCase());
+
+    const sortedRoutes = routes.sort(
+      (a, b) => compare(b.id, value) - compare(a.id, value)
+    );
+
+    setDisplayedRoutes(sortedRoutes);
   };
 
   const _renderShowByContainer = () => {
@@ -116,23 +117,11 @@ export const App = () => {
           fullWidth
           id="outlined-search"
           type="search"
-          label="Filter"
+          label="Search"
           variant="outlined"
-          onChange={filter}
+          onChange={debounce(sort, 500)}
         />
       </Container>
-    );
-  };
-
-  const _renderTypography = () => {
-    const hasBeenFiltered = filterValue !== '';
-    const displayText = hasBeenFiltered
-      ? 'No Results Found. Please confirm the value that has been entered is correct.'
-      : 'No Routes Available.';
-    return (
-      <Typography align="center" sx={{ mt: 10 }}>
-        {displayText}
-      </Typography>
     );
   };
 
@@ -161,11 +150,7 @@ export const App = () => {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            {displayedRoutes.length > 0 ? (
-              <Stack spacing={2}>{renderRoutelist()}</Stack>
-            ) : (
-              _renderTypography()
-            )}
+            <Stack spacing={2}>{renderRouteList()}</Stack>
           </Grid>
         </Grid>
       </Box>
