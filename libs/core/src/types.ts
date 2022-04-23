@@ -66,3 +66,12 @@ export interface FileHandlerOptions {
 }
 
 export type RouteVariants = Record<string, string>; // route id to variant id mapping
+
+/**
+ * Options used for set/update/reset mock variant util calls
+ */
+export interface ConnectionOptions {
+  useHttps?: boolean;
+  hostname?: string;
+  port?: number;
+}

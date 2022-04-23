@@ -25,7 +25,7 @@ if (arg === 'start') {
           path: '/api/food/meat',
           titleIcons: [
             {
-              name: 'github',
+              name: 'code',
               link: 'https://github.com/caribou-crew/mezzo',
               color: 'action',
             },
