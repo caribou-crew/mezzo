@@ -8,6 +8,7 @@ import {
   RouteData,
   RouteVariants,
   ServerOptions,
+  VariantData,
 } from '../types';
 import * as express from 'express';
 import { Route } from '../models/route-model';
@@ -27,6 +28,7 @@ import curry from '../utils/curry';
 
 export class Mezzo {
   public userRoutes: Route[] = [];
+  public globalVariants: VariantData[] = [];
   public sessionState: SessionState;
   private server: Server;
   private app: express.Express;
@@ -39,7 +41,10 @@ export class Mezzo {
   public port;
   public redirect;
 
-  private _resetRouteState = () => (this.userRoutes.length = 0);
+  private _resetRouteState = () => {
+    this.userRoutes.length = 0;
+    this.globalVariants.length = 0;
+  };
 
   private _addRouteToExpress = (myRoute: Route) => {
     this.app[myRoute.method.toLowerCase()](myRoute.path, <MiddlewareFn>((
@@ -117,6 +122,18 @@ export class Mezzo {
     this._addRouteToState(myRoute);
 
     return myRoute;
+  };
+
+  /**
+   * Adds variant to all existing routes
+   * Note: Routes added after this call will not have the global variant
+   * @param variantData
+   */
+  public addGlobalVariant = (variantData: VariantData) => {
+    this.globalVariants.push(variantData);
+    this.userRoutes.forEach((route) => {
+      route.variant(variantData);
+    });
   };
 
   // https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356

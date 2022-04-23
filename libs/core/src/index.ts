@@ -189,6 +189,14 @@ if (arg === 'start') {
           mezzo.util.respondWithFile(route, req, res);
         },
       });
+
+      mezzo.addGlobalVariant({
+        id: '500',
+        label: '500 error',
+        callback: function (req, res) {
+          res.sendStatus(500);
+        },
+      });
     }
   })();
 }
