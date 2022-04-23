@@ -16,7 +16,11 @@ import { Route } from '../models/route-model';
 import { addAdminEndpoints, addAdminStaticSite } from './admin';
 import * as fsDefault from 'fs';
 import { SessionState } from '../models/sessionState';
-import { DEFAULT_PORT, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import {
+  DEFAULT_PORT,
+  MEZZO_API_PATH,
+  LOCAL_HOST,
+} from '@caribou-crew/mezzo-constants';
 
 import * as bodyParser from 'body-parser';
 import {
@@ -174,28 +178,27 @@ export class Mezzo {
     await axios.post(url, payload);
   };
 
-  public resetMockVariant = async () => {
-    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/routeVariants`;
+  public resetMockVariant = async (options?: ConnectionOptions) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/routeVariants`;
     await axios.delete(url);
   };
 
-  public resetMockVariantForSession = async (sessionId: string) => {
-    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/${sessionId}`;
-    await axios.delete(url);
-  };
-
-  public resetMockVariantForAllSessions = async () => {
-    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState`;
-    await axios.delete(url);
-  };
-
-  public resetMockVariantWithSession = async (
+  public resetMockVariantForSession = async (
     sessionId: string,
     options?: ConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
-    const url = `${baseUri}/sessionVariantState/reset/${sessionId}`;
-    await axios.post(url);
+    const url = `${baseUri}/sessionVariantState/${sessionId}`;
+    await axios.delete(url);
+  };
+
+  public resetMockVariantForAllSessions = async (
+    options?: ConnectionOptions
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/sessionVariantState`;
+    await axios.delete(url);
   };
 
   public serialiazeRoutes = (): GetMezzoRoutes => {
