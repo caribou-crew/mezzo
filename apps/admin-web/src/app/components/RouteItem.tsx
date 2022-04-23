@@ -114,37 +114,35 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
         {route?.titleIcons?.map((icon) => (
           <GetLinkableIcon {...icon} />
         ))}
-        {selectedItem === route.id && (
-          <Button
-            variant="contained"
-            size="small"
-            sx={{
-              mr: 2,
-              backgroundColor: getColors().textColor,
-              maxHeight: 30,
-              alignSelf: 'center',
-            }}
-            onClick={() => {
-              if (route.method?.toUpperCase() === 'GET') {
-                openInNewTab(route.path.toString());
-              } else {
-                // If not a POST, currently assumes response is always JSON, fetch via API then open
-                fetch(route.path.toString(), {
-                  method: route.method,
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: route.method === 'GET' ? undefined : '{}',
-                })
-                  .then((r) => r.json())
-                  .then(openJsonInNewTab);
-              }
-            }}
-          >
-            <OpenInNew />
-          </Button>
-        )}
+        <Button
+          variant="contained"
+          size="small"
+          sx={{
+            mr: 2,
+            backgroundColor: getColors().textColor,
+            maxHeight: 30,
+            alignSelf: 'center',
+          }}
+          onClick={() => {
+            if (route.method?.toUpperCase() === 'GET') {
+              openInNewTab(route.path.toString());
+            } else {
+              // If not a POST, currently assumes response is always JSON, fetch via API then open
+              fetch(route.path.toString(), {
+                method: route.method,
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: route.method === 'GET' ? undefined : '{}',
+              })
+                .then((r) => r.json())
+                .then(openJsonInNewTab);
+            }
+          }}
+        >
+          <OpenInNew />
+        </Button>
         <Container
           sx={{
             backgroundColor: getColors().textColor,
