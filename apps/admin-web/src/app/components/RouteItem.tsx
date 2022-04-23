@@ -15,8 +15,8 @@ import {
   GetMezzoRoutesRouteData,
   RouteOrVariantIcon,
 } from '@caribou-crew/mezzo-interfaces';
-import GetIcon from './GetIcon';
-import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import DynamicIcon from './DynamicIcon';
+import VariantButton from './VariantButton';
 
 type Props = {
   route: GetMezzoRoutesRouteData;
@@ -92,7 +92,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             icon?.link && openInNewTab(icon.link);
           }}
         >
-          <GetIcon {...icon} />
+          <DynamicIcon {...icon} />
         </Button>
       );
     } else {
@@ -103,7 +103,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
             alignSelf: 'center',
           }}
         >
-          <GetIcon {...icon} />
+          <DynamicIcon {...icon} />
         </Container>
       );
     }
@@ -212,41 +212,15 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
                 ml: 8,
               }}
             >
-              {route.variants.map((variant, index) => {
-                const activeRouteVariant = activeVariant === variant.id;
-                return (
-                  <Button
-                    key={variant.id}
-                    variant="contained"
-                    sx={{
-                      backgroundColor: activeRouteVariant
-                        ? blue[900]
-                        : blue[300],
-                      width: '40%',
-                      mr: '1%',
-                      mb: 1,
-                    }}
-                    onClick={() => {
-                      // TODO investigate why this works with ../
-                      fetch(`../${MEZZO_API_PATH}/routeVariants/set`, {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ [route.id]: variant.id }),
-                      });
-                      setActiveVariant(variant.id);
-                    }}
-                  >
-                    <Typography noWrap>
-                      {variant.label ?? variant.id}
-                    </Typography>
-                    {variant?.icons?.map((icon) => (
-                      <GetIcon style={{ marginLeft: 5 }} {...icon} />
-                    ))}
-                  </Button>
-                );
-              })}
+              {route.variants.map((variant, index) => (
+                <VariantButton
+                  key={`${route.id}:${variant.id}`}
+                  activeVariant={activeVariant}
+                  setActiveVariant={setActiveVariant}
+                  route={route}
+                  variant={variant}
+                />
+              ))}
             </Container>
           </Container>
         </Box>
