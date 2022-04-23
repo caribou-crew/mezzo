@@ -3,7 +3,10 @@ import { fs, vol } from 'memfs';
 import mezzo from '../core';
 import * as path from 'path';
 import { resourcesPath } from '../../utils/pathHelpers';
-import { X_REQUEST_SESSION, X_REQUEST_VARIANT } from '../../utils/constants';
+import {
+  X_REQUEST_SESSION,
+  X_REQUEST_VARIANT,
+} from '@caribou-crew/mezzo-constants';
 
 describe('route-file-io', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;

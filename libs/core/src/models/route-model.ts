@@ -5,7 +5,7 @@ import {
   DEFAULT_VARIANT,
   X_REQUEST_SESSION,
   X_REQUEST_VARIANT,
-} from '../utils/constants';
+} from '@caribou-crew/mezzo-constants';
 import logger from '../utils/logger';
 import { getValidMethod } from '../utils/method-utils';
 import { SessionState } from './sessionState';

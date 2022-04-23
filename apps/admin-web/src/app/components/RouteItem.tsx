@@ -16,6 +16,7 @@ import {
   RouteOrVariantIcon,
 } from '@caribou-crew/mezzo-interfaces';
 import GetIcon from './GetIcon';
+import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 
 type Props = {
   route: GetMezzoRoutesRouteData;
@@ -224,7 +225,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
                     }}
                     onClick={() => {
                       // TODO investigate why this works with ../
-                      fetch(`../_admin/api/routeVariants/set`, {
+                      fetch(`../${MEZZO_API_PATH}/routeVariants/set`, {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',

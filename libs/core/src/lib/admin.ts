@@ -1,13 +1,13 @@
 import * as express from 'express';
 import { RouteVariants, ServerOptions } from '../types';
-import { MEZZO_API_PATH } from '../utils/constants';
+import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '../utils/logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo } from './core';
 import * as path from 'path';
 
 export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
-  app.get(`/_admin/routes`, (req, res) => {
+  app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
     res.json(mezzo.serialiazeRoutes());
   });
 
@@ -32,6 +32,13 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     res.sendStatus(200);
   });
 
+  app.delete(`${MEZZO_API_PATH}/routeVariants`, (req, res) => {
+    mezzo.userRoutes.forEach((route) => {
+      route.setVariant('default');
+    });
+    res.sendStatus(200);
+  });
+
   // setMockVariantWithSession https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L288-L315
   app.post(
     `${MEZZO_API_PATH}/sessionVariantState/set/:sessionId`,
@@ -53,6 +60,18 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     }
   );
 
+  // Wire up to CLI resetMockVariantWithSession https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L269-L286
+  app.delete(`${MEZZO_API_PATH}/sessionVariantState/:sessionId`, (req, res) => {
+    const sessionId = req.params.sessionId;
+    mezzo.sessionState.resetSessionVariantStateByKey(sessionId);
+    res.sendStatus(200);
+  });
+
+  app.delete(`${MEZZO_API_PATH}/sessionVariantState`, (req, res) => {
+    mezzo.sessionState.resetSessionVariantState();
+    res.sendStatus(200);
+  });
+
   // ===================================
   // NOT YET IMPLEMENTED
   // ===================================
@@ -67,17 +86,6 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     //TODO
     res.status(200).json({ message: 'reset' });
   });
-  app.post(`${MEZZO_API_PATH}/sessionVariantState/reset`, (req, res) => {
-    //TODO
-  });
-
-  // Wire up to CLI resetMockVariantWithSession https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L269-L286
-  app.post(
-    `${MEZZO_API_PATH}/sessionVariantState/reset/:sessionId`,
-    (req, res) => {
-      //TODO
-    }
-  );
 
   app.post(`${MEZZO_API_PATH}/input/reset`, (req, res) => {
     //TODO

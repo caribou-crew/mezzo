@@ -1,3 +1,4 @@
+import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import * as SuperTestRequest from 'supertest';
 import mezzo from '../core';
 
@@ -47,11 +48,11 @@ describe('admin-endpoints', () => {
     await mezzo.stop();
   });
 
-  describe('/_admin/routes', () => {
+  describe(`${MEZZO_API_PATH}/routes`, () => {
     it('should return all routes for admin GUI', async () => {
       await mezzo.setMockVariant({ [routeId]: variant1 });
 
-      const res = await request.get('/_admin/routes');
+      const res = await request.get(`${MEZZO_API_PATH}/routes`);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
         routes: [

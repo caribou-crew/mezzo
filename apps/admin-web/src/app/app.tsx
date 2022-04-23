@@ -14,6 +14,7 @@ import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import RouteItem from './components/RouteItem';
 import Header from './components/Header';
 import { useSort } from './utils/useSort';
+import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 
 type SortProperty = 'method' | 'path';
 export const App = () => {
@@ -27,7 +28,7 @@ export const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/_admin/routes');
+      const response = await fetch(`${MEZZO_API_PATH}/routes`);
       const data = await response.json();
       setRoutes(data.routes);
       setDisplayedRoutes(data.routes);
