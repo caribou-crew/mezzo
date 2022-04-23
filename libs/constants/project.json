@@ -1,0 +1,34 @@
+{
+  "root": "libs/constants",
+  "sourceRoot": "libs/constants/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/constants/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/constants"],
+      "options": {
+        "jestConfig": "libs/constants/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/constants",
+        "tsConfig": "libs/constants/tsconfig.lib.json",
+        "packageJson": "libs/constants/package.json",
+        "main": "libs/constants/src/index.ts",
+        "assets": ["libs/constants/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

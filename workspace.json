@@ -3,6 +3,7 @@
   "projects": {
     "admin-web": "apps/admin-web",
     "admin-web-e2e": "apps/admin-web-e2e",
+    "constants": "libs/constants",
     "core": "libs/core",
     "interfaces": "libs/interfaces"
   }
