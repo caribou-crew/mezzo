@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { CommonUtils } from '../utils/common-utils';
 import {
+  ConnectionOptions,
   MiddlewareFn,
   RouteData,
   RouteVariants,
@@ -136,25 +137,40 @@ export class Mezzo {
     });
   };
 
+  private getConnectionFromOptions(options?: ConnectionOptions) {
+    const protocol = options.useHttps ? 'https' : 'http';
+    const hostname = options?.hostname ?? LOCAL_HOST;
+    const port = options?.port ?? this.port;
+    return `${protocol}://${hostname}:${port}${MEZZO_API_PATH}`;
+  }
+
   // https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356
-  public setMockVariant = async (payload: RouteVariants) => {
-    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/routeVariants/set`;
+  public setMockVariant = async (
+    payload: RouteVariants,
+    options?: ConnectionOptions
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/routeVariants/set`;
     await axios.post(url, payload);
   };
 
   public setMockVariantForSession = async (
     sessionId: string,
-    payload: RouteVariants
+    payload: RouteVariants,
+    options?: ConnectionOptions
   ) => {
-    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/set/${sessionId}`;
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/sessionVariantState/set/${sessionId}`;
     await axios.post(url, payload);
   };
 
   public updateMockVariantForSession = async (
     sessionId: string,
-    payload: RouteVariants
+    payload: RouteVariants,
+    options?: ConnectionOptions
   ) => {
-    const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/update/${sessionId}`;
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/sessionVariantState/update/${sessionId}`;
     await axios.post(url, payload);
   };
 
@@ -167,9 +183,19 @@ export class Mezzo {
     const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState/${sessionId}`;
     await axios.delete(url);
   };
+
   public resetMockVariantForAllSessions = async () => {
     const url = `http://localhost:${this.port}${MEZZO_API_PATH}/sessionVariantState`;
     await axios.delete(url);
+  };
+
+  public resetMockVariantWithSession = async (
+    sessionId: string,
+    options?: ConnectionOptions
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/sessionVariantState/reset/${sessionId}`;
+    await axios.post(url);
   };
 
   public serialiazeRoutes = (): GetMezzoRoutes => {
