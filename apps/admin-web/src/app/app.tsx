@@ -26,6 +26,7 @@ export const App = () => {
   >([]);
   const [selectedItem, setSelectedItem] = useState('');
   const { sortBy, getSortDirection } = useSort();
+  const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +61,7 @@ export const App = () => {
 
   const sort = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event?.target?.value;
-    console.count();
+
     const compare = (a: string, b: string) =>
       stringSimilarity.compareTwoStrings(a.toLowerCase(), b.toLowerCase());
 
@@ -68,6 +69,7 @@ export const App = () => {
       (a, b) => compare(b.id, value) - compare(a.id, value)
     );
 
+    setFilterValue(value);
     setDisplayedRoutes(sortedRoutes);
   };
 
@@ -119,7 +121,7 @@ export const App = () => {
           type="search"
           label="Search"
           variant="outlined"
-          onChange={debounce(sort, 500)}
+          onChange={debounce(sort, 300)}
         />
       </Container>
     );
