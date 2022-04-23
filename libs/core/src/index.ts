@@ -90,7 +90,7 @@ if (arg === 'start') {
           path: '/route2',
           method: 'POST',
           handler: function (req, res) {
-            res.json({ someKey: 'C' });
+            res.json({ someKey: 'C', someOtherKey: 'D', yetAnotherKey: 'E' });
           },
         })
         .variant({
