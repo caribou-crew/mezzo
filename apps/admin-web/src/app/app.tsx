@@ -26,7 +26,7 @@ export const App = () => {
   >([]);
   const [selectedItem, setSelectedItem] = useState('');
   const { sortBy, getSortDirection } = useSort();
-  const [filterValue, setFilterValue] = useState('');
+  const [filterValues, setFilterValues] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +69,7 @@ export const App = () => {
       (a, b) => compare(b.id, value) - compare(a.id, value)
     );
 
-    setFilterValue(value);
+    setFilterValues(value); // TODO: investigate why deleting this will break search
     setDisplayedRoutes(sortedRoutes);
   };
 
