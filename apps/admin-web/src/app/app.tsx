@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
+import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
   TextField,
-  Stack,
   Grid,
   Box,
   Container,
@@ -37,14 +37,18 @@ export const App = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const renderRoutelist = () => {
+  const renderRouteList = () => {
     return displayedRoutes.map((route) => (
-      <RouteItem
-        route={route}
-        key={route.id}
-        selectedItem={selectedItem}
-        setSelectedItem={(id) => setSelectedItem(id)}
-      ></RouteItem>
+      <Flipped key={route.id} flipId={route.id}>
+        <div>
+          <RouteItem
+            route={route}
+            key={route.id}
+            selectedItem={selectedItem}
+            setSelectedItem={(id) => setSelectedItem(id)}
+          ></RouteItem>
+        </div>
+      </Flipped>
     ));
   };
 
@@ -162,7 +166,14 @@ export const App = () => {
           </Grid>
           <Grid item xs={12}>
             {displayedRoutes.length > 0 ? (
-              <Stack spacing={2}>{renderRoutelist()}</Stack>
+              <Flipper
+                flipKey={displayedRoutes.reduce(
+                  (prev, current) => prev + current.id,
+                  ''
+                )}
+              >
+                {renderRouteList()}
+              </Flipper>
             ) : (
               _renderTypography()
             )}
