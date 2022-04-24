@@ -192,6 +192,21 @@ var copyRecursiveSync = function (src, dest) {
     fs.copyFileSync(src, dest);
   }
 };
+var deleteFolderRecursive = function (directoryPath) {
+  if (fs.existsSync(directoryPath)) {
+    fs.readdirSync(directoryPath).forEach(function (file, index) {
+      var curPath = path.join(directoryPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // recurse
+        deleteFolderRecursive(curPath);
+      } else {
+        // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(directoryPath);
+  }
+};
 function echoExecutor(options, context) {
   var e_1, _a, e_2, _b;
   return __awaiter(this, void 0, void 0, function () {
@@ -319,6 +334,8 @@ function echoExecutor(options, context) {
             './dist/apps/admin-web',
             './dist/libs/core/src/public' // TODO this may have to change based on how app is built
           );
+          // delete dist/core/src/resources (2mb of unnecessary dev)
+          deleteFolderRecursive('./dist/libs/core/src/resources');
           return [2 /*return*/, { success: true }];
       }
     });

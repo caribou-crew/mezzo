@@ -18,7 +18,7 @@ This project was generated using [Nx](https://nx.dev).
 The only non-intuitive piece during building vs development is in development the admin website and core APIs exist on two separate ports by 2 separate projects.
 When building to publish to npm the web project is actually injected into the core project so that it is served by the same express server powering the core module.
 This is done under the hood by the `nx prepare core` step powered bythe buildCoreWithWeb/impl file.
-If changes are made to that file compile it `npx tsc tools/executors/buildCoreWithWeb/impl` via `npm build:executor`
+If changes are made to that file compile it `npx tsc tools/executors/buildCoreWithWeb/impl` via `npm run build:executor`. It may mention a couple tsc errors but confirm it compiles by running `git status` (the file `tools/executors/buildCoreWithWeb/impl.js` should be updated).
 
 # Publishing
 
