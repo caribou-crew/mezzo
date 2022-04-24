@@ -2,11 +2,18 @@
   "name": "mezzo",
   "version": "0.0.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caribou-crew/mezzo.git"
+  },
   "scripts": {
     "start": "nx serve",
-    "dev": "cross-env NODE_ENV=development nx run-many --target=serve --projects=core,admin-web",
-    "build": "cross-env NODE_ENV=production nx run-many --target=build --projects=core,admin-web",
+    "dev:serve": "cross-env NODE_ENV=development nx run-many --target=serve --projects=core,admin-web",
+    "dev": "npm run build:shared-libs && npm run dev:serve",
+    "build": "cross-env NODE_ENV=production nx run-many --all --target=build",
     "build:executor": "npx tsc tools/executors/buildCoreWithWeb/impl",
+    "build:shared-libs": "nx run-many --target=build --projects=constants,interfaces",
+    "build:core:prod": "cross-env NODE_ENV=production npm run build:shared-libs && nx prepare core",
     "test": "nx run-many --all --target=test --parallel",
     "clean": "rm -rf node_modules/ && npm install",
     "lintAll": "nx run-many --all --target=lint --parallel",

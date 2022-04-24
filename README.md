@@ -4,10 +4,6 @@
 
 - Install all dependencies
   - `npm i`
-- Make sure you have nx installed globally
-  - `npm i -g nx`
-- Build interfaces
-  - `nx build interfaces`
 - Run dev project
   - `npm run dev`
 
@@ -19,24 +15,16 @@ This project was generated using [Nx](https://nx.dev).
 
 # Building
 
-- `npm run build`
-  - Builds admin web and core projects
-- `nx prepare core`
-  - Injects admin web output into core.
-  - While not wired up at some point this way mezzo can serve the site while also serving the mock API
-  - Be sure any changes are built before you run `npm build:executor` aka `npx tsc tools/executors/buildCoreWithWeb/impl`
+The only non-intuitive piece during building vs development is in development the admin website and core APIs exist on two separate ports by 2 separate projects.
+When building to publish to npm the web project is actually injected into the core project so that it is served by the same express server powering the core module.
+This is done under the hood by the `nx prepare core` step powered bythe buildCoreWithWeb/impl file.
+If changes are made to that file compile it `npx tsc tools/executors/buildCoreWithWeb/impl` via `npm run build:executor`. It may mention a couple tsc errors but confirm it compiles by running `git status` (the file `tools/executors/buildCoreWithWeb/impl.js` should be updated).
 
 # Publishing
 
-Run `npm publish dist/libs/core --access public` from the root of the project
+Run `npm publish dist/libs/core --access public` from the root of the project.
 
-# Other Commands
+# Test
 
-- Run dev api and web
-  - `npm run dev`
-- Run tests for api
-  - `nx test core`
-- Serve only api
-  - `nx serve core`
-- Build the projects
-  - `npm run build`
+- Run tests
+  - `npm test`
