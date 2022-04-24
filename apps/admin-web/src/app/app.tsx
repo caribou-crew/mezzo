@@ -121,7 +121,7 @@ export const App = () => {
           type="search"
           label="Search"
           variant="outlined"
-          onChange={debounce(sort, 300)}
+          onChange={debounce(sort, 200)}
         />
       </Container>
     );
