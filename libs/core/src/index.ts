@@ -21,11 +21,11 @@ if (arg === 'start') {
       const database = { name: 'storage' };
       mezzo
         .route({
-          id: 'GET /route1',
-          path: '/route1',
+          id: 'GET /api/food/meat',
+          path: '/api/food/meat',
           titleIcons: [
             {
-              name: 'code',
+              name: 'github',
               link: 'https://github.com/caribou-crew/mezzo',
               color: 'action',
             },
@@ -86,8 +86,8 @@ if (arg === 'start') {
         });
       mezzo
         .route({
-          id: 'POST /route2',
-          path: '/route2',
+          id: 'POST /api/food/drink',
+          path: '/api/food/drink',
           method: 'POST',
           handler: function (req, res) {
             res.json({ someKey: 'C', someOtherKey: 'D', yetAnotherKey: 'E' });
@@ -100,32 +100,32 @@ if (arg === 'start') {
           },
         });
       mezzo.route({
-        id: 'GET /route3',
-        path: '/route3',
+        id: 'GET /api/food/drink/water',
+        path: '/api/food/drink/water',
         method: 'GET',
         handler: function (req, res) {
           res.json({ someKey: 'D' });
         },
       });
       mezzo.route({
-        id: 'PUT /route4',
-        path: '/route4',
+        id: 'PUT /api/food/drink/milk',
+        path: '/api/food/drink/milk',
         method: 'PUT',
         handler: function (req, res) {
           res.json({ someKey: '4' });
         },
       });
       mezzo.route({
-        id: 'DELETE /route5',
-        path: '/route5',
+        id: 'DELETE /api/food/fruit',
+        path: '/api/food/fruit',
         method: 'DELETE',
         handler: function (req, res) {
           res.json({ someKey: '5' });
         },
       });
       mezzo.route({
-        id: 'PATCH /route6',
-        path: '/route6',
+        id: 'PATCH /api/food/fruit/orange',
+        path: '/api/food/fruit/orange',
         method: 'PATCH',
         handler: function (req, res) {
           res.json({ someKey: '6' });
@@ -133,8 +133,8 @@ if (arg === 'start') {
       });
       mezzo
         .route({
-          id: 'GET /route7/serviceHandler/otherInformation/excessivelylongroutename',
-          path: '/route7/serviceHandler/otherInformation/excessivelylongroutename',
+          id: 'GET /api/food/fruit/orange/serviceHandler/otherInformation/excessivelylongroutename',
+          path: '/api/food/fruit/orange/serviceHandler/otherInformation/excessivelylongroutename',
           method: 'GET',
           handler: function (req, res) {
             res.json({ someKey: '7' });
