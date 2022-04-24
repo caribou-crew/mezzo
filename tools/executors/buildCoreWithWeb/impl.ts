@@ -28,6 +28,22 @@ var copyRecursiveSync = function (src, dest) {
   }
 };
 
+const deleteFolderRecursive = function (directoryPath) {
+  if (fs.existsSync(directoryPath)) {
+    fs.readdirSync(directoryPath).forEach((file, index) => {
+      const curPath = path.join(directoryPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // recurse
+        deleteFolderRecursive(curPath);
+      } else {
+        // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(directoryPath);
+  }
+};
+
 export default async function echoExecutor(
   options: ExecutorOptions,
   context: ExecutorContext
@@ -62,6 +78,9 @@ export default async function echoExecutor(
     './dist/apps/admin-web',
     './dist/libs/core/src/public' // TODO this may have to change based on how app is built
   );
+
+  // delete dist/core/src/resources (2mb of unnecessary dev)
+  deleteFolderRecursive('./dist/libs/core/src/resources');
 
   return { success: true };
 }

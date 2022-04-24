@@ -14,7 +14,7 @@ if (arg === 'start') {
       adminEndpoint: 'mezzo',
     });
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.USE_DUMMY_DATA === 'true') {
       mezzo.log.setLogLevel('debug');
       const dynamicFeed = { name: 'dynamic_feed' };
       const link = { name: 'link' };
