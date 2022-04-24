@@ -37,7 +37,7 @@ export const App = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const renderRoutelist = () => {
+  const renderRouteList = () => {
     return displayedRoutes.map((route) => (
       <Flipped key={route.id} flipId={route.id}>
         <div>
