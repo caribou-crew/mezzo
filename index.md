@@ -1,37 +1,42 @@
-## Welcome to GitHub Pages
+## Mezzo
 
-You can use the [editor on GitHub](https://github.com/caribou-crew/mezzo/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+An express powered mocking library that can serve up static or dynamic user mocks.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This documentation is a work in progress.
 
-### Markdown
+### Getting Started
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+```js
+import mezzo from `@caribou-crew/mezzo-core`;
 
-```markdown
-Syntax highlighted code block
+// start your mezzo server
+await mezzo.start({
+  port: 8000,
+  mockedDirectory
+});
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+// add your mocks
+mezzo
+  .route({
+    id: 'GET /route1',
+    path: '/route1',
+    callback: function (req, res) {
+      res.json({ someKey: 'A' });
+    },
+  })
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+### Variants
+Variants let you control the response of each mocked endpoint
 
-### Jekyll Themes
+### Sessions
+TODO
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/caribou-crew/mezzo/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Headers
 
-### Support or Contact
+### Admin UI
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Hosting remotely
+
+### Profiles
+
