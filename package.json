@@ -36,7 +36,6 @@
     "react-flip-toolkit": "^7.0.13",
     "react-is": "18.0.0",
     "regenerator-runtime": "0.13.7",
-    "string-similarity": "^4.0.4",
     "styled-jsx": "5.0.2",
     "tracer": "^1.1.5",
     "tslib": "^2.3.1"
