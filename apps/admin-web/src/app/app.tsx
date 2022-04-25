@@ -64,10 +64,12 @@ export const App = () => {
   const filter = (event: any) => {
     const value = event?.target?.value;
     const filteredRoutes = routes.filter((route) => {
+      const searchLower = value?.toLowerCase();
       return (
-        route?.id?.includes(value) ||
-        route?.label?.includes(value) ||
-        route?.method?.includes(value)
+        route?.id?.toLowerCase()?.includes(searchLower) ||
+        route?.label?.toLowerCase()?.includes(searchLower) ||
+        route?.method?.toLowerCase()?.includes(searchLower) ||
+        route?.path?.toString()?.toLowerCase()?.includes(searchLower)
       );
     });
     setFilterValue(value);
