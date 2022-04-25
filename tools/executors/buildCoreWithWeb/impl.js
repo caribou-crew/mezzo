@@ -282,8 +282,13 @@ function echoExecutor(options, context) {
           return [
             4 /*yield*/,
             (0, devkit_1.runExecutor)(
-              { project: 'core', target: 'build' },
-              {},
+              {
+                project: 'core',
+                target: 'build',
+              },
+              {
+                buildableProjectDepsInPackageJsonType: 'dependencies',
+              },
               context
             ),
           ];

@@ -63,8 +63,13 @@ export default async function echoExecutor(
   }
 
   const buildLib = await runExecutor(
-    { project: 'core', target: 'build' },
-    {},
+    {
+      project: 'core',
+      target: 'build',
+    },
+    {
+      buildableProjectDepsInPackageJsonType: 'dependencies',
+    },
     context
   );
 
