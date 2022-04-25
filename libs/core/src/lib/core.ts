@@ -223,6 +223,7 @@ export class Mezzo {
       return {
         id: route.id,
         method: route.method,
+        label: route.label,
         path: route.path,
         variants: variantRetVal,
         activeVariant: route.getActiveVariant(),
