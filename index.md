@@ -22,7 +22,7 @@ And on roadmap
 
 ## Admin UI
 The admin UI at `http://localhost:8000/mezzo` is great if using this locally to set routes and variants in global scope.  It has a handy GUI to set variants, make requests, and view responses.
-![Admin UI](/mezzo/assets/web-admin.png)
+![Admin UI](/mezzo/docs/assets/images/web-admin.png)
 
 ## Getting Started
 
