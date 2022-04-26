@@ -10,6 +10,9 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import HelpIcon from '@mui/icons-material/Help';
+import { openInNewTab } from '../utils/urlHelper';
 
 type Props = {
   name: string;
@@ -22,7 +25,11 @@ export default function Headers(props: Props) {
       path: `${MEZZO_API_PATH}/routeVariants`,
       method: 'DELETE',
     },
-    // { label: 'Reset Route Settings', path: '/state/reset' },
+    {
+      label: 'Reset Route Settings',
+      path: 'https://github.com/caribou-crew/mezzo',
+      method: 'GET',
+    },
   ];
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -101,7 +108,7 @@ export default function Headers(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            {props.name}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {navItems.map((navItem) => (
@@ -114,6 +121,30 @@ export default function Headers(props: Props) {
               </Button>
             ))}
           </Box>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={() =>
+              openInNewTab('https://github.com/caribou-crew/mezzo')
+            }
+            color="inherit"
+          >
+            <GitHubIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={() =>
+              openInNewTab('https://caribou-crew.github.io/mezzo/')
+            }
+            color="inherit"
+          >
+            <HelpIcon />
+          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>
