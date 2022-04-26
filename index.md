@@ -1,8 +1,28 @@
 # Mezzo
 
-Mezzo is REST API mocking library powered by Express.  The intended use case is to create a det
+Mezzo is REST API mocking library powered by Express.  
 
-This documentation is a work in progress.
+It has the following 
+
+- Web UI interface for manual testing/debugging
+- Variants: swap responses for REST API
+- Test Reuse: Execute the same test against mock or live servcie.
+- Parallel sessions: Support for single instance mock server for parallel processes.
+- Support for all file types: Auto evaluation of response file extension and mime type
+- Platform independent mocks: Mock any service irrespective of the language it is written in.
+- Server states: Ability to mock server state.
+- Manual tests: Ability to run tests manually against mock service
+- Service Faults: Team can simulate service faults deterministically.
+
+And on roadmap
+- Swagger integration: automatic mock creator for web-services with swagger definition.
+- Drop and respond: respond with a JSON file based on the route path automatically by dropping a repsonse file in the folder.
+- Share Mock data: Allows fetching of mocked data and routes from multiple Git repositories — allowing teams to share their mocked responses.
+- Dynamic Transposition of Mock Data (JSON): Ability to modify response on the fly.
+
+## Admin UI
+The admin UI at `http://localhost:8000/mezzo` is great if using this locally to set routes and variants in global scope.  It has a handy GUI to set variants, make requests, and view responses.
+![Admin UI](/mezzo/assets/web-admin.png)
 
 ## Getting Started
 
@@ -85,9 +105,6 @@ If you want to receive a specified variant without changing the route state simp
 ## Headers
 
 Per the prior sections, `x-request-variant` and `x-request-session` can be used to drive different behavior.
-
-## Admin UI
-The admin UI at `http://localhost:8000/mezzo` is great if using this locally to set routes and variants in global scope.  It has a handy GUI to set variants, make requests, and view responses.
 
 ## Hosting remotely
 At the end of the day this is a node API that can be hosted anywhere node runs.  A typical use case is to host remotely and have multiple consumers connect each defining their own session ID using variants to drive deterministic behavior.
