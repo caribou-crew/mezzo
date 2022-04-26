@@ -5,10 +5,14 @@ import logger from '../utils/logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo } from './core';
 import * as path from 'path';
+import { version } from '../../package.json';
 
 export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
-    res.json(mezzo.serialiazeRoutes());
+    res.json({
+      routes: mezzo.serialiazeRoutes(),
+      appVersion: version,
+    });
   });
 
   app.post(`${MEZZO_API_PATH}/routeVariants/set`, (req, res) => {

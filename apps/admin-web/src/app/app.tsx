@@ -19,6 +19,7 @@ import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 type SortProperty = 'method' | 'path';
 export const App = () => {
   const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
+  const [version, setVersion] = useState<string>('');
   const [displayedRoutes, setDisplayedRoutes] = useState<
     GetMezzoRoutesRouteData[]
   >([]);
@@ -31,6 +32,7 @@ export const App = () => {
       const response = await fetch(`${MEZZO_API_PATH}/routes`);
       const data = await response.json();
       setRoutes(data.routes);
+      setVersion(data.appVersion);
       setDisplayedRoutes(data.routes);
     };
 
@@ -179,6 +181,9 @@ export const App = () => {
             ) : (
               _renderTypography()
             )}
+            <Typography align="center" sx={{ mt: 5 }}>
+              v{version}
+            </Typography>
           </Grid>
         </Grid>
       </Box>
