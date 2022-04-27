@@ -88,6 +88,12 @@ if (arg === 'start') {
           id: 'POST /api/food/drink',
           path: '/api/food/drink',
           method: 'POST',
+          titleIcons: [
+            {
+              name: 'GitHub',
+              link: 'https://github.com/caribou-crew/mezzo',
+            },
+          ],
           handler: function (req, res) {
             res.json({ someKey: 'C', someOtherKey: 'D', yetAnotherKey: 'E' });
           },
