@@ -201,7 +201,7 @@ export class Mezzo {
     await axios.delete(url);
   };
 
-  public serialiazeRoutes = (): GetMezzoRoutes => {
+  public serialiazeRoutes = (): GetMezzoRoutesRouteData[] => {
     const routes: GetMezzoRoutesRouteData[] = this.userRoutes.map((route) => {
       const variantRetVal: GetMezzoRoutesVariantData[] = [];
 
@@ -230,9 +230,7 @@ export class Mezzo {
         titleIcons: route.titleIcons,
       };
     });
-    return {
-      routes,
-    };
+    return routes;
   };
 }
 

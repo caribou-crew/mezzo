@@ -54,36 +54,34 @@ describe('admin-endpoints', () => {
 
       const res = await request.get(`${MEZZO_API_PATH}/routes`);
       expect(res.status).toBe(200);
-      expect(res.body).toEqual({
-        routes: [
-          {
-            activeVariant: 'variant1',
-            id: routeId,
-            method: 'GET',
-            path: routePath,
-            variants: [
-              {
-                id: _default,
-              },
-              {
-                id: variant1,
-                label: `${variant1}-label`,
-              },
-            ],
-          },
-          {
-            activeVariant: _default,
-            id: 'POST /route2',
-            method: 'POST',
-            path: 'route2',
-            variants: [
-              {
-                id: _default,
-              },
-            ],
-          },
-        ],
-      });
+      expect(res.body.routes).toEqual([
+        {
+          activeVariant: 'variant1',
+          id: routeId,
+          method: 'GET',
+          path: routePath,
+          variants: [
+            {
+              id: _default,
+            },
+            {
+              id: variant1,
+              label: `${variant1}-label`,
+            },
+          ],
+        },
+        {
+          activeVariant: _default,
+          id: 'POST /route2',
+          method: 'POST',
+          path: 'route2',
+          variants: [
+            {
+              id: _default,
+            },
+          ],
+        },
+      ]);
     });
   });
 });
