@@ -1,4 +1,7 @@
-import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import {
+  DEFAULT_VARIANT_CATEGORY,
+  MEZZO_API_PATH,
+} from '@caribou-crew/mezzo-constants';
 import * as SuperTestRequest from 'supertest';
 import mezzo from '../core';
 
@@ -62,9 +65,11 @@ describe('admin-endpoints', () => {
           path: routePath,
           variants: [
             {
+              category: DEFAULT_VARIANT_CATEGORY,
               id: _default,
             },
             {
+              category: DEFAULT_VARIANT_CATEGORY,
               id: variant1,
               label: `${variant1}-label`,
             },
@@ -77,6 +82,7 @@ describe('admin-endpoints', () => {
           path: 'route2',
           variants: [
             {
+              category: DEFAULT_VARIANT_CATEGORY,
               id: _default,
             },
           ],

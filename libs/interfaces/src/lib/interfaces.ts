@@ -17,10 +17,7 @@ export interface GetMezzoRoutesVariantData {
   id: string;
   label?: string;
   icons?: RouteOrVariantIcon[];
-  category?: {
-    name: string;
-    order: number;
-  };
+  category?: string;
 }
 
 // TODO, this is almost a duplicate of core/src/types RouteData, address? This is the html facing API return value though
@@ -37,3 +34,8 @@ export interface GetMezzoRoutesRouteData {
   custom?: Record<any, any>;
   titleIcons?: RouteOrVariantIcon[];
 }
+
+export type VariantCategory = {
+  name: string;
+  order: number;
+};
