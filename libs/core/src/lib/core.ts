@@ -148,6 +148,9 @@ export class Mezzo {
    * @param variantData
    */
   public addGlobalVariant = (variantData: VariantData) => {
+    if (variantData.category == null) {
+      variantData.category = GLOBAL_VARIANT_CATEGORY;
+    }
     this.globalVariants.push(variantData);
     this.userRoutes.forEach((route) => {
       route.variant(variantData);
