@@ -12,6 +12,7 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     res.json({
       routes: mezzo.serialiazeRoutes(),
       appVersion: version,
+      variantCategories: mezzo.variantCategories,
     });
   });
 

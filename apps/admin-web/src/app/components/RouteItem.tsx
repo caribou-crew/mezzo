@@ -14,17 +14,24 @@ import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import {
   GetMezzoRoutesRouteData,
   RouteOrVariantIcon,
+  VariantCategory,
 } from '@caribou-crew/mezzo-interfaces';
 import DynamicIcon from './DynamicIcon';
-import VariantButton from './VariantButton';
+import RouteCategory from './RouteCategory';
 
 type Props = {
   route: GetMezzoRoutesRouteData;
   selectedItem: string;
   setSelectedItem: (id: string) => void;
+  variantCategories: VariantCategory[];
 };
 
-const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
+const RouteItem = ({
+  route,
+  selectedItem,
+  setSelectedItem,
+  variantCategories,
+}: Props) => {
   const [activeVariant, setActiveVariant] = useState('default');
 
   const getColors = () => {
@@ -189,7 +196,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
         <Box>
           <Divider></Divider>
           <Container
-            sx={{ pt: 2 }}
+            sx={{ pt: 2, pb: 2 }}
             onClick={(event) => {
               event.stopPropagation();
             }}
@@ -202,27 +209,14 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
               Active Variant Id:{' '}
               {<span style={{ color: 'green' }}>{activeVariant}</span>}
             </Typography>
-            <Typography variant="subtitle2" sx={{ pt: 2 }}>
-              Variants
-            </Typography>
-            <Container
-              disableGutters
-              sx={{
-                pb: 2,
-                mt: 2,
-                ml: 8,
-              }}
-            >
-              {route.variants.map((variant, index) => (
-                <VariantButton
-                  key={`${route.id}:${variant.id}`}
-                  activeVariant={activeVariant}
-                  setActiveVariant={setActiveVariant}
-                  route={route}
-                  variant={variant}
-                />
-              ))}
-            </Container>
+            {variantCategories.map((category) => (
+              <RouteCategory
+                category={category}
+                route={route}
+                activeVariant={activeVariant}
+                setActiveVariant={setActiveVariant}
+              />
+            ))}
           </Container>
         </Box>
       )}

@@ -1,4 +1,7 @@
-import { RouteOrVariantIcon } from '@caribou-crew/mezzo-interfaces';
+import {
+  RouteOrVariantIcon,
+  VariantCategory,
+} from '@caribou-crew/mezzo-interfaces';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { Route } from './models/route-model';
 
@@ -19,6 +22,7 @@ export interface ServerOptions {
   adminEndpoint?: string;
   mockedDirectory?: string;
   fsOverride?: any;
+  variantCategories?: VariantCategory[];
 }
 
 /**
@@ -44,6 +48,7 @@ export interface RouteAndVariantData {
   handler?: HandlerType;
   titleIcons?: RouteOrVariantIcon[];
   icons?: RouteOrVariantIcon[];
+  category?: string;
 }
 
 export type HandlerType = RequestHandler;

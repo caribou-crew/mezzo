@@ -20,11 +20,12 @@ import {
   DEFAULT_PORT,
   MEZZO_API_PATH,
   LOCAL_HOST,
+  DEFAULT_VARIANT_CATEGORY,
+  GLOBAL_VARIANT_CATEGORY,
 } from '@caribou-crew/mezzo-constants';
 
 import * as bodyParser from 'body-parser';
 import {
-  GetMezzoRoutes,
   GetMezzoRoutesRouteData,
   GetMezzoRoutesVariantData,
 } from '@caribou-crew/mezzo-interfaces';
@@ -45,6 +46,7 @@ export class Mezzo {
   public mockedDirectory;
   public port;
   public redirect;
+  public variantCategories;
 
   private _resetRouteState = () => {
     this.userRoutes.length = 0;
@@ -81,6 +83,17 @@ export class Mezzo {
     this.util = new CommonUtils(this.userRoutes, this.fs, this.mockedDirectory);
     this.sessionState = new SessionState();
     this.port = options?.port ?? DEFAULT_PORT;
+    this.variantCategories = [
+      {
+        name: DEFAULT_VARIANT_CATEGORY,
+        order: 0,
+      },
+      {
+        name: GLOBAL_VARIANT_CATEGORY,
+        order: 100,
+      },
+      ...(options?.variantCategories || []),
+    ];
 
     return new Promise((resolve) => {
       this.server = createServer(this.app).listen(this.port, () => {
@@ -209,6 +222,7 @@ export class Mezzo {
       variantRetVal.push({
         id: 'default',
         icons: route.icons,
+        category: route.category,
       });
 
       // add route specific variants
@@ -217,6 +231,7 @@ export class Mezzo {
           id: key,
           label: variant.label,
           icons: variant.icons,
+          category: variant?.category,
         });
       });
 

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { GetMezzoRoutesRouteData } from '@caribou-crew/mezzo-interfaces';
+import {
+  GetMezzoRoutesRouteData,
+  VariantCategory,
+} from '@caribou-crew/mezzo-interfaces';
 import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
@@ -20,6 +23,9 @@ type SortProperty = 'method' | 'path';
 export const App = () => {
   const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
   const [version, setVersion] = useState<string>('');
+  const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
+    []
+  );
   const [displayedRoutes, setDisplayedRoutes] = useState<
     GetMezzoRoutesRouteData[]
   >([]);
@@ -33,6 +39,12 @@ export const App = () => {
       const data = await response.json();
       setRoutes(data.routes);
       setVersion(data.appVersion);
+      setVariantCategories(
+        (data.variantCategories || []).sort(
+          (a: VariantCategory, b: VariantCategory) =>
+            (a?.order ?? 0) - (b?.order ?? 0)
+        )
+      );
       setDisplayedRoutes(data.routes);
     };
 
@@ -45,6 +57,7 @@ export const App = () => {
         <div>
           <RouteItem
             route={route}
+            variantCategories={variantCategories}
             key={route.id}
             selectedItem={selectedItem}
             setSelectedItem={(id) => setSelectedItem(id)}

@@ -3,6 +3,7 @@ import { Request, RequestHandler } from 'express';
 import { CallbackType, HandlerType, RouteData, VariantData } from '../types';
 import {
   DEFAULT_VARIANT,
+  DEFAULT_VARIANT_CATEGORY,
   X_REQUEST_SESSION,
   X_REQUEST_VARIANT,
 } from '@caribou-crew/mezzo-constants';
@@ -48,8 +49,10 @@ export class Route {
   public path: string | RegExp;
   public icons: RouteOrVariantIcon[];
   public titleIcons: RouteOrVariantIcon[];
+  public category: string;
 
   constructor(routeData: RouteData, sessionState: SessionState) {
+    this.category = routeData.category ?? DEFAULT_VARIANT_CATEGORY;
     this.routeData = routeData;
     this.titleIcons = routeData.titleIcons;
     this.icons = routeData.icons;
@@ -116,6 +119,9 @@ export class Route {
    * @returns
    */
   public variant = (variantData: VariantData) => {
+    if (variantData.category == null) {
+      variantData.category = DEFAULT_VARIANT_CATEGORY;
+    }
     this._variants.set(variantData.id, variantData);
     logger.info(
       `Adding to variants, size of ${this.path} is now ${this._variants.size}`

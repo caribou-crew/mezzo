@@ -2,8 +2,11 @@ import mezzo from './lib/core';
 export default mezzo;
 import * as path from 'path';
 import { resourcesPath } from './utils/pathHelpers';
+import { GLOBAL_VARIANT_CATEGORY } from '@caribou-crew/mezzo-constants';
 
 const [arg] = process.argv.slice(2);
+
+const customCategory = 'Approved Test Variant';
 
 if (arg === 'start') {
   const mockedDirectory = path.join(resourcesPath, 'mocked-data');
@@ -12,6 +15,12 @@ if (arg === 'start') {
       port: 8000,
       mockedDirectory,
       adminEndpoint: 'mezzo',
+      variantCategories: [
+        {
+          name: customCategory,
+          order: -1,
+        },
+      ],
     });
 
     if (process.env.USE_DUMMY_DATA === 'true') {
@@ -46,6 +55,7 @@ if (arg === 'start') {
           handler: function (req, res) {
             res.json({ someKey: 'C' });
           },
+          category: customCategory,
         })
         .variant({
           id: 'variant3',
@@ -211,6 +221,7 @@ if (arg === 'start') {
       mezzo.addGlobalVariant({
         id: '500',
         label: '500 error',
+        category: GLOBAL_VARIANT_CATEGORY,
         callback: function (req, res) {
           res.sendStatus(500);
         },
