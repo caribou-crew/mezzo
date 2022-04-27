@@ -1,14 +1,11 @@
 import { Container, Typography } from '@mui/material';
 
-import {
-  GetMezzoRoutesRouteData,
-  VariantCategory,
-} from '@caribou-crew/mezzo-interfaces';
+import { RouteItemType, VariantCategory } from '@caribou-crew/mezzo-interfaces';
 import VariantButton from './VariantButton';
 
 type Props = {
   category: VariantCategory;
-  route: GetMezzoRoutesRouteData;
+  route: RouteItemType;
   activeVariant: string;
   setActiveVariant: (arg0: string) => void;
 };

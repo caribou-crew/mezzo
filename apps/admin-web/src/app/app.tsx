@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  GetMezzoRoutesRouteData,
-  VariantCategory,
-} from '@caribou-crew/mezzo-interfaces';
+import { RouteItemType, VariantCategory } from '@caribou-crew/mezzo-interfaces';
 import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
@@ -21,14 +18,12 @@ import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 
 type SortProperty = 'method' | 'path';
 export const App = () => {
-  const [routes, setRoutes] = useState<GetMezzoRoutesRouteData[]>([]);
+  const [routes, setRoutes] = useState<RouteItemType[]>([]);
   const [version, setVersion] = useState<string>('');
   const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
     []
   );
-  const [displayedRoutes, setDisplayedRoutes] = useState<
-    GetMezzoRoutesRouteData[]
-  >([]);
+  const [displayedRoutes, setDisplayedRoutes] = useState<RouteItemType[]>([]);
   const [selectedItem, setSelectedItem] = useState('');
   const { sortBy, getSortDirection } = useSort();
   const [filterValue, setFilterValue] = useState('');

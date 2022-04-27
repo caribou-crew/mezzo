@@ -1,19 +1,21 @@
 import * as express from 'express';
-import { RouteVariants, ServerOptions } from '../types';
+import { RouteVariants, MezzoStartOptions } from '../types';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '../utils/logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo } from './core';
 import * as path from 'path';
 import { version } from '../../package.json';
+import { GetRoutesResponse } from '@caribou-crew/mezzo-interfaces';
 
 export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
-    res.json({
+    const response: GetRoutesResponse = {
       routes: mezzo.serialiazeRoutes(),
       appVersion: version,
       variantCategories: mezzo.variantCategories,
-    });
+    };
+    res.json(response);
   });
 
   app.post(`${MEZZO_API_PATH}/routeVariants/set`, (req, res) => {
@@ -99,7 +101,7 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
 
 export const addAdminStaticSite = (
   app: express.Express,
-  options?: ServerOptions
+  options?: MezzoStartOptions
 ) => {
   app.use(
     `/${options?.adminEndpoint ?? 'mezzo'}`,

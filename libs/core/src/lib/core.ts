@@ -4,12 +4,12 @@ import axios from 'axios';
 
 import { CommonUtils } from '../utils/common-utils';
 import {
-  ConnectionOptions,
+  ServerConnectionOptions,
   MiddlewareFn,
-  RouteData,
+  RouteInputData,
   RouteVariants,
-  ServerOptions,
-  VariantData,
+  MezzoStartOptions,
+  VariantInputData,
 } from '../types';
 import * as express from 'express';
 import { Route } from '../models/route-model';
@@ -26,15 +26,16 @@ import {
 
 import * as bodyParser from 'body-parser';
 import {
-  GetMezzoRoutesRouteData,
-  GetMezzoRoutesVariantData,
+  RouteItemType,
+  VariantCategory,
+  VariantItem,
 } from '@caribou-crew/mezzo-interfaces';
 import { addRedirect } from './redirect';
 import curry from '../utils/curry';
 
 export class Mezzo {
   public userRoutes: Route[] = [];
-  public globalVariants: VariantData[] = [];
+  public globalVariants: VariantInputData[] = [];
   public sessionState: SessionState;
   private server: Server;
   private app: express.Express;
@@ -46,7 +47,7 @@ export class Mezzo {
   public mockedDirectory;
   public port;
   public redirect;
-  public variantCategories;
+  public variantCategories: VariantCategory[] = [];
 
   private _resetRouteState = () => {
     this.userRoutes.length = 0;
@@ -71,7 +72,7 @@ export class Mezzo {
     this.app.use(bodyParser.json({ limit: '5mb' }));
   };
 
-  public start = async (options?: ServerOptions): Promise<Server> => {
+  public start = async (options?: MezzoStartOptions): Promise<Server> => {
     this.app = express();
     this.redirect = curry(addRedirect)(this.app);
     this._resetRouteState();
@@ -128,7 +129,7 @@ export class Mezzo {
    * @param routeData
    * @returns
    */
-  public route = (routeData: RouteData): Route => {
+  public route = (routeData: RouteInputData): Route => {
     if (this.app == undefined) {
       logger.error(
         'You have not yet initialied the app, please start before adding routes'
@@ -147,7 +148,7 @@ export class Mezzo {
    * Note: Routes added after this call will not have the global variant
    * @param variantData
    */
-  public addGlobalVariant = (variantData: VariantData) => {
+  public addGlobalVariant = (variantData: VariantInputData) => {
     if (variantData.category == null) {
       variantData.category = GLOBAL_VARIANT_CATEGORY;
     }
@@ -157,7 +158,7 @@ export class Mezzo {
     });
   };
 
-  private getConnectionFromOptions(options?: ConnectionOptions) {
+  private getConnectionFromOptions(options?: ServerConnectionOptions) {
     const protocol = options?.useHttps ? 'https' : 'http';
     const hostname = options?.hostname ?? LOCAL_HOST;
     const port = options?.port ?? this.port;
@@ -167,7 +168,7 @@ export class Mezzo {
   // https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356
   public setMockVariant = async (
     payload: RouteVariants,
-    options?: ConnectionOptions
+    options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/routeVariants/set`;
@@ -177,7 +178,7 @@ export class Mezzo {
   public setMockVariantForSession = async (
     sessionId: string,
     payload: RouteVariants,
-    options?: ConnectionOptions
+    options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState/set/${sessionId}`;
@@ -187,14 +188,14 @@ export class Mezzo {
   public updateMockVariantForSession = async (
     sessionId: string,
     payload: RouteVariants,
-    options?: ConnectionOptions
+    options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState/update/${sessionId}`;
     await axios.post(url, payload);
   };
 
-  public resetMockVariant = async (options?: ConnectionOptions) => {
+  public resetMockVariant = async (options?: ServerConnectionOptions) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/routeVariants`;
     await axios.delete(url);
@@ -202,7 +203,7 @@ export class Mezzo {
 
   public resetMockVariantForSession = async (
     sessionId: string,
-    options?: ConnectionOptions
+    options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState/${sessionId}`;
@@ -210,16 +211,16 @@ export class Mezzo {
   };
 
   public resetMockVariantForAllSessions = async (
-    options?: ConnectionOptions
+    options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState`;
     await axios.delete(url);
   };
 
-  public serialiazeRoutes = (): GetMezzoRoutesRouteData[] => {
-    const routes: GetMezzoRoutesRouteData[] = this.userRoutes.map((route) => {
-      const variantRetVal: GetMezzoRoutesVariantData[] = [];
+  public serialiazeRoutes = (): RouteItemType[] => {
+    const routes: RouteItemType[] = this.userRoutes.map((route) => {
+      const variantRetVal: VariantItem[] = [];
 
       // add default variant
       variantRetVal.push({

@@ -6,18 +6,9 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { Route } from './models/route-model';
 
 /**
- * Express middleware function signature
- */
-export type MiddlewareFn = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void;
-
-/**
  * Server options used when starting mezzo
  */
-export interface ServerOptions {
+export interface MezzoStartOptions {
   port: number | string;
   adminEndpoint?: string;
   mockedDirectory?: string;
@@ -28,32 +19,32 @@ export interface ServerOptions {
 /**
  * Input provided when creating a new route
  */
-export interface RouteData extends RouteAndVariantData {
+export interface RouteInputData extends RouteAndVariantInputData {
   method?: string;
   path: string | RegExp;
 }
 /**
  * Input provided when creating a new variant
  */
-export interface VariantData extends RouteAndVariantData {
+export interface VariantInputData extends RouteAndVariantInputData {
   variantLabel?: string;
 }
 /**
  * Shared interface between route and variant data
  */
-export interface RouteAndVariantData {
+export interface RouteAndVariantInputData {
   id: string;
   label?: string;
-  callback?: CallbackType;
-  handler?: HandlerType;
+  callback?: CallbackFnType;
+  handler?: HandlerFnType;
   titleIcons?: RouteOrVariantIcon[];
   icons?: RouteOrVariantIcon[];
   category?: string;
 }
 
-export type HandlerType = RequestHandler;
+export type HandlerFnType = RequestHandler;
 
-export type CallbackType = (
+export type CallbackFnType = (
   req: Request,
   res: Response,
   route: Route
@@ -65,18 +56,29 @@ export interface FileHandlerOptions {
   baseDir?: string; // Base directory to scan method + variant for
   filePath?: string; // Exact file to read (bypasses variant logic)
   delay?: number;
-  cookies?: any;
-  // TODO
-  transpose?: any;
 }
 
+// TODO figure out if using route variants or mezzo variant[]
 export type RouteVariants = Record<string, string>; // route id to variant id mapping
+export interface MezzoVariant {
+  routeID: string;
+  variantID: string;
+}
 
 /**
  * Options used for set/update/reset mock variant util calls
  */
-export interface ConnectionOptions {
+export interface ServerConnectionOptions {
   useHttps?: boolean;
   hostname?: string;
   port?: number;
 }
+
+/**
+ * Express middleware function signature
+ */
+export type MiddlewareFn = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => void;

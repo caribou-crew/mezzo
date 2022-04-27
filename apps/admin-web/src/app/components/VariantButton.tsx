@@ -1,8 +1,5 @@
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import {
-  GetMezzoRoutesRouteData,
-  GetMezzoRoutesVariantData,
-} from '@caribou-crew/mezzo-interfaces';
+import { RouteItemType, VariantItem } from '@caribou-crew/mezzo-interfaces';
 import { Button, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import DynamicIcon from './DynamicIcon';
@@ -10,8 +7,8 @@ import DynamicIcon from './DynamicIcon';
 type Props = {
   activeVariant: string;
   setActiveVariant: (id: string) => void;
-  route: GetMezzoRoutesRouteData;
-  variant: GetMezzoRoutesVariantData;
+  route: RouteItemType;
+  variant: VariantItem;
 };
 export default function VariantButton(props: Props) {
   const { route, variant, activeVariant, setActiveVariant } = props;

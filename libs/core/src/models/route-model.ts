@@ -1,6 +1,11 @@
 import { RouteOrVariantIcon } from '@caribou-crew/mezzo-interfaces';
 import { Request, RequestHandler } from 'express';
-import { CallbackType, HandlerType, RouteData, VariantData } from '../types';
+import {
+  CallbackFnType,
+  HandlerFnType,
+  RouteInputData,
+  VariantInputData,
+} from '../types';
 import {
   DEFAULT_VARIANT,
   DEFAULT_VARIANT_CATEGORY,
@@ -13,8 +18,11 @@ import { SessionState } from './sessionState';
 
 export class Route {
   private _activeVariant = 'default';
-  private _variants: Map<string, VariantData> = new Map<string, VariantData>();
-  private routeData: RouteData;
+  private _variants: Map<string, VariantInputData> = new Map<
+    string,
+    VariantInputData
+  >();
+  private routeData: RouteInputData;
   private sessionState: SessionState;
 
   public getVariants() {
@@ -51,7 +59,7 @@ export class Route {
   public titleIcons: RouteOrVariantIcon[];
   public category: string;
 
-  constructor(routeData: RouteData, sessionState: SessionState) {
+  constructor(routeData: RouteInputData, sessionState: SessionState) {
     this.category = routeData.category ?? DEFAULT_VARIANT_CATEGORY;
     this.routeData = routeData;
     this.titleIcons = routeData.titleIcons;
@@ -70,8 +78,8 @@ export class Route {
    * @param next
    */
   public processRequest: RequestHandler = (req, res, next) => {
-    let callback: CallbackType;
-    let handler: HandlerType;
+    let callback: CallbackFnType;
+    let handler: HandlerFnType;
 
     const activeVariant = this.getActiveVariantId(req);
     const hasVariant = this._variants.has(activeVariant);
@@ -118,7 +126,7 @@ export class Route {
    * @param variantData
    * @returns
    */
-  public variant = (variantData: VariantData) => {
+  public variant = (variantData: VariantInputData) => {
     if (variantData.category == null) {
       variantData.category = DEFAULT_VARIANT_CATEGORY;
     }
