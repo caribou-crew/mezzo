@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import { ReactComponent as Logo } from '../../assets/logo.svg';
 
 type Props = {
   name: string;
@@ -53,7 +54,11 @@ export default function Headers(props: Props) {
             component="div"
             sx={{ mr: 2, mb: 0.5, display: { xs: 'none', md: 'flex' } }}
           >
-            {props.name}
+            <Logo
+              title={props.name}
+              style={{ width: 70, marginTop: 5 }}
+              fill="white"
+            />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -101,7 +106,7 @@ export default function Headers(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            <Logo title={props.name} style={{ width: 100 }} fill="white" />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {navItems.map((navItem) => (
