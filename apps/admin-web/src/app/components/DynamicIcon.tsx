@@ -1,4 +1,5 @@
 import { Icon } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 type Props = {
   name: string;
@@ -14,6 +15,11 @@ type Props = {
  * @returns
  */
 export default function DynamicIcon(props: Props) {
-  const item = <Icon style={props.style}>{props.name}</Icon>;
+  let item;
+  if (props.name.toLowerCase() === 'github') {
+    item = <GitHubIcon style={props.style} />;
+  } else {
+    item = <Icon style={props.style}>{props.name}</Icon>;
+  }
   return item;
 }
