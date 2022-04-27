@@ -46,6 +46,10 @@ if (arg === 'start') {
           handler: function (req, res) {
             res.json({ someKey: 'C' });
           },
+          category: {
+            name: 'Approved Test Variant',
+            order: -1,
+          },
         })
         .variant({
           id: 'variant3',
@@ -211,6 +215,10 @@ if (arg === 'start') {
       mezzo.addGlobalVariant({
         id: '500',
         label: '500 error',
+        category: {
+          name: 'Global Variants',
+          order: 100,
+        },
         callback: function (req, res) {
           res.sendStatus(500);
         },

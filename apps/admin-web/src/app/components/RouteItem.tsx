@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Container,
   Button,
@@ -13,6 +13,7 @@ import { OpenInNew } from '@mui/icons-material';
 import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import {
   GetMezzoRoutesRouteData,
+  GetMezzoRoutesVariantData,
   RouteOrVariantIcon,
 } from '@caribou-crew/mezzo-interfaces';
 import DynamicIcon from './DynamicIcon';
@@ -24,8 +25,22 @@ type Props = {
   setSelectedItem: (id: string) => void;
 };
 
+function getCategoryNames(variants: GetMezzoRoutesVariantData[]) {
+  console.log('Calc cat names');
+  return [
+    ...new Set(variants.map((v) => v.category)),
+    { name: undefined, order: 0 },
+  ]
+    .filter((i) => i != null)
+    .sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0));
+}
+
 const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
   const [activeVariant, setActiveVariant] = useState('default');
+  const categoryNames = useMemo(
+    () => getCategoryNames(route.variants),
+    [route.variants]
+  );
 
   const getColors = () => {
     let backgroundColor;
@@ -189,7 +204,7 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
         <Box>
           <Divider></Divider>
           <Container
-            sx={{ pt: 2 }}
+            sx={{ pt: 2, pb: 2 }}
             onClick={(event) => {
               event.stopPropagation();
             }}
@@ -202,27 +217,31 @@ const RouteItem = ({ route, selectedItem, setSelectedItem }: Props) => {
               Active Variant Id:{' '}
               {<span style={{ color: 'green' }}>{activeVariant}</span>}
             </Typography>
-            <Typography variant="subtitle2" sx={{ pt: 2 }}>
-              Variants
-            </Typography>
-            <Container
-              disableGutters
-              sx={{
-                pb: 2,
-                mt: 2,
-                ml: 8,
-              }}
-            >
-              {route.variants.map((variant, index) => (
-                <VariantButton
-                  key={`${route.id}:${variant.id}`}
-                  activeVariant={activeVariant}
-                  setActiveVariant={setActiveVariant}
-                  route={route}
-                  variant={variant}
-                />
-              ))}
-            </Container>
+            {categoryNames.map((category) => (
+              <>
+                <Typography variant="subtitle2" sx={{ pt: 2 }}>
+                  {category?.name ?? 'Variants'}
+                </Typography>
+                <Container
+                  disableGutters
+                  sx={{
+                    ml: 8,
+                  }}
+                >
+                  {route.variants
+                    .filter((v) => v.category?.name === category?.name)
+                    .map((variant, idx) => (
+                      <VariantButton
+                        key={`${route.id}:${variant.id}`}
+                        activeVariant={activeVariant}
+                        setActiveVariant={setActiveVariant}
+                        route={route}
+                        variant={variant}
+                      />
+                    ))}
+                </Container>
+              </>
+            ))}
           </Container>
         </Box>
       )}

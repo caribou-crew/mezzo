@@ -44,6 +44,10 @@ export interface RouteAndVariantData {
   handler?: HandlerType;
   titleIcons?: RouteOrVariantIcon[];
   icons?: RouteOrVariantIcon[];
+  category?: {
+    name: string;
+    order: number;
+  };
 }
 
 export type HandlerType = RequestHandler;

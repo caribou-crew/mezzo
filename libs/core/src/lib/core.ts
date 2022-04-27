@@ -217,6 +217,7 @@ export class Mezzo {
           id: key,
           label: variant.label,
           icons: variant.icons,
+          category: variant?.category,
         });
       });
 
