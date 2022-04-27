@@ -26,8 +26,7 @@ export default function VariantButton(props: Props) {
         mb: 1,
       }}
       onClick={() => {
-        // TODO investigate why this works with ../
-        fetch(`../${MEZZO_API_PATH}/routeVariants/set`, {
+        fetch(`${MEZZO_API_PATH}/routeVariants/set`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
