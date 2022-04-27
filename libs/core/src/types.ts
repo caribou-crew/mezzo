@@ -58,13 +58,6 @@ export interface FileHandlerOptions {
   delay?: number;
 }
 
-// TODO figure out if using route variants or mezzo variant[]
-export type RouteVariants = Record<string, string>; // route id to variant id mapping
-export interface MezzoVariant {
-  routeID: string;
-  variantID: string;
-}
-
 /**
  * Options used for set/update/reset mock variant util calls
  */

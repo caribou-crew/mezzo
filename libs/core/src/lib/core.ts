@@ -7,7 +7,6 @@ import {
   ServerConnectionOptions,
   MiddlewareFn,
   RouteInputData,
-  RouteVariants,
   MezzoStartOptions,
   VariantInputData,
 } from '../types';
@@ -27,6 +26,7 @@ import {
 import * as bodyParser from 'body-parser';
 import {
   RouteItemType,
+  SetRouteVariant,
   VariantCategory,
   VariantItem,
 } from '@caribou-crew/mezzo-interfaces';
@@ -167,7 +167,7 @@ export class Mezzo {
 
   // https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L318-L356
   public setMockVariant = async (
-    payload: RouteVariants,
+    payload: SetRouteVariant,
     options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
@@ -177,7 +177,7 @@ export class Mezzo {
 
   public setMockVariantForSession = async (
     sessionId: string,
-    payload: RouteVariants,
+    payload: SetRouteVariant,
     options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
@@ -187,7 +187,7 @@ export class Mezzo {
 
   public updateMockVariantForSession = async (
     sessionId: string,
-    payload: RouteVariants,
+    payload: SetRouteVariant,
     options?: ServerConnectionOptions
   ) => {
     const baseUri = this.getConnectionFromOptions(options);

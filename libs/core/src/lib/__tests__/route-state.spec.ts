@@ -77,10 +77,10 @@ describe('route-state', () => {
       expect(res3.body.variant).toBe(_default);
     });
     it('should prefer request variant header over session and route state', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [routeId]: variant2,
-      });
-      await mezzo.setMockVariant({ [routeId]: variant2 });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: routeId, variantID: variant2 },
+      ]);
+      await mezzo.setMockVariant([{ routeID: routeId, variantID: variant2 }]);
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId)
@@ -92,18 +92,18 @@ describe('route-state', () => {
 
   describe('session scoped variant', () => {
     it('should respect variant from header', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [routeId]: variant2,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: routeId, variantID: variant2 },
+      ]);
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId);
       expect(res1.status).toBe(200);
       expect(res1.body.variant).toBe(variant2);
 
-      await mezzo.setMockVariantForSession(sessionId, {
-        [routeId]: variant1,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: routeId, variantID: variant1 },
+      ]);
       const res2 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId);
@@ -118,9 +118,9 @@ describe('route-state', () => {
       expect(res1.body.variant).toBe(_default);
     });
     it('should fall back to default variant for invalid variant', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [routeId]: 'bogus',
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: routeId, variantID: 'bogus' },
+      ]);
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId);
@@ -128,10 +128,10 @@ describe('route-state', () => {
       expect(res1.body.variant).toBe(_default);
     });
     it('should prefer session variant header over route state', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [routeId]: variant1,
-      });
-      await mezzo.setMockVariant({ [routeId]: variant2 });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: routeId, variantID: variant1 },
+      ]);
+      await mezzo.setMockVariant([{ routeID: routeId, variantID: variant2 }]);
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId);

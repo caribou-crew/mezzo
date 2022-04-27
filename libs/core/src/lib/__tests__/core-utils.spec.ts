@@ -63,19 +63,19 @@ describe('core-utils', () => {
 
   describe('.setMockVariantForSession', () => {
     it('should reset all variants for session when setting new values', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [route1]: variant1,
-        [route2]: variant2,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: route1, variantID: variant1 },
+        { routeID: route2, variantID: variant2 },
+      ]);
 
       const res1 = await request
         .get(route1Path)
         .set(X_REQUEST_SESSION, sessionId);
       expect(res1.body.someKey).toBe(variant1);
 
-      await mezzo.setMockVariantForSession(sessionId, {
-        [route2]: variant2,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: route2, variantID: variant2 },
+      ]);
 
       const res2 = await request
         .get(route1Path)
@@ -86,19 +86,19 @@ describe('core-utils', () => {
 
   describe('.updateMockVariantForSession', () => {
     it('should preserve prior variants without collision for session when setting new values', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [route1]: variant1,
-        [route2]: variant2,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: route1, variantID: variant1 },
+        { routeID: route2, variantID: variant2 },
+      ]);
 
       const res1 = await request
         .get(route1Path)
         .set(X_REQUEST_SESSION, sessionId);
       expect(res1.body.someKey).toBe(variant1);
 
-      await mezzo.updateMockVariantForSession(sessionId, {
-        [route2]: variant2,
-      });
+      await mezzo.updateMockVariantForSession(sessionId, [
+        { routeID: route2, variantID: variant2 },
+      ]);
 
       const res2 = await request
         .get(route1Path)
@@ -112,7 +112,7 @@ describe('core-utils', () => {
       const res = await request.get(route1Path);
       expect(res.body).toEqual({ someKey: a1Default });
 
-      await mezzo.setMockVariant({ [route1]: variant1 });
+      await mezzo.setMockVariant([{ routeID: route1, variantID: variant1 }]);
       const res2 = await request.get(route1Path);
       expect(res2.body).toEqual({ someKey: variant1 });
     });
@@ -120,10 +120,10 @@ describe('core-utils', () => {
 
   describe('.resetMockVariantForSession', () => {
     it('should reset all variants for session', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [route1]: variant1,
-        [route2]: variant2,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: route1, variantID: variant1 },
+        { routeID: route2, variantID: variant2 },
+      ]);
 
       const res1 = await request
         .get(route1Path)
@@ -140,10 +140,10 @@ describe('core-utils', () => {
   });
   describe('.resetMockVariantForAllSessions', () => {
     it('should reset all variants for session', async () => {
-      await mezzo.setMockVariantForSession(sessionId, {
-        [route1]: variant1,
-        [route2]: variant2,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: route1, variantID: variant1 },
+        { routeID: route2, variantID: variant2 },
+      ]);
 
       const res1 = await request
         .get(route1Path)
@@ -160,7 +160,7 @@ describe('core-utils', () => {
   });
   describe('.resetMockVariant', () => {
     it('should reset all variants', async () => {
-      await mezzo.setMockVariant({ [route1]: variant1 });
+      await mezzo.setMockVariant([{ routeID: route1, variantID: variant1 }]);
       const res1 = await request.get(route1Path);
       expect(res1.body).toEqual({ someKey: variant1 });
 

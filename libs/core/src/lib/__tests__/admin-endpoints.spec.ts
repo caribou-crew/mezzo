@@ -53,7 +53,7 @@ describe('admin-endpoints', () => {
 
   describe(`${MEZZO_API_PATH}/routes`, () => {
     it('should return all routes for admin GUI', async () => {
-      await mezzo.setMockVariant({ [routeId]: variant1 });
+      await mezzo.setMockVariant([{ routeID: routeId, variantID: variant1 }]);
 
       const res = await request.get(`${MEZZO_API_PATH}/routes`);
       expect(res.status).toBe(200);

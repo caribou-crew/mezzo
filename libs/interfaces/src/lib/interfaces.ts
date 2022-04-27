@@ -32,3 +32,10 @@ export type VariantCategory = {
   name: string;
   order: number;
 };
+
+export interface RouteVariant {
+  routeID: string;
+  variantID: string;
+}
+
+export type SetRouteVariant = RouteVariant[];

@@ -1,12 +1,15 @@
 import * as express from 'express';
-import { RouteVariants, MezzoStartOptions } from '../types';
+import { MezzoStartOptions } from '../types';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '../utils/logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo } from './core';
 import * as path from 'path';
 import { version } from '../../package.json';
-import { GetRoutesResponse } from '@caribou-crew/mezzo-interfaces';
+import {
+  GetRoutesResponse,
+  SetRouteVariant,
+} from '@caribou-crew/mezzo-interfaces';
 
 export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
@@ -19,19 +22,17 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   });
 
   app.post(`${MEZZO_API_PATH}/routeVariants/set`, (req, res) => {
-    const payload: RouteVariants = req.body;
+    const payload: SetRouteVariant = req.body;
 
-    Object.keys(payload).forEach((routeId) => {
-      const variantId = payload[routeId];
-
-      const index = findRouteIndexById(routeId, mezzo.userRoutes);
+    payload.forEach((item) => {
+      const index = findRouteIndexById(item.routeID, mezzo.userRoutes);
       const foundRoute = mezzo.userRoutes[index];
       if (foundRoute) {
-        const updatedItem = foundRoute.setVariant(variantId);
+        const updatedItem = foundRoute.setVariant(item.variantID);
         mezzo.userRoutes[index] = updatedItem;
       } else {
         logger.warn(
-          `Could not find route for ${routeId} to set variant ${variantId}`
+          `Could not find route for ${item.routeID} to set variant ${item.variantID}`
         );
       }
     });
@@ -46,12 +47,11 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     res.sendStatus(200);
   });
 
-  // setMockVariantWithSession https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L288-L315
   app.post(
     `${MEZZO_API_PATH}/sessionVariantState/set/:sessionId`,
     (req, res) => {
       const sessionId = req.params.sessionId;
-      const payload: RouteVariants = req.body;
+      const payload: SetRouteVariant = req.body;
       mezzo.sessionState.setSessionVariantStateByKey(sessionId, payload);
       res.sendStatus(200);
     }
@@ -61,13 +61,12 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     `${MEZZO_API_PATH}/sessionVariantState/update/:sessionId`,
     (req, res) => {
       const sessionId = req.params.sessionId;
-      const payload: RouteVariants = req.body;
+      const payload: SetRouteVariant = req.body;
       mezzo.sessionState.updateSessionVariantStateByKey(sessionId, payload);
       res.sendStatus(200);
     }
   );
 
-  // Wire up to CLI resetMockVariantWithSession https://github.com/sgoff0/midway/blob/6614a6a91d3060951e99326c68333ebf78563e8c/src/utils/common-utils.ts#L269-L286
   app.delete(`${MEZZO_API_PATH}/sessionVariantState/:sessionId`, (req, res) => {
     const sessionId = req.params.sessionId;
     mezzo.sessionState.resetSessionVariantStateByKey(sessionId);

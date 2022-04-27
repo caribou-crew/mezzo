@@ -1,4 +1,4 @@
-import { RouteVariants } from '../types';
+import { SetRouteVariant } from '@caribou-crew/mezzo-interfaces';
 
 export class SessionState {
   private state = {};
@@ -21,19 +21,20 @@ export class SessionState {
 
   public setSessionVariantStateByKey(
     sessionId: string,
-    payload: RouteVariants
+    payload: SetRouteVariant
   ) {
-    this.state[sessionId] = payload;
+    this.state[sessionId] = {};
+    payload.forEach((item) => {
+      this.state[sessionId][item.routeID] = item.variantID;
+    });
   }
 
   public updateSessionVariantStateByKey(
     sessionId: string,
-    payload: RouteVariants
+    payload: SetRouteVariant
   ) {
-    const currentData = this.state[sessionId] || {};
-    this.state[sessionId] = {
-      ...currentData,
-      ...payload,
-    };
+    payload.forEach((item) => {
+      this.state[sessionId][item.routeID] = item.variantID;
+    });
   }
 }

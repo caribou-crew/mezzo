@@ -1,5 +1,9 @@
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import { RouteItemType, VariantItem } from '@caribou-crew/mezzo-interfaces';
+import {
+  RouteItemType,
+  SetRouteVariant,
+  VariantItem,
+} from '@caribou-crew/mezzo-interfaces';
 import { Button, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import DynamicIcon from './DynamicIcon';
@@ -23,12 +27,18 @@ export default function VariantButton(props: Props) {
         mb: 1,
       }}
       onClick={() => {
+        const myVariants: SetRouteVariant = [
+          {
+            routeID: route.id,
+            variantID: variant.id,
+          },
+        ];
         fetch(`${MEZZO_API_PATH}/routeVariants/set`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ [route.id]: variant.id }),
+          body: JSON.stringify(myVariants),
         });
         setActiveVariant(variant.id);
       }}

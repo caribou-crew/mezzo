@@ -161,7 +161,9 @@ describe('route-file-io', () => {
             return mezzo.util.respondWithFile(route, req, res);
           },
         });
-      await mezzo.setMockVariant({ [routeId4Html]: variant1 });
+      await mezzo.setMockVariant([
+        { routeID: routeId4Html, variantID: variant1 },
+      ]);
       const res = await request.get(routePath4Html);
       expect(res.status).toBe(200);
       expect(res.text).toEqual(variantHtml);
@@ -246,7 +248,7 @@ describe('route-file-io', () => {
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ variant: _default });
 
-      await mezzo.setMockVariant({ [routeId2]: variant1 });
+      await mezzo.setMockVariant([{ routeID: routeId2, variantID: variant1 }]);
 
       const res2 = await request.get(routePath2);
       expect(res2.body).toEqual({ variant: variant1 });
@@ -284,7 +286,9 @@ describe('route-file-io', () => {
       const res = await request.get('/part1/someDynamicPart2Path');
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ variant: _default });
-      await mezzo.setMockVariant({ [routeId3Dynamic]: variant1 });
+      await mezzo.setMockVariant([
+        { routeID: routeId3Dynamic, variantID: variant1 },
+      ]);
       const res2 = await request.get('/part1/someDynamicPart2Path');
       expect(res2.body).toEqual({ variant: 'other' });
       const res3 = await request.get('/part1/someDynamicPart2PathAlt');
@@ -365,9 +369,9 @@ describe('route-file-io', () => {
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ variant: _default });
 
-      await mezzo.setMockVariantForSession(sessionId, {
-        [routeId2]: variant1,
-      });
+      await mezzo.setMockVariantForSession(sessionId, [
+        { routeID: routeId2, variantID: variant1 },
+      ]);
 
       const res2 = await request
         .get(routePath2)
