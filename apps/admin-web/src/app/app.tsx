@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { RouteItemType, VariantCategory } from '@caribou-crew/mezzo-interfaces';
+import React, { useState } from 'react';
 import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
@@ -13,49 +12,31 @@ import {
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import RouteItem from './components/RouteItem';
 import Header from './components/Header';
-import { useSort } from './utils/useSort';
-import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import { getFilteredRoutes } from './utils/filter';
+import useFetchRoutes from './hooks/useFetchRoutes';
+import useRouteFilter from './hooks/useRouteFilter';
+import useRouteSort from './hooks/useRouteSort';
+import useFilterFromURL, { setURLHash } from './hooks/useFilterFromURL';
 
-type SortProperty = 'method' | 'path';
+type SortProperty = 'method' | 'path' | '';
 export const App = () => {
-  const filterPrefix = '#label';
-  const [routes, setRoutes] = useState<RouteItemType[]>([]);
-  const [version, setVersion] = useState<string>('');
-  const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
-    []
-  );
-  const [displayedRoutes, setDisplayedRoutes] = useState<RouteItemType[]>([]);
   const [selectedItem, setSelectedItem] = useState('');
-  const { sortBy, getSortDirection } = useSort();
-  const [filterValue, setFilterValue] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`${MEZZO_API_PATH}/routes`);
-      const data = await response.json();
-      setRoutes(data.routes);
-      setVersion(data.appVersion);
-      setVariantCategories(
-        (data.variantCategories || []).sort(
-          (a: VariantCategory, b: VariantCategory) =>
-            (a?.order ?? 0) - (b?.order ?? 0)
-        )
-      );
+  const { routes, version, variantCategories } = useFetchRoutes();
 
-      const hash = window.location.hash;
-      if (hash.length > 0) {
-        const value = decodeURIComponent(hash.split(`${filterPrefix}/`)?.[1]);
-        const filteredRoutes = getFilteredRoutes(data.routes, value);
-        setFilterValue(value);
-        setDisplayedRoutes(filteredRoutes);
-      } else {
-        setDisplayedRoutes(data.routes);
-      }
-    };
+  const {
+    routes: filteredRoutes,
+    setFilterValue,
+    filterValue,
+  } = useRouteFilter(routes);
 
-    fetchData().catch(console.error);
-  }, []);
+  const {
+    routes: displayedRoutes,
+    setSort,
+    sortDirection,
+    sortedByProperty,
+  } = useRouteSort(filteredRoutes);
+
+  useFilterFromURL(setFilterValue);
 
   const renderRouteList = () => {
     return displayedRoutes.map((route) => (
@@ -74,8 +55,7 @@ export const App = () => {
   };
 
   const getSortIcon = (property: SortProperty) => {
-    const sortDirection = getSortDirection(property);
-    if (sortDirection != null) {
+    if (sortDirection != null && property === sortedByProperty) {
       return sortDirection > 0 ? <ArrowDropDown /> : <ArrowDropUp />;
     } else {
       return null;
@@ -84,18 +64,8 @@ export const App = () => {
 
   const filter = (event: any) => {
     const value = event?.target?.value;
-    const filteredRoutes = getFilteredRoutes(routes, value);
-    if (value.length > 0) {
-      window.history.replaceState(
-        null,
-        '',
-        `${filterPrefix}/${encodeURIComponent(value)}`
-      );
-    } else {
-      window.history.replaceState(null, '', '');
-    }
+    setURLHash(value);
     setFilterValue(value);
-    setDisplayedRoutes(filteredRoutes);
   };
 
   const _renderShowByContainer = () => {
@@ -114,14 +84,14 @@ export const App = () => {
         </Typography>
         <Button
           variant="outlined"
-          onClick={() => setDisplayedRoutes(sortBy('method', displayedRoutes))}
+          onClick={() => setSort('method')}
           startIcon={getSortIcon('method')}
         >
           Method
         </Button>
         <Button
           variant="outlined"
-          onClick={() => setDisplayedRoutes(sortBy('path', displayedRoutes))}
+          onClick={() => setSort('path')}
           startIcon={getSortIcon('path')}
         >
           Path
@@ -129,7 +99,8 @@ export const App = () => {
         <Button
           variant="outlined"
           color="error"
-          onClick={() => setDisplayedRoutes(routes)}
+          onClick={() => setSort('')}
+          startIcon={getSortIcon('')}
         >
           Default
         </Button>
