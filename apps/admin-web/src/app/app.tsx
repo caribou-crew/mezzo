@@ -15,9 +15,11 @@ import RouteItem from './components/RouteItem';
 import Header from './components/Header';
 import { useSort } from './utils/useSort';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import { getFilteredRoutes } from './utils/filter';
 
 type SortProperty = 'method' | 'path';
 export const App = () => {
+  const filterPrefix = '#label';
   const [routes, setRoutes] = useState<RouteItemType[]>([]);
   const [version, setVersion] = useState<string>('');
   const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
@@ -40,7 +42,16 @@ export const App = () => {
             (a?.order ?? 0) - (b?.order ?? 0)
         )
       );
-      setDisplayedRoutes(data.routes);
+
+      const hash = window.location.hash;
+      if (hash.length > 0) {
+        const value = decodeURIComponent(hash.split(`${filterPrefix}/`)?.[1]);
+        const filteredRoutes = getFilteredRoutes(data.routes, value);
+        setFilterValue(value);
+        setDisplayedRoutes(filteredRoutes);
+      } else {
+        setDisplayedRoutes(data.routes);
+      }
     };
 
     fetchData().catch(console.error);
@@ -73,15 +84,16 @@ export const App = () => {
 
   const filter = (event: any) => {
     const value = event?.target?.value;
-    const filteredRoutes = routes.filter((route) => {
-      const searchLower = value?.toLowerCase();
-      return (
-        route?.id?.toLowerCase()?.includes(searchLower) ||
-        route?.label?.toLowerCase()?.includes(searchLower) ||
-        route?.method?.toLowerCase()?.includes(searchLower) ||
-        route?.path?.toString()?.toLowerCase()?.includes(searchLower)
+    const filteredRoutes = getFilteredRoutes(routes, value);
+    if (value.length > 0) {
+      window.history.replaceState(
+        null,
+        '',
+        `${filterPrefix}/${encodeURIComponent(value)}`
       );
-    });
+    } else {
+      window.history.replaceState(null, '', '');
+    }
     setFilterValue(value);
     setDisplayedRoutes(filteredRoutes);
   };
@@ -135,6 +147,7 @@ export const App = () => {
           label="Filter"
           variant="outlined"
           onChange={filter}
+          value={filterValue}
         />
       </Container>
     );
