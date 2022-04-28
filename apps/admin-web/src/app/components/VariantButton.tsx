@@ -20,11 +20,9 @@ export default function VariantButton(props: Props) {
   return (
     <Button
       variant="contained"
+      fullWidth
       sx={{
         backgroundColor: activeRouteVariant ? blue[900] : blue[300],
-        width: '40%',
-        mr: '1%',
-        mb: 1,
       }}
       onClick={() => {
         const myVariants: SetRouteVariant = [

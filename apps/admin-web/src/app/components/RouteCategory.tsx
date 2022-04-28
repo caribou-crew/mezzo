@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 import { RouteItemType, VariantCategory } from '@caribou-crew/mezzo-interfaces';
 import VariantButton from './VariantButton';
@@ -25,24 +25,21 @@ const RouteCategory = ({
       <Typography variant="subtitle2" sx={{ pt: 2 }}>
         {category?.name ?? 'Variants'}
       </Typography>
-      <Container
-        disableGutters
-        sx={{
-          ml: 8,
-        }}
-      >
+      <Grid container spacing={1} sx={{ mb: 1 }}>
         {route.variants
           .filter((v) => v.category === category?.name)
-          .map((variant, idx) => (
-            <VariantButton
-              key={`${route.id}:${variant.id}`}
-              activeVariant={activeVariant}
-              setActiveVariant={setActiveVariant}
-              route={route}
-              variant={variant}
-            />
+          .map((variant, index) => (
+            <Grid key={index} item xs={12} sm={12} md={6}>
+              <VariantButton
+                key={`${route.id}:${variant.id}`}
+                activeVariant={activeVariant}
+                setActiveVariant={setActiveVariant}
+                route={route}
+                variant={variant}
+              />
+            </Grid>
           ))}
-      </Container>
+      </Grid>
     </>
   );
 };
