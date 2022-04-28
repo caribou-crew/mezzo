@@ -119,8 +119,8 @@ const RouteItem = ({
   const _renderInteractiveButtons = () => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-        {route?.titleIcons?.map((icon) => (
-          <GetLinkableIcon {...icon} />
+        {route?.titleIcons?.map((icon, index) => (
+          <GetLinkableIcon key={`${icon.name}:${index}`} {...icon} />
         ))}
         <Button
           variant="contained"
@@ -154,6 +154,7 @@ const RouteItem = ({
           <OpenInNew />
         </Button>
         <Container
+          disableGutters
           sx={{
             backgroundColor: getColors().textColor,
             pt: '15px',
@@ -209,8 +210,9 @@ const RouteItem = ({
               Active Variant Id:{' '}
               {<span style={{ color: 'green' }}>{activeVariant}</span>}
             </Typography>
-            {variantCategories.map((category) => (
+            {variantCategories.map((category, index) => (
               <RouteCategory
+                key={`${category}:${index}`}
                 category={category}
                 route={route}
                 activeVariant={activeVariant}
