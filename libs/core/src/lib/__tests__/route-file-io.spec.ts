@@ -28,7 +28,6 @@ describe('route-file-io', () => {
   const routeId4Html = `GET ${routePath4Html}`;
 
   const variant1 = 'variant1';
-  const variant2 = 'v2';
   const _default = 'default';
   const sessionId = '123';
   const expectedPayload = 'Responding with file';
