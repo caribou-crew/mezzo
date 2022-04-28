@@ -17,6 +17,12 @@
         "tsConfig": "apps/admin-web/tsconfig.app.json",
         "assets": [
           "apps/admin-web/src/favicon.ico",
+          "apps/admin-web/src/favicon-16x16.png",
+          "apps/admin-web/src/favicon-32x32.png",
+          "apps/admin-web/src/android-chrome-192x192.png",
+          "apps/admin-web/src/android-chrome-512x512.png",
+          "apps/admin-web/src/apple-touch-icon.png",
+          "apps/admin-web/src/site.webmanifest",
           "apps/admin-web/src/assets"
         ],
         "styles": [],
