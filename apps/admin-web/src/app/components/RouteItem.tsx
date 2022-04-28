@@ -12,7 +12,7 @@ import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { OpenInNew } from '@mui/icons-material';
 import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import {
-  GetMezzoRoutesRouteData,
+  RouteItemType,
   RouteOrVariantIcon,
   VariantCategory,
 } from '@caribou-crew/mezzo-interfaces';
@@ -20,7 +20,7 @@ import DynamicIcon from './DynamicIcon';
 import RouteCategory from './RouteCategory';
 
 type Props = {
-  route: GetMezzoRoutesRouteData;
+  route: RouteItemType;
   selectedItem: string;
   setSelectedItem: (id: string) => void;
   variantCategories: VariantCategory[];
