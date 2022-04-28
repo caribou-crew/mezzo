@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Button,
+  MenuItem,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -52,7 +54,7 @@ export default function Headers(props: Props) {
   };
 
   return (
-    <AppBar position="static" sx={{ mb: 5 }}>
+    <AppBar position="relative">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
