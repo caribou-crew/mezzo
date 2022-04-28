@@ -62,7 +62,7 @@ export const App = () => {
     }
   };
 
-  const filter = (event: any) => {
+  const filter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event?.target?.value;
     setURLHash(value);
     setFilterValue(value);

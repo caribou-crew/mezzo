@@ -3,7 +3,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 
 type Props = {
   name: string;
-  style?: any;
+  style?: React.CSSProperties;
 };
 
 /**
