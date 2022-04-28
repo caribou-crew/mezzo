@@ -7,7 +7,7 @@ export interface URLHashCallback {
 }
 
 export type SetFilter = (arg0: string) => void;
-const filterPrefix = '#label';
+const hashKey = 'label';
 
 /**
  * If #label hash is set in URL on load, then set that value as the initial filter
@@ -16,7 +16,7 @@ const filterPrefix = '#label';
 export default function useFilterFromURL(setFilter: SetFilter) {
   useEffect(() => {
     const hash = getURLHash();
-    if (hash.key === filterPrefix) {
+    if (hash.key === hashKey) {
       setFilter(hash.value);
     }
   }, [setFilter]);
@@ -32,7 +32,7 @@ export const setURLHash = (value: string) => {
     window.history.replaceState(
       null,
       '',
-      `${filterPrefix}/${encodeURIComponent(value)}`
+      `#${hashKey}/${encodeURIComponent(value)}`
     );
   } else {
     window.history.replaceState(null, '', '');
