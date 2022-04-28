@@ -190,7 +190,7 @@ export const App = () => {
               _renderTypography()
             )}
             <Typography align="center" sx={{ mt: 5 }}>
-              v{version}
+              {version ? `v${version}` : null}
             </Typography>
           </Grid>
         </Grid>
