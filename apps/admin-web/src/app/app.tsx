@@ -3,11 +3,13 @@ import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
   TextField,
-  Grid,
   Box,
   Container,
   Button,
   Typography,
+  CssBaseline,
+  Grid,
+  Divider,
 } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import RouteItem from './components/RouteItem';
@@ -71,18 +73,27 @@ export const App = () => {
   const _renderShowByContainer = () => {
     return (
       <Container
+        disableGutters
         sx={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'flex-start',
           mt: 1.1,
           gap: 1,
+          '@media (max-width:475px)': {
+            flexDirection: 'column',
+            alignItems: 'center',
+            mt: 0,
+          },
         }}
       >
-        <Typography align="center" variant="h6">
-          Sort By:
-        </Typography>
+        <Box>
+          <Typography noWrap align="center" variant="h6">
+            Sort By:
+          </Typography>
+        </Box>
         <Button
+          fullWidth
           variant="outlined"
           onClick={() => setSort('method')}
           startIcon={getSortIcon('method')}
@@ -90,6 +101,7 @@ export const App = () => {
           Method
         </Button>
         <Button
+          fullWidth
           variant="outlined"
           onClick={() => setSort('path')}
           startIcon={getSortIcon('path')}
@@ -97,6 +109,7 @@ export const App = () => {
           Path
         </Button>
         <Button
+          fullWidth
           variant="outlined"
           color="error"
           onClick={() => setSort('')}
@@ -110,17 +123,15 @@ export const App = () => {
 
   const _renderSearchInput = () => {
     return (
-      <Container>
-        <TextField
-          fullWidth
-          id="outlined-search"
-          type="search"
-          label="Filter"
-          variant="outlined"
-          onChange={filter}
-          value={filterValue}
-        />
-      </Container>
+      <TextField
+        fullWidth
+        id="outlined-search"
+        type="search"
+        label="Filter"
+        variant="outlined"
+        onChange={filter}
+        value={filterValue}
+      />
     );
   };
 
@@ -137,49 +148,48 @@ export const App = () => {
   };
 
   return (
-    <Container component="main" maxWidth="lg">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Header name="Mezzo"></Header>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              {_renderShowByContainer()}
-              {_renderSearchInput()}
-            </Box>
+    <>
+      <CssBaseline />
+      <Header name="Mezzo"></Header>
+      <Container component="main" maxWidth="lg">
+        <Grid container spacing={1} sx={{ my: 2 }}>
+          <Grid item xs={12} sm={12} md={6}>
+            {_renderShowByContainer()}
           </Grid>
-          <Grid item xs={12}>
-            {displayedRoutes.length > 0 ? (
-              <Flipper
-                flipKey={displayedRoutes.reduce(
-                  (prev, current) => prev + current.id,
-                  ''
-                )}
-              >
-                {renderRouteList()}
-              </Flipper>
-            ) : (
-              _renderTypography()
-            )}
-            <Typography align="center" sx={{ mt: 5 }}>
-              {version ? `v${version}` : null}
-            </Typography>
+          <Grid item xs={12} sm={12} md={6}>
+            {_renderSearchInput()}
           </Grid>
         </Grid>
-      </Box>
-    </Container>
+        <Divider />
+        <Typography
+          variant="h6"
+          sx={{
+            mt: 3,
+            '@media (max-width:475px)': {
+              textAlign: 'center',
+            },
+          }}
+          gutterBottom
+        >
+          Routes
+        </Typography>
+        {displayedRoutes.length > 0 ? (
+          <Flipper
+            flipKey={displayedRoutes.reduce(
+              (prev, current) => prev + current.id,
+              ''
+            )}
+          >
+            {renderRouteList()}
+          </Flipper>
+        ) : (
+          _renderTypography()
+        )}
+        <Typography align="center" sx={{ mt: 5 }} gutterBottom>
+          {version ? `v${version}` : null}
+        </Typography>
+      </Container>
+    </>
   );
 };
 
