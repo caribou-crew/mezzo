@@ -28,3 +28,14 @@ Run `npm publish dist/libs/core --access public` from the root of the project.
 
 - Run tests
   - `npm test`
+
+# Testing "Production" web experience
+
+In development web runs on `http://localhost:4200/` while API runs on `http://localhost:8000/mezzo`.
+There are some subtle differences in how things behave due to this. Here is how you can test this locally.
+
+1. Run `npm run build:core:prod`
+2. Navigate to `/dist/libs/core`
+3. Run `npm i` (as it has dependencies on interfaces and constants)
+4. Start server by running `node src/index start`
+5. Load site at `http://localhost:8000/mezzo/`

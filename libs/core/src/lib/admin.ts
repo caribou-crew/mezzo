@@ -77,25 +77,6 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     mezzo.sessionState.resetSessionVariantState();
     res.sendStatus(200);
   });
-
-  // ===================================
-  // NOT YET IMPLEMENTED
-  // ===================================
-  app.get(`/api`, (req, res) => {
-    res.status(200).json({ message: 'Hello world from api' });
-  });
-
-  app.post(`${MEZZO_API_PATH}/action`, (req, res) => {
-    //TODO
-  });
-  app.post(`${MEZZO_API_PATH}/state/reset`, (req, res) => {
-    //TODO
-    res.status(200).json({ message: 'reset' });
-  });
-
-  app.post(`${MEZZO_API_PATH}/input/reset`, (req, res) => {
-    //TODO
-  });
 };
 
 export const addAdminStaticSite = (
@@ -106,4 +87,20 @@ export const addAdminStaticSite = (
     `/${options?.adminEndpoint ?? 'mezzo'}`,
     express.static(path.join(__dirname, '..', 'public'))
   );
+};
+
+export const addSiteManifest = (app: express.Express) => {
+  const items = [
+    '/favicon.ico',
+    '/favicon-32x32.png',
+    '/favicon-16x16.png',
+    '/apple-touch-icon.png',
+    '/android-chrome-512x512.png',
+    '/android-chrome-192x192.png',
+    '/site.webmanifest',
+  ];
+
+  items.forEach((i) => {
+    app.use(i, express.static(path.join(__dirname, '..', 'public', i)));
+  });
 };
