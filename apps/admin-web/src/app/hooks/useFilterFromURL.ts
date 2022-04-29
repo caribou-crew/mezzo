@@ -10,6 +10,12 @@ export type SetFilter = (arg0: string) => void;
 const hashKey = 'label';
 
 /**
+ * If dev we're on port 4200 in our own build at root (/)
+ * If prod (assembled in core) we're at /mezzo and want to make sure replaceState keeps us at /mezzo
+ */
+const prefix = process.env['NODE_ENV'] === 'production' ? '/mezzo/' : '/';
+
+/**
  * If #label hash is set in URL on load, then set that value as the initial filter
  * @param setFilter
  */
@@ -32,9 +38,9 @@ export const setURLHash = (value: string) => {
     window.history.replaceState(
       null,
       '',
-      `#${hashKey}/${encodeURIComponent(value)}`
+      `${prefix}#${hashKey}/${encodeURIComponent(value)}`
     );
   } else {
-    window.history.replaceState(null, '', '');
+    window.history.replaceState(null, '', prefix);
   }
 };
