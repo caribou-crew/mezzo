@@ -22,6 +22,7 @@ import RouteCategory from './RouteCategory';
 type Props = {
   route: RouteItemType;
   selectedItem: string;
+  initialActiveVariant: string;
   setSelectedItem: (id: string) => void;
   variantCategories: VariantCategory[];
 };
@@ -29,10 +30,11 @@ type Props = {
 const RouteItem = ({
   route,
   selectedItem,
+  initialActiveVariant,
   setSelectedItem,
   variantCategories,
 }: Props) => {
-  const [activeVariant, setActiveVariant] = useState('default');
+  const [activeVariant, setActiveVariant] = useState(initialActiveVariant);
 
   const getColors = () => {
     let backgroundColor;

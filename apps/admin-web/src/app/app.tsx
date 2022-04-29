@@ -49,6 +49,7 @@ export const App = () => {
             variantCategories={variantCategories}
             key={route.id}
             selectedItem={selectedItem}
+            initialActiveVariant={route.activeVariant}
             setSelectedItem={(id) => setSelectedItem(id)}
           ></RouteItem>
         </div>
