@@ -12,7 +12,11 @@ import {
 } from '../types';
 import * as express from 'express';
 import { Route } from '../models/route-model';
-import { addAdminEndpoints, addAdminStaticSite } from './admin';
+import {
+  addAdminEndpoints,
+  addAdminStaticSite,
+  addSiteManifest,
+} from './admin';
 import * as fsDefault from 'fs';
 import { SessionState } from '../models/sessionState';
 import {
@@ -79,6 +83,7 @@ export class Mezzo {
     this.initializeMiddleware();
     addAdminEndpoints(this.app, this);
     addAdminStaticSite(this.app, options);
+    addSiteManifest(this.app);
     this.fs = options?.fsOverride ?? fsDefault;
     this.mockedDirectory = options.mockedDirectory;
     this.util = new CommonUtils(this.userRoutes, this.fs, this.mockedDirectory);
