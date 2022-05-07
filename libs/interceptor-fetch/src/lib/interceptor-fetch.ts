@@ -5,7 +5,6 @@ import {
   MEZZO_API_POST_RECORD_RESPONSE,
 } from '@caribou-crew/mezzo-constants';
 import { Fetch, ServerConnectionOptions } from '@caribou-crew/mezzo-interfaces';
-// import { v4 as uuidv4 } from 'uuid';
 // import * as R from 'ramda/src/curry';
 
 // function uuidv4() {

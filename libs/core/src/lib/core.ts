@@ -168,7 +168,10 @@ export class Mezzo {
         logger.debug(
           '***************Stopping Mezzo mocking server ***************'
         );
-        this.websocketServer?.close();
+        // if (this.websocketServer) {
+        //   logger.debug('Stopping websocket server too');
+        //   this.websocketServer.close();
+        // }
         serverToStop.close(resolve);
         this.app = undefined;
       } else {
