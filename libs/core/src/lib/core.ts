@@ -128,7 +128,7 @@ export class Mezzo {
   }
 
   _processPlugins() {
-    console.log('Using plugins: ', this.options.plugins);
+    logger.debug(`About to apply ${this.options.plugins.length} plugins`);
     if (Array.isArray(this.options.plugins)) {
       this.options.plugins.forEach((p) => this.use(p));
     }
@@ -152,6 +152,7 @@ export class Mezzo {
         logger.debug(
           `***************Server running on port ${this.options.port} ***************`
         );
+        logger.info('Server running on port: ', this.options.port);
 
         resolve(this.server);
       });
@@ -159,12 +160,11 @@ export class Mezzo {
   };
 
   private use(pluginCreator: MezzoServerPlugin) {
-    logger.info('Binding plugins: ', pluginCreator);
     if (typeof pluginCreator !== 'function') {
       throw new Error('plugins must be a function');
     }
     const pluginData = pluginCreator.call(this, this);
-    logger.info(`Added plugin: ${pluginData?.name}`);
+    logger.debug(`Applied plugin: ${pluginData?.name}`);
 
     // if (typeof plugin !== 'object') {
     //   throw new Error('plugins must return an object');

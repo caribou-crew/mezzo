@@ -87,13 +87,14 @@ export const addAdminStaticSite = (
 ) => {
   const rootAdmin = `/${options?.adminEndpoint ?? 'mezzo'}`;
 
-  logger.info('Adding admin static site: ', rootAdmin);
-  logger.info('Static path: ', staticPath);
-  app.use(rootAdmin, express.static(staticPath));
+  logger.debug(`Adding endpoint: ${rootAdmin} reading html from ${staticPath}`);
 
-  // With react routing on client side we need to call out routes if we also want to support server side
-  // Alternatively we could use something like hash based routing
-  app.use(`${rootAdmin}/record`, express.static(staticPath));
+  const validClientRoutes = [rootAdmin, `${rootAdmin}/record`];
+
+  validClientRoutes.forEach((clientRoute) => {
+    logger.debug(`Adding nedpoint ${clientRoute} for server side reload`);
+    app.use(clientRoute, express.static(staticPath));
+  });
 };
 
 export const addSiteManifest = (app: express.Express) => {

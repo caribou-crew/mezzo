@@ -50,6 +50,8 @@ export default async function buildExecutor(
 ): Promise<{ success: boolean }> {
   console.log('Running admin-web to core executor');
 
+  // Skip build as I can just do copy now that baseHref is the same indev
+  /*
   const buildClient = await runExecutor(
     { project: 'admin-web', target: 'build' },
     options,
@@ -80,6 +82,7 @@ export default async function buildExecutor(
       return result;
     }
   }
+  */
 
   copyRecursiveSync(
     './dist/apps/admin-web',

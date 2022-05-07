@@ -28,7 +28,7 @@
     "prepare": {
       "executor": "./tools/executors/buildCoreWithWeb:buildCoreWithWeb",
       "options": {
-        "baseHref": "mezzo"
+        "baseHref": "/mezzo/"
       }
     },
     "build": {
