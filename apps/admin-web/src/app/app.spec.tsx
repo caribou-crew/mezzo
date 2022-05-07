@@ -21,6 +21,8 @@ describe('App', () => {
       }),
     });
 
+    window.history.pushState({}, '', '/mezzo');
+
     const { baseElement } = render(<App />);
     await waitFor(() => getAllByText(baseElement, 'Filter'));
   });
