@@ -5,14 +5,14 @@ import {
   HandlerFnType,
   RouteInputData,
   VariantInputData,
-} from '../types';
+} from '../../types';
 import {
   DEFAULT_VARIANT,
   DEFAULT_VARIANT_CATEGORY,
   X_REQUEST_SESSION,
   X_REQUEST_VARIANT,
 } from '@caribou-crew/mezzo-constants';
-import logger from '../utils/logger';
+import logger from '@caribou-crew/mezzo-utils-logger';
 import { getValidMethod } from '../utils/method-utils';
 import { SessionState } from './sessionState';
 

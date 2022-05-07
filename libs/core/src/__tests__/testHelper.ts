@@ -2,7 +2,7 @@ import mezzo from '../index';
 import { Server } from 'http';
 import * as SuperTestRequest from 'supertest';
 import * as path from 'path';
-import { resourcesPath } from '../utils/pathHelpers';
+import { resourcesPath } from '../lib/utils/pathHelpers';
 
 export const getHTTPPort = () => 3000;
 

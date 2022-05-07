@@ -3,18 +3,7 @@ import {
   VariantCategory,
 } from '@caribou-crew/mezzo-interfaces';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { Route } from './models/route-model';
-
-/**
- * Server options used when starting mezzo
- */
-export interface MezzoStartOptions {
-  port: number | string;
-  adminEndpoint?: string;
-  mockedDirectory?: string;
-  fsOverride?: any;
-  variantCategories?: VariantCategory[];
-}
+import { Route } from './lib/models/route-model';
 
 /**
  * Input provided when creating a new route
@@ -56,15 +45,6 @@ export interface FileHandlerOptions {
   baseDir?: string; // Base directory to scan method + variant for
   filePath?: string; // Exact file to read (bypasses variant logic)
   delay?: number;
-}
-
-/**
- * Options used for set/update/reset mock variant util calls
- */
-export interface ServerConnectionOptions {
-  useHttps?: boolean;
-  hostname?: string;
-  port?: number;
 }
 
 /**

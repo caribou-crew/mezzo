@@ -1,20 +1,21 @@
 import * as express from 'express';
-import { MezzoStartOptions } from '../types';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import logger from '../utils/logger';
+import logger from '@caribou-crew/mezzo-utils-logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
-import { Mezzo } from './core';
+import { Mezzo } from '../core';
 import * as path from 'path';
-import { version } from '../../package.json';
+import { version } from '../../../package.json';
+// import { StaticRouter } from 'react-router-dom/server';
 import {
   GetRoutesResponse,
+  MezzoStartOptions,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
 
 export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
     const response: GetRoutesResponse = {
-      routes: mezzo.serialiazeRoutes(),
+      routes: mezzo.util.serialiazeRoutes(),
       appVersion: version,
       variantCategories: mezzo.variantCategories,
     };
@@ -83,8 +84,15 @@ export const addAdminStaticSite = (
   app: express.Express,
   options?: MezzoStartOptions
 ) => {
+  const rootAdmin = `/${options?.adminEndpoint ?? 'mezzo'}`;
+
+  console.log('Starting at endpoint: ', rootAdmin);
+  app.use(rootAdmin, express.static(path.join(__dirname, '..', 'public')));
+
+  // With react routing on client side we need to call out routes if we also want to support server side
+  // Alternatively we could use something like hash based routing
   app.use(
-    `/${options?.adminEndpoint ?? 'mezzo'}`,
+    `${rootAdmin}/record`,
     express.static(path.join(__dirname, '..', 'public'))
   );
 };
@@ -103,4 +111,10 @@ export const addSiteManifest = (app: express.Express) => {
   items.forEach((i) => {
     app.use(i, express.static(path.join(__dirname, '..', 'public', i)));
   });
+};
+
+export default () => (mezzo: Mezzo) => {
+  addAdminEndpoints(mezzo.app, mezzo);
+  addAdminStaticSite(mezzo.app, mezzo.options);
+  addSiteManifest(mezzo.app);
 };
