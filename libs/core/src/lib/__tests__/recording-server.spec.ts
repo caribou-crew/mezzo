@@ -85,22 +85,23 @@ describe('recordingServer', () => {
     });
   });
 
-  describe('socket connection', () => {
-    it('should work', async () => {
-      const client = new WebSocket(`ws://localhost:${port}`);
+  // describe('socket connection', () => {
+  //   it('should work', async () => {
+  //     const client = new WebSocket(`ws://localhost:${port}`);
 
-      let welcomeMessage;
-      client.on('message', (data) => {
-        welcomeMessage = data.toString();
-      });
-      await waitForSocketState(client, client.OPEN);
+  //     let welcomeMessage;
+  //     client.on('message', (data) => {
+  //       welcomeMessage = data.toString();
+  //     });
+  //     await waitForSocketState(client, client.OPEN);
 
-      expect(welcomeMessage).toBe(
-        'Welcome to the mezzo recording socket server'
-      );
-      client.close();
-    });
-  });
+  // Probably won't keep welcome message
+  //     expect(welcomeMessage).toBe(
+  //       'Welcome to the mezzo recording socket server'
+  //     );
+  //     client.close();
+  //   });
+  // });
 
   // TODO move interceptor-fetch to that lib, shouldn't be in core
   // describe('functionality', () => {

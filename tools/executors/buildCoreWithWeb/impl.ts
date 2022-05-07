@@ -44,7 +44,7 @@ const deleteFolderRecursive = function (directoryPath) {
   }
 };
 
-export default async function echoExecutor(
+export default async function buildExecutor(
   options: ExecutorOptions,
   context: ExecutorContext
 ): Promise<{ success: boolean }> {
@@ -53,6 +53,7 @@ export default async function echoExecutor(
   const buildClient = await runExecutor(
     { project: 'admin-web', target: 'build' },
     options,
+    // { envFile: '.env.prod' },
     context
   );
 
@@ -69,6 +70,7 @@ export default async function echoExecutor(
     },
     {
       buildableProjectDepsInPackageJsonType: 'dependencies',
+      envFile: '.env.prod',
     },
     context
   );

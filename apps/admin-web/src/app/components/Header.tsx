@@ -11,13 +11,13 @@ import {
   MenuItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+// import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import HelpIcon from '@mui/icons-material/Help';
 import { openInNewTab } from '../utils/urlHelper';
 import { Link, useNavigate } from 'react-router-dom';
-import * as path from 'path';
+// import * as path from 'path';
 
 type Props = {
   name: string;
@@ -28,18 +28,18 @@ export default function Headers(props: Props) {
 
   // const basePath = process
   // TODO refactor
-  const prefix = process.env['NODE_ENV'] === 'production' ? '/mezzo/' : '/';
+  // const prefix = process.env['NODE_ENV'] === 'production' ? '/mezzo/' : '/';
 
   // TODO fire API call to server to get enabled capabilities?  This way if users don't care about recording they don't see it
   const navItems = [
     {
       label: 'Home',
-      path: prefix,
+      path: '/',
       isLink: true,
     },
     {
       label: 'Record',
-      path: `${prefix}record`,
+      path: `/record`,
       isLink: true,
     },
     // {

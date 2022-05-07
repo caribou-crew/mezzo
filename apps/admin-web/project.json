@@ -11,7 +11,7 @@
         "compiler": "babel",
         "outputPath": "dist/apps/admin-web",
         "index": "apps/admin-web/src/index.html",
-        "baseHref": "/",
+        "baseHref": "/mezzo/",
         "main": "apps/admin-web/src/main.tsx",
         "polyfills": "apps/admin-web/src/polyfills.ts",
         "tsConfig": "apps/admin-web/tsconfig.app.json",

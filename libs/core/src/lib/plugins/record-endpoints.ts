@@ -147,7 +147,7 @@ function setupWebSocketServer(mezzo: Mezzo) {
       // ws.send(`Hello, you sent -> ${message}`);
     });
     //send immediatly when client connets
-    ws.send('Welcome to the mezzo recording socket server');
+    // ws.send('Welcome to the mezzo recording socket server');
   });
 
   mezzo.websocketServer = websocketServer;
