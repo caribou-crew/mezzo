@@ -1,0 +1,34 @@
+{
+  "root": "libs/core-client",
+  "sourceRoot": "libs/core-client/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/core-client/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/core-client"],
+      "options": {
+        "jestConfig": "libs/core-client/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core-client",
+        "tsConfig": "libs/core-client/tsconfig.lib.json",
+        "packageJson": "libs/core-client/package.json",
+        "main": "libs/core-client/src/index.ts",
+        "assets": ["libs/core-client/*.md"]
+      }
+    }
+  },
+  "tags": []
+}
