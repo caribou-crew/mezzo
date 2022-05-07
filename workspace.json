@@ -5,6 +5,11 @@
     "admin-web-e2e": "apps/admin-web-e2e",
     "constants": "libs/constants",
     "core": "libs/core",
-    "interfaces": "libs/interfaces"
+    "core-client": "libs/core-client",
+    "core-server": "libs/core-server",
+    "interceptor-fetch": "libs/interceptor-fetch",
+    "interceptor-react-native": "libs/interceptor-react-native",
+    "interfaces": "libs/interfaces",
+    "utils-logger": "libs/utils-logger"
   }
 }
