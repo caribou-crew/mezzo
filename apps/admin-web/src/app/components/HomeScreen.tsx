@@ -19,7 +19,7 @@ import useFilterFromURL, { setURLHash } from '../hooks/useFilterFromURL';
 
 type SortProperty = 'method' | 'path' | '';
 
-type Props = {};
+type Props = Record<string, never>;
 
 export default function Home(props: Props) {
   const [selectedItem, setSelectedItem] = useState('');
