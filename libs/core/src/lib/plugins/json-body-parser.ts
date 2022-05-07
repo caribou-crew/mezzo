@@ -3,4 +3,8 @@ import { Mezzo } from '../core';
 
 export default () => (mezzo: Mezzo) => {
   mezzo.app.use(bodyParser.json({ limit: '5mb' }));
+
+  return {
+    name: 'json-body-parser',
+  };
 };

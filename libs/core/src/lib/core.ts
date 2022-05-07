@@ -18,7 +18,7 @@ import {
 } from '@caribou-crew/mezzo-constants';
 
 import {
-  MezzoStartOptions,
+  // MezzoStartOptions,
   ServerConnectionOptions,
   VariantCategory,
 } from '@caribou-crew/mezzo-interfaces';
@@ -29,8 +29,18 @@ import jsonBodyParser from './plugins/json-body-parser';
 import cors from './plugins/cors';
 import { ClientUtils } from './utils/client-utils';
 
-type MezzoServerPlugin = (mezzo: Mezzo) => void;
+// type MezzoServerPlugin = (mezzo: Mezzo) => void;
 
+// TODO: Figure out best way to type Mezzo server class and put in shared interface
+type MezzoServerPlugin = (mezzo: Mezzo) => Record<string, any>;
+export interface MezzoStartOptions {
+  port: number | string;
+  adminEndpoint?: string;
+  mockedDirectory?: string;
+  fsOverride?: any;
+  variantCategories?: VariantCategory[];
+  plugins?: MezzoServerPlugin[];
+}
 export const corePlugins: MezzoServerPlugin[] = [
   jsonBodyParser(),
   cors(),
@@ -53,7 +63,7 @@ const DEFAULT_OPTIONS: MezzoStartOptions = {
 
 export class Mezzo {
   public options: MezzoStartOptions = Object.assign({}, DEFAULT_OPTIONS);
-  public plugins: MezzoServerPlugin[] = [];
+  // public plugins: MezzoServerPlugin[] = [];
   public userRoutes: Route[] = [];
   public globalVariants: VariantInputData[] = [];
   public sessionState: SessionState;
@@ -118,6 +128,7 @@ export class Mezzo {
   }
 
   _processPlugins() {
+    console.log('Using plugins: ', this.options.plugins);
     if (Array.isArray(this.options.plugins)) {
       this.options.plugins.forEach((p) => this.use(p));
     }
@@ -148,11 +159,12 @@ export class Mezzo {
   };
 
   private use(pluginCreator: MezzoServerPlugin) {
+    logger.info('Binding plugins: ', pluginCreator);
     if (typeof pluginCreator !== 'function') {
       throw new Error('plugins must be a function');
     }
-    // pluginCreator.bind(this)(this);
-    pluginCreator.call(this, this);
+    const pluginData = pluginCreator.call(this, this);
+    logger.info(`Added plugin: ${pluginData?.name}`);
 
     // if (typeof plugin !== 'object') {
     //   throw new Error('plugins must return an object');

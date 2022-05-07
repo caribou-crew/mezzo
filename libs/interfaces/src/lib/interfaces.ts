@@ -43,14 +43,14 @@ export type SetRouteVariant = RouteVariant[];
 /**
  * Server options used when starting mezzo
  */
-export interface MezzoStartOptions {
-  port: number | string;
-  adminEndpoint?: string;
-  mockedDirectory?: string;
-  fsOverride?: any;
-  variantCategories?: VariantCategory[];
-  plugins?: any[];
-}
+// export interface MezzoStartOptions {
+//   port: number | string;
+//   adminEndpoint?: string;
+//   mockedDirectory?: string;
+//   fsOverride?: any;
+//   variantCategories?: VariantCategory[];
+//   plugins?: (any) => Record<string, any>[];
+// }
 
 /**
  * Options used for set/update/reset mock variant util calls

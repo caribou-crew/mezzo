@@ -15,6 +15,7 @@
     "build:shared-libs": "nx run-many --target=build --projects=constants,interfaces,interceptor-fetch,interceptor-react-native,core-client,utils-logger",
     "build:core:prod": "cross-env NODE_ENV=production npm run build:shared-libs && nx prepare core",
     "test": "nx run-many --all --target=test --parallel",
+    "test:coverage": "nx run-many --all --target=test --parallel --coverage",
     "clean": "rm -rf node_modules/ && npm install",
     "lintAll": "nx run-many --all --target=lint --parallel",
     "testAll": "nx run-many --all --target=test --parallel",
@@ -23,6 +24,7 @@
   },
   "private": true,
   "dependencies": {
+    "@caribou-crew/mezzo-constants": "file:dist/libs/constants",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fontsource/roboto": "^4.5.5",

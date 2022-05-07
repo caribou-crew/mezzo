@@ -2,13 +2,13 @@ import * as express from 'express';
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '@caribou-crew/mezzo-utils-logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
-import { Mezzo } from '../core';
+import { Mezzo, MezzoStartOptions } from '../core';
 import * as path from 'path';
 import { version } from '../../../package.json';
 // import { StaticRouter } from 'react-router-dom/server';
 import {
   GetRoutesResponse,
-  MezzoStartOptions,
+  // MezzoStartOptions,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
 
@@ -80,21 +80,20 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
   });
 };
 
+const staticPath = path.join(__dirname, '..', '..', 'public');
 export const addAdminStaticSite = (
   app: express.Express,
   options?: MezzoStartOptions
 ) => {
   const rootAdmin = `/${options?.adminEndpoint ?? 'mezzo'}`;
 
-  console.log('Starting at endpoint: ', rootAdmin);
-  app.use(rootAdmin, express.static(path.join(__dirname, '..', 'public')));
+  logger.info('Adding admin static site: ', rootAdmin);
+  logger.info('Static path: ', staticPath);
+  app.use(rootAdmin, express.static(staticPath));
 
   // With react routing on client side we need to call out routes if we also want to support server side
   // Alternatively we could use something like hash based routing
-  app.use(
-    `${rootAdmin}/record`,
-    express.static(path.join(__dirname, '..', 'public'))
-  );
+  app.use(`${rootAdmin}/record`, express.static(staticPath));
 };
 
 export const addSiteManifest = (app: express.Express) => {
@@ -109,12 +108,16 @@ export const addSiteManifest = (app: express.Express) => {
   ];
 
   items.forEach((i) => {
-    app.use(i, express.static(path.join(__dirname, '..', 'public', i)));
+    app.use(i, express.static(staticPath));
   });
 };
 
 export default () => (mezzo: Mezzo) => {
+  logger.debug('Admin Endpoints attaching');
   addAdminEndpoints(mezzo.app, mezzo);
   addAdminStaticSite(mezzo.app, mezzo.options);
   addSiteManifest(mezzo.app);
+  return {
+    name: 'admin-endpoints-plugins',
+  };
 };

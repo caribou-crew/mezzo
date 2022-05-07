@@ -6,7 +6,7 @@ import {
   MEZZO_API_GET_RECORDINGS,
 } from '@caribou-crew/mezzo-constants';
 
-import { interceptedFetch } from '@caribou-crew/mezzo-interceptor-fetch';
+// import { interceptedFetch } from '@caribou-crew/mezzo-interceptor-fetch';
 import { RecordedItem } from '@caribou-crew/mezzo-interfaces';
 import NetworkItem from './NetworkItem';
 // interceptFetch();
@@ -77,7 +77,7 @@ export default function RecordScreen(props: Props) {
   // const [state, dispatch] = useReducer(reducer, { items: [] });
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchWithIntercept = interceptedFetch(fetch, {});
+  // const fetchWithIntercept = interceptedFetch(fetch, {});
 
   const ws = useRef<WebSocket | null>(null);
 
@@ -139,14 +139,14 @@ export default function RecordScreen(props: Props) {
         {isPaused ? 'Resume' : 'Pause'}
       </Button>
       <br /> */}
-      <Button
+      {/* <Button
         variant="outlined"
         onClick={() => {
           fetchWithIntercept('/api/food/meat');
         }}
       >
         Make API Call{' '}
-      </Button>
+      </Button> */}
       <br />
       <Typography>Total items: {state.items.length}</Typography>
       Redux:

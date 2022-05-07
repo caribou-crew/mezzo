@@ -8,8 +8,6 @@ import mezzo from '../core';
 import { recordingServerPort } from './testPorts';
 import { waitForSocketState } from './webSocketTestUtils';
 import * as WebSocket from 'ws';
-import fetch from 'node-fetch';
-import { interceptedFetch } from '@caribou-crew/mezzo-interceptor-fetch';
 import logger from '@caribou-crew/mezzo-utils-logger';
 
 const movies = [
@@ -104,23 +102,24 @@ describe('recordingServer', () => {
     });
   });
 
-  describe('functionality', () => {
-    it.skip('mock fetch for testing', async () => {
-      const fetchWithIntercept = interceptedFetch(fetch, { port });
-      const response = await fetchWithIntercept(
-        `http://localhost:${port}/movies`
-      );
+  // TODO move interceptor-fetch to that lib, shouldn't be in core
+  // describe('functionality', () => {
+  //   it.skip('mock fetch for testing', async () => {
+  //     const fetchWithIntercept = interceptedFetch(fetch, { port });
+  //     const response = await fetchWithIntercept(
+  //       `http://localhost:${port}/movies`
+  //     );
 
-      // Assert fetch still works as expected
-      const json = await response.json();
-      expect(json).toEqual(movies);
+  //     // Assert fetch still works as expected
+  //     const json = await response.json();
+  //     expect(json).toEqual(movies);
 
-      // Assert local recording API has processed the request and response
-      const response2 = await request.get(MEZZO_API_GET_RECORDINGS);
-      console.log('Recordings: ', response2.body.responses);
-      expect(response2.status).toBe(200);
-      // expect(response2.body.responses).toHaveLength(2);
-      // expect(response2.body.requests).toHaveLength(1);
-    });
-  });
+  //     // Assert local recording API has processed the request and response
+  //     const response2 = await request.get(MEZZO_API_GET_RECORDINGS);
+  //     console.log('Recordings: ', response2.body.responses);
+  //     expect(response2.status).toBe(200);
+  //     // expect(response2.body.responses).toHaveLength(2);
+  //     // expect(response2.body.requests).toHaveLength(1);
+  //   });
+  // });
 });

@@ -156,4 +156,7 @@ function setupWebSocketServer(mezzo: Mezzo) {
 export default () => (mezzo: Mezzo) => {
   setupAPI(mezzo.app);
   setupWebSocketServer(mezzo);
+  return {
+    name: 'recording-endpoints-plugin',
+  };
 };

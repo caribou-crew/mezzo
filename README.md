@@ -37,5 +37,7 @@ There are some subtle differences in how things behave due to this. Here is how 
 1. Run `npm run build:core:prod`
 2. Navigate to `/dist/libs/core`
 3. Run `npm i` (as it has dependencies on interfaces and constants)
+   - TODO: Figure out better way to symlink or test node modules that aren't published or latest version is not yet published as all local mezzo dependencies point to npm (not local filesystem) when testing this way. Really only works for testing new content in core, not content in other packages without publishing every iteration (must be better way)
 4. Start server by running `node src/index start`
+   - If you want test data, install `cross-env` globally and run `cross-env USE_DUMMY_DATA=true node src/index.js start`
 5. Load site at `http://localhost:8000/mezzo/`
