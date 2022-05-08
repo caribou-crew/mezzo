@@ -15,6 +15,18 @@ jobs:
       - run: npm ci
       - run: npm run test
       - run: npm run build:core:prod
+      - run: npm publish dist/libs/utils-logger --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/interceptor-react-native --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/core-client --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm publish dist/libs/interfaces --access public
         continue-on-error: true
         env:

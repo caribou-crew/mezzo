@@ -3,7 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <title>Mezzo</title>
-    <base href="/" />
+    <!-- old -->
+    <!-- <base href="/" /> -->
+
+    <!-- webpack -->
+    <!-- <base href="<%= htmlWebpackPlugin.options.baseHref %>" /> -->
+
+    <!-- NX_PUBLIC_URL -->
+    <!-- <base href="%NX_PUBLIC_URL%" /> -->
+    <base href="%NX_PUBLIC_URL%" />
+
+    <!-- desired harcoded though -->
+    <!-- <base href="/mezzo/" /> -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />

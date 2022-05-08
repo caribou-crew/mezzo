@@ -1,10 +1,10 @@
 import { Route } from '../models/route-model';
-import logger from './logger';
+import logger from '@caribou-crew/mezzo-utils-logger';
 import * as path from 'path';
 import * as util from 'util';
 import * as nodeFs from 'fs';
 import { Request } from 'express';
-import { FileHandlerOptions } from '../types';
+import { FileHandlerOptions } from '../../types';
 
 export interface Variant {
   id: string;

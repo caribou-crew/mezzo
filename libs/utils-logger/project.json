@@ -1,0 +1,34 @@
+{
+  "root": "libs/utils-logger",
+  "sourceRoot": "libs/utils-logger/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/utils-logger/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/utils-logger"],
+      "options": {
+        "jestConfig": "libs/utils-logger/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/utils-logger",
+        "tsConfig": "libs/utils-logger/tsconfig.lib.json",
+        "packageJson": "libs/utils-logger/package.json",
+        "main": "libs/utils-logger/src/index.ts",
+        "assets": ["libs/utils-logger/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

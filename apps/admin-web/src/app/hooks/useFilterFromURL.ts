@@ -1,5 +1,6 @@
 import { RouteItemType } from '@caribou-crew/mezzo-interfaces';
 import { useEffect } from 'react';
+import { PUBLIC_URL } from '../utils/urlPrefix';
 
 export interface URLHashCallback {
   routes: RouteItemType[];
@@ -13,7 +14,7 @@ const hashKey = 'label';
  * If dev we're on port 4200 in our own build at root (/)
  * If prod (assembled in core) we're at /mezzo and want to make sure replaceState keeps us at /mezzo
  */
-const prefix = process.env['NODE_ENV'] === 'production' ? '/mezzo/' : '/';
+// const prefix = process.env['NODE_ENV'] === 'production' ? '/mezzo/' : '/';
 
 /**
  * If #label hash is set in URL on load, then set that value as the initial filter
@@ -34,13 +35,14 @@ export const getURLHash = () => {
 };
 
 export const setURLHash = (value: string) => {
+  console.log('Value of public URL: ', PUBLIC_URL);
   if (value.length > 0) {
     window.history.replaceState(
       null,
       '',
-      `${prefix}#${hashKey}/${encodeURIComponent(value)}`
+      `${PUBLIC_URL}#${hashKey}/${encodeURIComponent(value)}`
     );
   } else {
-    window.history.replaceState(null, '', prefix);
+    window.history.replaceState(null, '', PUBLIC_URL);
   }
 };

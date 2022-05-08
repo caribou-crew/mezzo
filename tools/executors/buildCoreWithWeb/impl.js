@@ -133,42 +133,7 @@ var __generator =
       return { value: op[0] ? op[1] : void 0, done: true };
     }
   };
-var __asyncValues =
-  (this && this.__asyncValues) ||
-  function (o) {
-    if (!Symbol.asyncIterator)
-      throw new TypeError('Symbol.asyncIterator is not defined.');
-    var m = o[Symbol.asyncIterator],
-      i;
-    return m
-      ? m.call(o)
-      : ((o =
-          typeof __values === 'function' ? __values(o) : o[Symbol.iterator]()),
-        (i = {}),
-        verb('next'),
-        verb('throw'),
-        verb('return'),
-        (i[Symbol.asyncIterator] = function () {
-          return this;
-        }),
-        i);
-    function verb(n) {
-      i[n] =
-        o[n] &&
-        function (v) {
-          return new Promise(function (resolve, reject) {
-            (v = o[n](v)), settle(resolve, reject, v.done, v.value);
-          });
-        };
-    }
-    function settle(resolve, reject, d, v) {
-      Promise.resolve(v).then(function (v) {
-        resolve({ value: v, done: d });
-      }, reject);
-    }
-  };
 exports.__esModule = true;
-var devkit_1 = require('@nrwl/devkit');
 var fs = require('fs');
 var path = require('path');
 /**
@@ -207,143 +172,51 @@ var deleteFolderRecursive = function (directoryPath) {
     fs.rmdirSync(directoryPath);
   }
 };
-function echoExecutor(options, context) {
-  var e_1, _a, e_2, _b;
+function buildExecutor(options, context) {
   return __awaiter(this, void 0, void 0, function () {
-    var buildClient,
-      buildClient_1,
-      buildClient_1_1,
-      result,
-      e_1_1,
-      buildLib,
-      buildLib_1,
-      buildLib_1_1,
-      result,
-      e_2_1;
-    return __generator(this, function (_c) {
-      switch (_c.label) {
-        case 0:
-          console.log('Running admin-web to core executor');
-          return [
-            4 /*yield*/,
-            (0, devkit_1.runExecutor)(
+    return __generator(this, function (_a) {
+      console.log('Running admin-web to core executor');
+      // Skip build as I can just do copy now that baseHref is the same indev
+      /*
+            const buildClient = await runExecutor(
               { project: 'admin-web', target: 'build' },
               options,
+              // { envFile: '.env.prod' },
               context
-            ),
-          ];
-        case 1:
-          buildClient = _c.sent();
-          _c.label = 2;
-        case 2:
-          _c.trys.push([2, 7, 8, 13]);
-          buildClient_1 = __asyncValues(buildClient);
-          _c.label = 3;
-        case 3:
-          return [4 /*yield*/, buildClient_1.next()];
-        case 4:
-          if (!((buildClient_1_1 = _c.sent()), !buildClient_1_1.done))
-            return [3 /*break*/, 6];
-          result = buildClient_1_1.value;
-          if (!result.success) {
-            return [2 /*return*/, result];
-          }
-          _c.label = 5;
-        case 5:
-          return [3 /*break*/, 3];
-        case 6:
-          return [3 /*break*/, 13];
-        case 7:
-          e_1_1 = _c.sent();
-          e_1 = { error: e_1_1 };
-          return [3 /*break*/, 13];
-        case 8:
-          _c.trys.push([8, , 11, 12]);
-          if (
-            !(
-              buildClient_1_1 &&
-              !buildClient_1_1.done &&
-              (_a = buildClient_1['return'])
-            )
-          )
-            return [3 /*break*/, 10];
-          return [4 /*yield*/, _a.call(buildClient_1)];
-        case 9:
-          _c.sent();
-          _c.label = 10;
-        case 10:
-          return [3 /*break*/, 12];
-        case 11:
-          if (e_1) throw e_1.error;
-          return [7 /*endfinally*/];
-        case 12:
-          return [7 /*endfinally*/];
-        case 13:
-          return [
-            4 /*yield*/,
-            (0, devkit_1.runExecutor)(
+            );
+          
+            for await (const result of buildClient) {
+              if (!result.success) {
+                return result;
+              }
+            }
+          
+            const buildLib = await runExecutor(
               {
                 project: 'core',
                 target: 'build',
               },
               {
                 buildableProjectDepsInPackageJsonType: 'dependencies',
+                envFile: '.env.prod',
               },
               context
-            ),
-          ];
-        case 14:
-          buildLib = _c.sent();
-          _c.label = 15;
-        case 15:
-          _c.trys.push([15, 20, 21, 26]);
-          buildLib_1 = __asyncValues(buildLib);
-          _c.label = 16;
-        case 16:
-          return [4 /*yield*/, buildLib_1.next()];
-        case 17:
-          if (!((buildLib_1_1 = _c.sent()), !buildLib_1_1.done))
-            return [3 /*break*/, 19];
-          result = buildLib_1_1.value;
-          if (!result.success) {
-            return [2 /*return*/, result];
-          }
-          _c.label = 18;
-        case 18:
-          return [3 /*break*/, 16];
-        case 19:
-          return [3 /*break*/, 26];
-        case 20:
-          e_2_1 = _c.sent();
-          e_2 = { error: e_2_1 };
-          return [3 /*break*/, 26];
-        case 21:
-          _c.trys.push([21, , 24, 25]);
-          if (
-            !(buildLib_1_1 && !buildLib_1_1.done && (_b = buildLib_1['return']))
-          )
-            return [3 /*break*/, 23];
-          return [4 /*yield*/, _b.call(buildLib_1)];
-        case 22:
-          _c.sent();
-          _c.label = 23;
-        case 23:
-          return [3 /*break*/, 25];
-        case 24:
-          if (e_2) throw e_2.error;
-          return [7 /*endfinally*/];
-        case 25:
-          return [7 /*endfinally*/];
-        case 26:
-          copyRecursiveSync(
-            './dist/apps/admin-web',
-            './dist/libs/core/src/public' // TODO this may have to change based on how app is built
-          );
-          // delete dist/core/src/resources (2mb of unnecessary dev)
-          deleteFolderRecursive('./dist/libs/core/src/resources');
-          return [2 /*return*/, { success: true }];
-      }
+            );
+          
+            for await (const result of buildLib) {
+              if (!result.success) {
+                return result;
+              }
+            }
+            */
+      copyRecursiveSync(
+        './dist/apps/admin-web',
+        './dist/libs/core/src/public' // TODO this may have to change based on how app is built
+      );
+      // delete dist/core/src/resources (2mb of unnecessary dev)
+      deleteFolderRecursive('./dist/libs/core/src/resources');
+      return [2 /*return*/, { success: true }];
     });
   });
 }
-exports['default'] = echoExecutor;
+exports['default'] = buildExecutor;

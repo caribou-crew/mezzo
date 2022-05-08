@@ -1,4 +1,4 @@
-import logger from './logger';
+import logger from '@caribou-crew/mezzo-utils-logger';
 
 export function getValidMethod(methodInput?: string) {
   const method = methodInput?.toLowerCase();

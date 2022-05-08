@@ -2,11 +2,12 @@ import * as SuperTestRequest from 'supertest';
 import { fs, vol } from 'memfs';
 import mezzo from '../core';
 import * as path from 'path';
-import { resourcesPath } from '../../utils/pathHelpers';
+import { resourcesPath } from '../utils/pathHelpers';
 import {
   X_REQUEST_SESSION,
   X_REQUEST_VARIANT,
 } from '@caribou-crew/mezzo-constants';
+import { routeStatePort } from './testPorts';
 
 describe('route-state', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
@@ -23,7 +24,7 @@ describe('route-state', () => {
   const sessionId = '123';
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
-    const port = 3006;
+    const port = routeStatePort;
     request = SuperTestRequest(`http://localhost:${port}`);
     mockedDirectory = path.join(resourcesPath, 'some-custom-mocked-data');
     await mezzo.start({
@@ -77,10 +78,12 @@ describe('route-state', () => {
       expect(res3.body.variant).toBe(_default);
     });
     it('should prefer request variant header over session and route state', async () => {
-      await mezzo.setMockVariantForSession(sessionId, [
+      await mezzo.clientUtil.setMockVariantForSession(sessionId, [
         { routeID: routeId, variantID: variant2 },
       ]);
-      await mezzo.setMockVariant([{ routeID: routeId, variantID: variant2 }]);
+      await mezzo.clientUtil.setMockVariant([
+        { routeID: routeId, variantID: variant2 },
+      ]);
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId)
@@ -92,7 +95,7 @@ describe('route-state', () => {
 
   describe('session scoped variant', () => {
     it('should respect variant from header', async () => {
-      await mezzo.setMockVariantForSession(sessionId, [
+      await mezzo.clientUtil.setMockVariantForSession(sessionId, [
         { routeID: routeId, variantID: variant2 },
       ]);
       const res1 = await request
@@ -101,7 +104,7 @@ describe('route-state', () => {
       expect(res1.status).toBe(200);
       expect(res1.body.variant).toBe(variant2);
 
-      await mezzo.setMockVariantForSession(sessionId, [
+      await mezzo.clientUtil.setMockVariantForSession(sessionId, [
         { routeID: routeId, variantID: variant1 },
       ]);
       const res2 = await request
@@ -118,7 +121,7 @@ describe('route-state', () => {
       expect(res1.body.variant).toBe(_default);
     });
     it('should fall back to default variant for invalid variant', async () => {
-      await mezzo.setMockVariantForSession(sessionId, [
+      await mezzo.clientUtil.setMockVariantForSession(sessionId, [
         { routeID: routeId, variantID: 'bogus' },
       ]);
       const res1 = await request
@@ -128,10 +131,12 @@ describe('route-state', () => {
       expect(res1.body.variant).toBe(_default);
     });
     it('should prefer session variant header over route state', async () => {
-      await mezzo.setMockVariantForSession(sessionId, [
+      await mezzo.clientUtil.setMockVariantForSession(sessionId, [
         { routeID: routeId, variantID: variant1 },
       ]);
-      await mezzo.setMockVariant([{ routeID: routeId, variantID: variant2 }]);
+      await mezzo.clientUtil.setMockVariant([
+        { routeID: routeId, variantID: variant2 },
+      ]);
       const res1 = await request
         .get(routePath)
         .set(X_REQUEST_SESSION, sessionId);

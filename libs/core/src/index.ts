@@ -1,7 +1,7 @@
 import mezzo from './lib/core';
 export default mezzo;
 import * as path from 'path';
-import { resourcesPath } from './utils/pathHelpers';
+import { resourcesPath } from './lib/utils/pathHelpers';
 import { GLOBAL_VARIANT_CATEGORY } from '@caribou-crew/mezzo-constants';
 
 const [arg] = process.argv.slice(2);

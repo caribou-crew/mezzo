@@ -44,15 +44,18 @@ const deleteFolderRecursive = function (directoryPath) {
   }
 };
 
-export default async function echoExecutor(
+export default async function buildExecutor(
   options: ExecutorOptions,
   context: ExecutorContext
 ): Promise<{ success: boolean }> {
   console.log('Running admin-web to core executor');
 
+  // Skip build as I can just do copy now that baseHref is the same indev
+  /*
   const buildClient = await runExecutor(
     { project: 'admin-web', target: 'build' },
     options,
+    // { envFile: '.env.prod' },
     context
   );
 
@@ -69,6 +72,7 @@ export default async function echoExecutor(
     },
     {
       buildableProjectDepsInPackageJsonType: 'dependencies',
+      envFile: '.env.prod',
     },
     context
   );
@@ -78,6 +82,7 @@ export default async function echoExecutor(
       return result;
     }
   }
+  */
 
   copyRecursiveSync(
     './dist/apps/admin-web',
