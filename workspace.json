@@ -1,17 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "workspace": {
-      "root": ".",
-      "targets": {
-        "version": {
-          "executor": "@jscutlery/semver:version",
-          "options": {
-            "syncVersions": true
-          }
-        }
-      }
-    },
     "admin-web": "apps/admin-web",
     "admin-web-e2e": "apps/admin-web-e2e",
     "constants": "libs/constants",
@@ -22,6 +11,17 @@
     "interceptor-react-native": "libs/interceptor-react-native",
     "interceptor-react-native-with-reactotron": "libs/interceptor-react-native-with-reactotron",
     "interfaces": "libs/interfaces",
-    "utils-logger": "libs/utils-logger"
+    "utils-logger": "libs/utils-logger",
+    "workspace": {
+      "root": ".",
+      "targets": {
+        "version": {
+          "executor": "@jscutlery/semver:version",
+          "options": {
+            "syncVersions": true
+          }
+        }
+      }
+    }
   }
 }
