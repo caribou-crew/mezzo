@@ -25,7 +25,7 @@
           "apps/admin-web/src/site.webmanifest",
           "apps/admin-web/src/assets"
         ],
-        "styles": [],
+        "styles": ["apps/admin-web/src/styles.scss"],
         "scripts": [],
         "webpackConfig": "@nrwl/react/plugins/webpack"
       },
