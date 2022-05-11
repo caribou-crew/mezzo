@@ -16,6 +16,7 @@
     "build:core:prod": "cross-env NODE_ENV=production nx run-many --target=build --projects=core,admin-web && nx prepare core",
     "build:core:prod:legacy": "cross-env NODE_ENV=production npm run build:shared-libs && nx prepare core",
     "test": "nx run-many --all --target=test --parallel",
+    "test:cloud": "cross-env NX_BRANCH=testing nx run-many --all --target=test --parallel",
     "test:coverage": "nx run-many --all --target=test --parallel --coverage",
     "clean": "rm -rf node_modules/ && npm install",
     "lintAll": "nx run-many --all --target=lint --parallel",
