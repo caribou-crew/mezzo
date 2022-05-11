@@ -2,7 +2,6 @@ export default class ConnectionManager {
   private webSocket: any;
 
   constructor(path?: string) {
-    console.log('RN socket Connection attempt');
     this.webSocket = new WebSocket(path);
   }
 
@@ -21,7 +20,9 @@ export default class ConnectionManager {
   }
 
   close() {
-    console.log('RN socket close');
+    console.log(
+      '[interceptor-react-native.connectionManager close] RN socket close'
+    );
     this.webSocket.close();
   }
 }

@@ -1,18 +1,10 @@
-# interceptor-fetch
+# Package Status
 
-This library was generated with [Nx](https://nx.dev).
+Currently a work in progress while interceptor-react-native is being focused on.
 
-## Running unit tests
+### Testing against a client locally
 
-Run `nx test interceptor-fetch` to execute the unit tests via [Jest](https://jestjs.io).
-
-## Running lint
-
-Run `nx lint interceptor-fetch` to execute the lint via [ESLint](https://eslint.org/).
-
-### Testing against RN Client locally
-
-Couldn't get this working with npm, but with yarn run
+Couldn't get this working with npm during local testing, but with yarn run
 
 `yarn add <rootDir>\mezzo\dist\libs\constants`
 
@@ -31,3 +23,15 @@ You'll need to first import react-native-get-random-values per https://github.co
 
 Can this library be updated to detect RN and deal with this on their behalf?
 We can likely drop the third party uuid dependency all together if we come up with our own internal random value, it just needs a unique ID per request initiated by client.
+
+# interceptor-fetch
+
+This library was generated with [Nx](https://nx.dev).
+
+## Running unit tests
+
+Run `nx test interceptor-fetch` to execute the unit tests via [Jest](https://jestjs.io).
+
+## Running lint
+
+Run `nx lint interceptor-fetch` to execute the lint via [ESLint](https://eslint.org/).

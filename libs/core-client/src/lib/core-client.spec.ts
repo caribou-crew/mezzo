@@ -1,7 +1,8 @@
-import { createClient, MezzoClient } from './core-client';
+import { MezzoClient } from './core-client';
 import * as WebSocket from 'ws';
 import { startServer, waitForSocketState } from './test/webSocketTestUtils';
 import logger, { setLogLevel } from '@caribou-crew/mezzo-utils-logger';
+import { MezzoRecordingClient } from './plugins/recording-client';
 
 export function timeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -14,7 +15,7 @@ const port = 3000 + Number(process.env.JEST_WORKER_ID);
 
 describe('coreClient sockets', () => {
   let server;
-  let client: MezzoClient;
+  let client: MezzoRecordingClient;
 
   beforeAll(async () => {
     global.console = require('console'); // Don't stack trace out all console logs
@@ -37,7 +38,12 @@ describe('coreClient sockets', () => {
     };
 
     // Initialize and connect clinet
-    client = createClient({ createSocket, port, onCommand });
+    const mezzoClient = new MezzoClient().initRecording({
+      createSocket,
+      port,
+      onCommand,
+    });
+    client = mezzoClient.recordingClient;
     await waitForSocketState(client, WebSocket.OPEN);
 
     logger.info('--Done watiting for socket state');
