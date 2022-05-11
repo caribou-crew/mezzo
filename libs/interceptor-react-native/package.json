@@ -1,6 +1,6 @@
 {
   "name": "@caribou-crew/mezzo-interceptor-react-native",
-  "version": "0.0.1",
+  "version": "0.7.0",
   "peerDependencies": {
     "react-native": "0.x.x"
   }
