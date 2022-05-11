@@ -1,6 +1,17 @@
 {
   "version": 2,
   "projects": {
+    "workspace": {
+      "root": ".",
+      "targets": {
+        "version": {
+          "executor": "@jscutlery/semver:version",
+          "options": {
+            "syncVersions": true
+          }
+        }
+      }
+    },
     "admin-web": "apps/admin-web",
     "admin-web-e2e": "apps/admin-web-e2e",
     "constants": "libs/constants",

@@ -22,6 +22,10 @@ If changes are made to that file compile it `npx tsc tools/executors/buildCoreWi
 
 # Publishing
 
+## Create new Tag
+
+`git tag vx.y.z`
+
 ## Bump Version
 
 This project uses https://github.com/jscutlery/semver, currently in synced mode.
