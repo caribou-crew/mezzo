@@ -1,0 +1,36 @@
+{
+  "root": "libs/interceptor-react-native-with-reactotron",
+  "sourceRoot": "libs/interceptor-react-native-with-reactotron/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/interceptor-react-native-with-reactotron/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/interceptor-react-native-with-reactotron"],
+      "options": {
+        "jestConfig": "libs/interceptor-react-native-with-reactotron/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/interceptor-react-native-with-reactotron",
+        "tsConfig": "libs/interceptor-react-native-with-reactotron/tsconfig.lib.json",
+        "packageJson": "libs/interceptor-react-native-with-reactotron/package.json",
+        "main": "libs/interceptor-react-native-with-reactotron/src/index.ts",
+        "assets": ["libs/interceptor-react-native-with-reactotron/*.md"]
+      }
+    }
+  },
+  "tags": []
+}
