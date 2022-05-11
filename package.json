@@ -15,6 +15,7 @@
     "build:shared-libs": "nx run-many --target=build --projects=constants,interfaces,interceptor-fetch,interceptor-react-native,core-client,utils-logger,interceptor-react-native-with-reactotron",
     "build:core:prod": "cross-env NODE_ENV=production nx run-many --target=build --projects=core,admin-web && nx prepare core",
     "build:core:prod:legacy": "cross-env NODE_ENV=production npm run build:shared-libs && nx prepare core",
+    "bumpVersion": "nx run workspace:version --skipProjectChangelog --syncVersions --origin=upstream",
     "commit": "cz",
     "test": "nx run-many --all --target=test --parallel",
     "test:cloud": "cross-env NX_BRANCH=testing nx run-many --all --target=test --parallel",

@@ -20,19 +20,17 @@ When building to publish to npm the web project is actually injected into the co
 This is done under the hood by the `nx prepare core` step powered bythe buildCoreWithWeb/impl file.
 If changes are made to that file compile it `npx tsc tools/executors/buildCoreWithWeb/impl` via `npm run build:executor`. It may mention a couple tsc errors but confirm it compiles by running `git status` (the file `tools/executors/buildCoreWithWeb/impl.js` should be updated).
 
-# Publishing
+# Commiting
 
-## Create new Tag
-
-`git tag vx.y.z`
+This repo uses conventional commits, an easy interactive way to stay compliant is to run `npm run commit` or `git cz` when committing.
 
 ## Bump Version
 
 This project uses https://github.com/jscutlery/semver, currently in synced mode.
 
-Release workspace by running `nx run workspace:version [...options]`
+Release workspace by running `nx run workspace:version`
 
-Run `npm publish dist/libs/core --access public` from the root of the project.
+Run `npm publish dist/libs/core --access public` from the root of the project, but CI will push it all when a release is made.
 
 # Test
 
