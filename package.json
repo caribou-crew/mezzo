@@ -15,6 +15,7 @@
     "build:shared-libs": "nx run-many --target=build --projects=constants,interfaces,interceptor-fetch,interceptor-react-native,core-client,utils-logger,interceptor-react-native-with-reactotron",
     "build:core:prod": "cross-env NODE_ENV=production nx run-many --target=build --projects=core,admin-web && nx prepare core",
     "build:core:prod:legacy": "cross-env NODE_ENV=production npm run build:shared-libs && nx prepare core",
+    "commit": "cz",
     "test": "nx run-many --all --target=test --parallel",
     "test:cloud": "cross-env NX_BRANCH=testing nx run-many --all --target=test --parallel",
     "test:coverage": "nx run-many --all --target=test --parallel --coverage",
@@ -79,8 +80,10 @@
     "@typescript-eslint/eslint-plugin": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
     "babel-jest": "27.5.1",
+    "commitizen": "^4.2.4",
     "cross-env": "^7.0.3",
     "cypress": "^9.1.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "8.12.0",
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-cypress": "^2.10.3",
@@ -100,5 +103,10 @@
     "supertest": "^6.2.2",
     "ts-jest": "27.1.4",
     "typescript": "~4.5.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
