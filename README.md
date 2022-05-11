@@ -28,7 +28,7 @@ This repo uses conventional commits, an easy interactive way to stay compliant i
 
 This project uses https://github.com/jscutlery/semver, currently in synced mode.
 
-Release workspace by running `nx run workspace:version`
+Release workspace by running `npm run bumpVersion`
 
 Run `npm publish dist/libs/core --access public` from the root of the project, but CI will push it all when a release is made.
 
