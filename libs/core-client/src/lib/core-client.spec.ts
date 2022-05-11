@@ -25,7 +25,7 @@ describe('coreClient sockets', () => {
 
   afterAll(() => server.close());
 
-  test('Server echoes the message it receives from client', async () => {
+  test.skip('Server echoes the message it receives from client', async () => {
     const messages = [];
 
     // onMessage callback for client
