@@ -1,5 +1,4 @@
 {
-  "root": "libs/interceptor-react-native",
   "sourceRoot": "libs/interceptor-react-native/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +13,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/interceptor-react-native"],
       "options": {
-        "jestConfig": "libs/interceptor-react-native/jest.config.js",
+        "jestConfig": "libs/interceptor-react-native/jest.config.ts",
         "passWithNoTests": true
       }
     },

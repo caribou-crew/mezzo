@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'interceptor-react-native-with-reactotron',
-  preset: '../../jest.preset.js',
+  displayName: 'interceptor-react-native',
+
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -11,6 +11,6 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory:
-    '../../coverage/libs/interceptor-react-native-with-reactotron',
+  coverageDirectory: '../../coverage/libs/interceptor-react-native',
+  preset: '../../jest.preset.ts',
 };

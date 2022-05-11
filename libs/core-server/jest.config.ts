@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'utils-logger',
-  preset: '../../jest.preset.js',
+  displayName: 'core-server',
+
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -11,5 +11,6 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/utils-logger',
+  coverageDirectory: '../../coverage/libs/core-server',
+  preset: '../../jest.preset.ts',
 };

@@ -1,5 +1,4 @@
 {
-  "root": "libs/core-server",
   "sourceRoot": "libs/core-server/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +13,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/core-server"],
       "options": {
-        "jestConfig": "libs/core-server/jest.config.js",
+        "jestConfig": "libs/core-server/jest.config.ts",
         "passWithNoTests": true
       }
     },

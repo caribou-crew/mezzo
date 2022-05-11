@@ -1,5 +1,4 @@
 {
-  "root": "libs/constants",
   "sourceRoot": "libs/constants/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +13,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/constants"],
       "options": {
-        "jestConfig": "libs/constants/jest.config.js",
+        "jestConfig": "libs/constants/jest.config.ts",
         "passWithNoTests": true
       }
     },
