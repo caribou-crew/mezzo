@@ -22,6 +22,12 @@ If changes are made to that file compile it `npx tsc tools/executors/buildCoreWi
 
 # Publishing
 
+## Bump Version
+
+This project uses https://github.com/jscutlery/semver, currently in synced mode.
+
+Release workspace by running `nx run workspace:version [...options]`
+
 Run `npm publish dist/libs/core --access public` from the root of the project.
 
 # Test

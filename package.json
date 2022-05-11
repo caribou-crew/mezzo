@@ -54,6 +54,9 @@
     "ws": "^8.6.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
+    "@jscutlery/semver": "^2.23.4",
     "@nrwl/cli": "14.1.4",
     "@nrwl/cypress": "14.1.4",
     "@nrwl/eslint-plugin-nx": "14.1.4",
@@ -85,6 +88,7 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.5.0",
+    "husky": "^7.0.4",
     "jest": "27.5.1",
     "jest-websocket-mock": "^2.3.0",
     "memfs": "^3.4.1",
