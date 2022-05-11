@@ -5,6 +5,9 @@ on:
 
 jobs:
   unit-tests:
+    strategy:
+      matrix:
+        project: ['admin-web', 'core', 'core-client']
     name: Jest Unit Test
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -17,8 +20,11 @@ jobs:
           node-version: 16.x
       - name: Npm install
         run: npm install
+      - name: install nx
+        run: npm i -g nx
       - name: Unit test
-        run: npm run testAll
+        run: nx test ${{ matrix.project }}
+        # run: npm run testAll
   linting:
     name: Linting
     runs-on: ubuntu-latest
