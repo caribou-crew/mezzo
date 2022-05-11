@@ -26,7 +26,8 @@
         "tsConfig": "libs/interceptor-react-native/tsconfig.lib.json",
         "packageJson": "libs/interceptor-react-native/package.json",
         "main": "libs/interceptor-react-native/src/index.ts",
-        "assets": ["libs/interceptor-react-native/*.md"]
+        "assets": ["libs/interceptor-react-native/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     }
   },

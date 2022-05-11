@@ -1,7 +1,7 @@
 import { MezzoClient } from './core-client';
 import * as WebSocket from 'ws';
 import { startServer, waitForSocketState } from './test/webSocketTestUtils';
-import logger, { setLogLevel } from '@caribou-crew/mezzo-utils-logger';
+// import logger, { setLogLevel } from '@caribou-crew/mezzo-utils-logger';
 import { MezzoRecordingClient } from './plugins/recording-client';
 
 export function timeout(ms: number) {
@@ -19,7 +19,7 @@ describe('coreClient sockets', () => {
 
   beforeAll(async () => {
     global.console = require('console'); // Don't stack trace out all console logs
-    setLogLevel('debug');
+    // setLogLevel('debug');
     server = await startServer(port);
   });
 
@@ -30,7 +30,7 @@ describe('coreClient sockets', () => {
 
     // onMessage callback for client
     const onCommand = (data: any) => {
-      logger.info('In custom on response', data);
+      // logger.info('In custom on response', data);
       messages.push(data);
       if (messages.length >= 2) {
         client.close();
@@ -46,7 +46,7 @@ describe('coreClient sockets', () => {
     client = mezzoClient.recordingClient;
     await waitForSocketState(client, WebSocket.OPEN);
 
-    logger.info('--Done watiting for socket state');
+    // logger.info('--Done watiting for socket state');
 
     // TODO find more deterministic way to accomplish this
     await timeout(20);
@@ -60,7 +60,7 @@ describe('coreClient sockets', () => {
 
     // TODO understand why sockets are still in binary/buffer format unless JSON.parse or .toString() is called on them
     const responseObject = JSON.parse(messages[1]);
-    logger.info(responseObject);
+    // logger.info(responseObject);
     expect(responseObject?.payload?.message).toBe('hello');
   });
 });

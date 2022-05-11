@@ -26,7 +26,8 @@
         "tsConfig": "libs/interfaces/tsconfig.lib.json",
         "packageJson": "libs/interfaces/package.json",
         "main": "libs/interfaces/src/index.ts",
-        "assets": ["libs/interfaces/*.md"]
+        "assets": ["libs/interfaces/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     }
   },
