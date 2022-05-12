@@ -19,7 +19,6 @@
         "libs/api-interfaces/src/index.ts"
       ],
       "@caribou-crew/mezzo-constants": ["libs/constants/src/index.ts"],
-      "@caribou-crew/mezzo-core": ["libs/core/src/index.ts"],
       "@caribou-crew/mezzo-core-client": ["libs/core-client/src/index.ts"],
       "@caribou-crew/mezzo-core-server": ["libs/core-server/src/index.ts"],
       "@caribou-crew/mezzo-interceptor-fetch": [

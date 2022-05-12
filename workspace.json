@@ -4,7 +4,6 @@
     "admin-web": "apps/admin-web",
     "admin-web-e2e": "apps/admin-web-e2e",
     "constants": "libs/constants",
-    "core": "libs/core",
     "core-client": "libs/core-client",
     "core-server": "libs/core-server",
     "interceptor-fetch": "libs/interceptor-fetch",

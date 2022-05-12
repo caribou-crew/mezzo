@@ -86,11 +86,11 @@ export default async function buildExecutor(
 
   copyRecursiveSync(
     './dist/apps/admin-web',
-    './dist/libs/core/src/public' // TODO this may have to change based on how app is built
+    './dist/libs/core-server/src/public' // TODO this may have to change based on how app is built
   );
 
-  // delete dist/core/src/resources (2mb of unnecessary dev)
-  deleteFolderRecursive('./dist/libs/core/src/resources');
+  // delete dist/core-server/src/resources (2mb of unnecessary dev)
+  deleteFolderRecursive('./dist/libs/core-server/src/resources');
 
   return { success: true };
 }
