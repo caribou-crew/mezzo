@@ -79,8 +79,10 @@ const RouteItem = ({
         }}
       >
         <Typography noWrap variant="body1">
-          <b>Path: </b>
-          {route.path}
+          <>
+            <b>Path: </b>
+            {route.path}
+          </>
         </Typography>
         {selectedItem !== route.id && activeVariant !== 'default' && (
           <Typography noWrap variant="body1">

@@ -15,6 +15,9 @@ log.setDefaultLevel('debug');
 
 type Props = Record<string, never>;
 
+const ReflexContainerTSFix: any = ReflexContainer;
+const ReflexElementTSFix: any = ReflexElement;
+
 export default function RecordScreen(props: Props) {
   const [selectedNetworkItem, setSelectedNetworkItem] =
     useState<RecordedItem>();
@@ -34,8 +37,8 @@ export default function RecordScreen(props: Props) {
   }, []);
 
   return (
-    <ReflexContainer orientation="horizontal">
-      <ReflexElement className="left-pane">
+    <ReflexContainerTSFix orientation="horizontal">
+      <ReflexElementTSFix className="left-pane">
         <Container component="main" maxWidth="lg">
           <Button
             variant="outlined"
@@ -58,14 +61,14 @@ export default function RecordScreen(props: Props) {
             />
           ))}
         </Container>
-      </ReflexElement>
+      </ReflexElementTSFix>
       <ReflexSplitter />
 
-      <ReflexElement className="right-pane" minSize={200}>
+      <ReflexElementTSFix className="right-pane" minSize={200}>
         {selectedNetworkItem && (
           <SelectedNetworkItem {...selectedNetworkItem} />
         )}
-      </ReflexElement>
-    </ReflexContainer>
+      </ReflexElementTSFix>
+    </ReflexContainerTSFix>
   );
 }
