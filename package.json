@@ -23,7 +23,8 @@
     "lintAll": "nx run-many --all --exclude=workspace --target=lint --parallel",
     "testAll": "nx run-many --all --exclude=workspace --target=test --parallel",
     "format:check": "nx format:check --all --exclude=workspace ",
-    "format:fix": "nx format:write --all --exclude=workspace "
+    "format:fix": "nx format:write --all --exclude=workspace ",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
@@ -90,7 +91,7 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.5.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.1",
     "jest": "27.5.1",
     "jest-websocket-mock": "^2.3.0",
     "memfs": "^3.4.1",
