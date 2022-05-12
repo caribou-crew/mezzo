@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.6.1](https://github.com/caribou-crew/mezzo/compare/v0.6.0...v0.6.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* fix admin-web ts ([19041fe](https://github.com/caribou-crew/mezzo/commit/19041fe699378f1c98a6a7e86c8bd0369d927701))
+
+
+
 # [0.6.0](https://github.com/caribou-crew/mezzo/compare/v0.5.0...v0.6.0) (2022-05-12)
 
 
