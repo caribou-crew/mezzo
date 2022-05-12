@@ -17,6 +17,19 @@
         "passWithNoTests": true
       }
     },
+    "serve": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "core-server:build",
+        "args": ["start"]
+      }
+    },
+    "prepare": {
+      "executor": "./tools/executors/buildCoreWithWeb:buildCoreWithWeb",
+      "options": {
+        "baseHref": "/mezzo/"
+      }
+    },
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
@@ -25,7 +38,8 @@
         "tsConfig": "libs/core-server/tsconfig.lib.json",
         "packageJson": "libs/core-server/package.json",
         "main": "libs/core-server/src/index.ts",
-        "assets": ["libs/core-server/*.md"]
+        "assets": ["libs/core-server/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     }
   },

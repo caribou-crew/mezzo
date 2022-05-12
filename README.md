@@ -30,7 +30,7 @@ This project uses https://github.com/jscutlery/semver, currently in synced mode.
 
 Release workspace by running `npm run bumpVersion`
 
-Run `npm publish dist/libs/core --access public` from the root of the project, but CI will push it all when a release is made.
+Run `npm publish dist/libs/core-server --access public` from the root of the project, but CI will push it all when a release is made.
 
 # Test
 
@@ -42,8 +42,8 @@ Run `npm publish dist/libs/core --access public` from the root of the project, b
 In development web runs on `http://localhost:4200/` while API runs on `http://localhost:8000/mezzo`.
 There are some subtle differences in how things behave due to this. Here is how you can test this locally.
 
-1. Run `npm run build:core:prod`
-2. Navigate to `/dist/libs/core`
+1. Run `npm run build:prod`
+2. Navigate to `/dist/libs/core-server`
 3. Run `npm i` (as it has dependencies on interfaces and constants)
    - TODO: Figure out better way to symlink or test node modules that aren't published or latest version is not yet published as all local mezzo dependencies point to npm (not local filesystem) when testing this way. Really only works for testing new content in core, not content in other packages without publishing every iteration (must be better way)
 4. Start server by running `node src/index start`
