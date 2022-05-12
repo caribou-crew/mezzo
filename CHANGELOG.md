@@ -2,14 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-# [0.6.0](https://github.com/caribou-crew/mezzo/compare/v0.5.0...v0.6.0) (2022-05-12)
+## [0.6.1](https://github.com/caribou-crew/mezzo/compare/v0.6.0...v0.6.1) (2022-05-12)
 
+### Bug Fixes
+
+- fix admin-web ts ([19041fe](https://github.com/caribou-crew/mezzo/commit/19041fe699378f1c98a6a7e86c8bd0369d927701))
+
+# [0.6.0](https://github.com/caribou-crew/mezzo/compare/v0.5.0...v0.6.0) (2022-05-12)
 
 ### Features
 
-* forcing feat comment as a ton changed between last release ([3b2a711](https://github.com/caribou-crew/mezzo/commit/3b2a711559d8e9cd4321a72bf2e0f367f791fccc))
-
-
+- forcing feat comment as a ton changed between last release ([3b2a711](https://github.com/caribou-crew/mezzo/commit/3b2a711559d8e9cd4321a72bf2e0f367f791fccc))
 
 # [0.6.0](https://github.com/caribou-crew/mezzo/compare/v0.5.0...v0.6.0) (2022-05-12)
 

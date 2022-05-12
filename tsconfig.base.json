@@ -10,10 +10,7 @@
     "importHelpers": false,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -21,18 +18,10 @@
       "@caribou-crew/mezzo-api-interfaces": [
         "libs/api-interfaces/src/index.ts"
       ],
-      "@caribou-crew/mezzo-constants": [
-        "libs/constants/src/index.ts"
-      ],
-      "@caribou-crew/mezzo-core": [
-        "libs/core/src/index.ts"
-      ],
-      "@caribou-crew/mezzo-core-client": [
-        "libs/core-client/src/index.ts"
-      ],
-      "@caribou-crew/mezzo-core-server": [
-        "libs/core-server/src/index.ts"
-      ],
+      "@caribou-crew/mezzo-constants": ["libs/constants/src/index.ts"],
+      "@caribou-crew/mezzo-core": ["libs/core/src/index.ts"],
+      "@caribou-crew/mezzo-core-client": ["libs/core-client/src/index.ts"],
+      "@caribou-crew/mezzo-core-server": ["libs/core-server/src/index.ts"],
       "@caribou-crew/mezzo-interceptor-fetch": [
         "libs/interceptor-fetch/src/index.ts"
       ],
@@ -42,17 +31,10 @@
       "@caribou-crew/mezzo-interceptor-react-native-with-reactotron": [
         "libs/interceptor-react-native-with-reactotron/src/index.ts"
       ],
-      "@caribou-crew/mezzo-interfaces": [
-        "libs/interfaces/src/index.ts"
-      ],
-      "@caribou-crew/mezzo-utils-logger": [
-        "libs/utils-logger/src/index.ts"
-      ]
+      "@caribou-crew/mezzo-interfaces": ["libs/interfaces/src/index.ts"],
+      "@caribou-crew/mezzo-utils-logger": ["libs/utils-logger/src/index.ts"]
     },
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }
