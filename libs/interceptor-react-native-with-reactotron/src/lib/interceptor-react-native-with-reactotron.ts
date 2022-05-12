@@ -13,6 +13,7 @@ export interface NetworkingOptions {
   ignoreContentTypes?: RegExp;
   ignoreUrls?: RegExp;
   mezzoPort?: number;
+  host?: string;
 }
 
 // const DEFAULTS: NetworkingOptions = {
