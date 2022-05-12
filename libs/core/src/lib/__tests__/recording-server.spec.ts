@@ -57,23 +57,25 @@ describe('recordingServer', () => {
     await mezzo.stop();
   });
 
-  describe('record request', () => {
-    it('should be a post endpoint', async () => {
-      const url = MEZZO_API_POST_RECORD_REQUEST;
+  // Currently only supported via websocket, not REST
+  // describe('record request', () => {
+  //   it('should be a post endpoint', async () => {
+  //     const url = MEZZO_API_POST_RECORD_REQUEST;
 
-      const res = await request.post(url);
-      expect(res.status).toBe(201);
-    });
-  });
+  //     const res = await request.post(url);
+  //     expect(res.status).toBe(201);
+  //   });
+  // });
 
-  describe('record response', () => {
-    it('should be a post endpoint', async () => {
-      const url = MEZZO_API_POST_RECORD_RESPONSE;
+  // Currently only supported via websocket, not REST
+  // describe('record response', () => {
+  //   it('should be a post endpoint', async () => {
+  //     const url = MEZZO_API_POST_RECORD_RESPONSE;
 
-      const res = await request.post(url);
-      expect(res.status).toBe(201);
-    });
-  });
+  //     const res = await request.post(url);
+  //     expect(res.status).toBe(201);
+  //   });
+  // });
 
   describe('view recordings', () => {
     it('should be a GET endpoint', async () => {

@@ -9,7 +9,19 @@
     "core-server": "libs/core-server",
     "interceptor-fetch": "libs/interceptor-fetch",
     "interceptor-react-native": "libs/interceptor-react-native",
+    "interceptor-react-native-with-reactotron": "libs/interceptor-react-native-with-reactotron",
     "interfaces": "libs/interfaces",
-    "utils-logger": "libs/utils-logger"
+    "utils-logger": "libs/utils-logger",
+    "workspace": {
+      "root": ".",
+      "targets": {
+        "version": {
+          "executor": "@jscutlery/semver:version",
+          "options": {
+            "syncVersions": true
+          }
+        }
+      }
+    }
   }
 }

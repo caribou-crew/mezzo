@@ -36,45 +36,46 @@ let id = 0;
 const data: RecordedItem[] = [];
 
 function setupAPI(app: express.Express) {
-  app.post(MEZZO_API_POST_RECORD_REQUEST, (req, res) => {
-    console.log('Got record request ');
-    const { uuid, config, resource, startTime } = req.body;
-    const item = {
-      uuid,
-      startTime,
-      resource,
-      request: {
-        config,
-      },
-      response: undefined,
-    };
-    // TODO temporarily don't allow REST way to update
-    console.warn('REST implementation of recording temporarily disallowed');
-    // data.push(item);
-    res.sendStatus(201);
-    // TODO trigger update to anyone listening on socket
-    clients.forEach(({ ws }) => {
-      ws.send(JSON.stringify(item));
-    });
-  });
-  app.post(MEZZO_API_POST_RECORD_RESPONSE, (req, res) => {
-    const { duration, endTime, url, uuid, ...rest } = req.body;
-    const existingIndex = data.findIndex((i) => i.uuid === uuid);
-    const updatedItem = {
-      ...data[existingIndex],
-      duration,
-      endTime,
-      url,
-      response: {
-        ...rest,
-      },
-    };
-    console.warn('REST implementation of recording temporarily disallowed');
-    // data[existingIndex] = updatedItem;
-    res.sendStatus(201);
-    // TODO trigger update to anyone listening on socket
-    notifyAllClientsJSON(updatedItem);
-  });
+  // recording API calls moved to WS
+  //   app.post(MEZZO_API_POST_RECORD_REQUEST, (req, res) => {
+  //     console.log('Got record request ');
+  //     const { uuid, config, resource, startTime } = req.body;
+  //     const item = {
+  //       uuid,
+  //       startTime,
+  //       resource,
+  //       request: {
+  //         config,
+  //       },
+  //       response: undefined,
+  //     };
+  //     // TODO temporarily don't allow REST way to update
+  //     console.warn('REST implementation of recording temporarily disallowed');
+  //     // data.push(item);
+  //     res.sendStatus(201);
+  //     // TODO trigger update to anyone listening on socket
+  //     clients.forEach(({ ws }) => {
+  //       ws.send(JSON.stringify(item));
+  //     });
+  //   });
+  //   app.post(MEZZO_API_POST_RECORD_RESPONSE, (req, res) => {
+  //     const { duration, endTime, url, uuid, ...rest } = req.body;
+  //     const existingIndex = data.findIndex((i) => i.uuid === uuid);
+  //     const updatedItem = {
+  //       ...data[existingIndex],
+  //       duration,
+  //       endTime,
+  //       url,
+  //       response: {
+  //         ...rest,
+  //       },
+  //     };
+  //     console.warn('REST implementation of recording temporarily disallowed');
+  //     // data[existingIndex] = updatedItem;
+  //     res.sendStatus(201);
+  //     // TODO trigger update to anyone listening on socket
+  //     notifyAllClientsJSON(updatedItem, 'api.response');
+  //   });
   logger.info('Adding GET endpoint');
   app.get(MEZZO_API_GET_RECORDINGS, (req, res) => {
     logger.info('Inside GET endpoint');
@@ -84,14 +85,18 @@ function setupAPI(app: express.Express) {
   });
 }
 
-function notifyAllClientsJSON(message: any) {
+function notifyAllClientsJSON(message: any, type?: string) {
+  logger.debug(`Sending message to all ${clients.length} clients`, {
+    message,
+    type,
+  });
   clients.forEach(({ ws }) => {
-    console.log('Sending message to all connected clients');
-    ws.send(JSON.stringify(message));
+    ws.send(JSON.stringify({ type, ...message }));
   });
 }
 
 function processRequestResponseMessage(message: SocketRequestResponseMessage) {
+  logger.debug('Processing message: ', message);
   if (message.type != null) {
     const { request, response } = message.payload;
     const item: RecordedItem = {
@@ -104,7 +109,33 @@ function processRequestResponseMessage(message: SocketRequestResponseMessage) {
       duration: message.payload.duration,
     };
     data.push(item);
-    notifyAllClientsJSON(item);
+    notifyAllClientsJSON(item, 'api.response');
+  } else {
+    logger.warn(
+      "Received message but didn't add to data itmes as type was null"
+    );
+  }
+}
+
+function closeClient(ws: WebSocket) {
+  logger.debug('Removing client: ', id);
+  const idx = clients.findIndex((i) => i.id === id);
+  clients.splice(idx, 1);
+  ws.close();
+}
+
+function processMessage(message, ws: WebSocket) {
+  // attempt to parse
+  try {
+    const data = JSON.parse(message);
+    if (data?.type === 'api.response') {
+      logger.debug('Received api response', data);
+      processRequestResponseMessage(data);
+    } else if (data?.type === 'ping') {
+      ws.send(JSON.stringify({ type: 'pong' }));
+    }
+  } catch (e) {
+    logger.error('Error parsings ws message', e);
   }
 }
 
@@ -122,28 +153,13 @@ function setupWebSocketServer(mezzo: Mezzo) {
     );
 
     ws.on('message', (message: string) => {
-      logger.debug('Socket Received: ', message);
-
+      // logger.debug('Message received');
+      logger.debug('Message received: %s', message);
       if (message.toString() === 'Close') {
-        logger.debug('Removing client: ', id);
-        const idx = clients.findIndex((i) => i.id === id);
-        clients.splice(idx, 1);
-        ws.close();
+        closeClient(ws);
       } else {
-        logger.debug('Processing incoming socket as data message');
-        // attempt to parse
-        try {
-          const data = JSON.parse(message);
-          if (data?.type === 'api.response') {
-            logger.debug('Received api response', data);
-            processRequestResponseMessage(data);
-          }
-        } catch (e) {
-          logger.error('Error parsings ws message', e);
-        }
+        processMessage(message, ws);
       }
-
-      logger.debug('received: %s', message);
       // ws.send(`Hello, you sent -> ${message}`);
     });
     //send immediatly when client connets

@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'core',
-  preset: '../../jest.preset.js',
+  displayName: 'interceptor-fetch',
+
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -11,6 +11,6 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/core',
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.js'],
+  coverageDirectory: '../../coverage/libs/interceptor-fetch',
+  preset: '../../jest.preset.ts',
 };

@@ -11,8 +11,7 @@ import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { RecordedItem } from '@caribou-crew/mezzo-interfaces';
 
 interface Props extends RecordedItem {
-  selectedUUID: string;
-  setSelectedUUID: (id: string) => void;
+  onClick: any;
 }
 
 const NetworkItem = ({
@@ -23,8 +22,7 @@ const NetworkItem = ({
   date,
   deltaTime,
   duration,
-  selectedUUID,
-  setSelectedUUID,
+  onClick,
 }: Props) => {
   const getColors = () => {
     // let backgroundColor;
@@ -46,8 +44,8 @@ const NetworkItem = ({
           display: 'flex',
           flexDirection: 'row',
           overflow: 'hidden',
-          p: 2,
-          gap: 2,
+          p: 0.2,
+          gap: 0,
         }}
       >
         <Typography noWrap variant="body1">
@@ -63,11 +61,10 @@ const NetworkItem = ({
         backgroundColor: getColors().backgroundColor,
         overflow: 'hidden',
         cursor: 'pointer',
-        marginBottom: 15,
+        marginBottom: 1,
+        padding: 0,
       }}
-      onClick={() =>
-        uuid === selectedUUID ? setSelectedUUID('') : setSelectedUUID(uuid)
-      }
+      onClick={onClick}
     >
       <Box
         sx={{
@@ -75,56 +72,10 @@ const NetworkItem = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}
+        style={{ padding: 0 }}
       >
         {_renderTitle()}
       </Box>
-      {selectedUUID === uuid && (
-        <Box>
-          <Divider></Divider>
-          <Container
-            sx={{ pt: 2, pb: 2 }}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            <Typography variant="subtitle2">Details</Typography>
-            <Typography variant="body2">
-              Date: {date}
-              <br />
-              Duration: {duration}
-              <br />
-              DeltaTime: {deltaTime}
-            </Typography>
-            <Typography variant="subtitle2">Request:</Typography>
-            <Typography variant="body2">
-              Headers:{' '}
-              {
-                <span style={{ color: 'green' }}>
-                  {JSON.stringify(request?.headers)}
-                </span>
-              }
-            </Typography>
-            <Typography variant="subtitle2">Response:</Typography>
-            <Typography variant="body2">Status: {response?.status}</Typography>
-            <Typography variant="body2">
-              Headers:{' '}
-              {
-                <span style={{ color: 'green' }}>
-                  {JSON.stringify(response?.headers)}
-                </span>
-              }
-            </Typography>
-            <Typography variant="body2">
-              Body:{' '}
-              {
-                <span style={{ color: 'green' }}>
-                  {JSON.stringify(response?.body)}
-                </span>
-              }
-            </Typography>
-          </Container>
-        </Box>
-      )}
     </Paper>
   );
 };

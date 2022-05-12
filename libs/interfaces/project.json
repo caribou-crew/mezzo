@@ -1,5 +1,4 @@
 {
-  "root": "libs/interfaces",
   "sourceRoot": "libs/interfaces/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +13,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/interfaces"],
       "options": {
-        "jestConfig": "libs/interfaces/jest.config.js",
+        "jestConfig": "libs/interfaces/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -26,7 +25,8 @@
         "tsConfig": "libs/interfaces/tsconfig.lib.json",
         "packageJson": "libs/interfaces/package.json",
         "main": "libs/interfaces/src/index.ts",
-        "assets": ["libs/interfaces/*.md"]
+        "assets": ["libs/interfaces/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     }
   },

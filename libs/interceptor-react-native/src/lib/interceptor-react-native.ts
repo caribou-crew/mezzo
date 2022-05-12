@@ -1,11 +1,29 @@
 import * as XHRInterceptor from 'react-native/Libraries/Network/XHRInterceptor';
 import * as queryString from 'query-string';
 import { startTimer } from './utils/start-timer';
-import { createClient } from '@caribou-crew/mezzo-core-client';
+import { MezzoClient } from '@caribou-crew/mezzo-core-client';
 import * as getHost from 'rn-host-detect';
 
 import ConnectionManager from './utils/connection-manager';
 import { ClientOptions } from '@caribou-crew/mezzo-interfaces';
+import * as log from 'loglevel';
+
+const getLogLevel = (desired?: string): log.LogLevelDesc => {
+  const lower = desired?.toLowerCase();
+  switch (lower) {
+    case 'trace':
+    case 'debug':
+    case 'info':
+    case 'warn':
+    case 'error':
+    case 'silent':
+      return lower;
+    default:
+      return 'info';
+  }
+};
+// log.setDefaultLevel(getLogLevel(process.env?.['LOG_LEVEL']));
+log.setDefaultLevel('debug');
 
 /**
  * Don't include the response bodies for images by default.
@@ -26,48 +44,69 @@ const DEFAULTS: ClientOptions = {
 };
 
 export const interceptReactNativeFetch = (pluginConfig: ClientOptions = {}) => {
-  // const options = Object.assign({}, DEFAULTS, pluginConfig);
   const options = {
     ...DEFAULTS,
     ...pluginConfig,
   };
-
-  console.log('Using host: ', options.host);
-
-  // mezzoClient.configure({});
-  const mezzoClient = createClient(options);
-  console.log('Attempting to connect to socket');
+  log.info(
+    "[mezzo-intercept.intercept] Interceting React Native's fetch: ",
+    options
+  );
+  const mezzoClient = new MezzoClient().initRecording(options);
 
   // a RegExp to suppess adding the body cuz it costs a lot to serialize
   const ignoreContentTypes =
     options.ignoreContentTypes || DEFAULT_CONTENT_TYPES_RX;
 
   // a XHR call tracker
-  let reactotronCounter = 1000;
+  let mezzoCounter = 1000;
 
   // a temporary cache to hold requests so we can match up the data
   const requestCache = {};
 
   /**
-   * Fires when we talk to the server.
+   * Initializes a newly-created request, or re-initializes an existing one
+   * https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open
+   * @param method
+   * @param url
+   */
+  function onOpen(method: string, url: string, xhr: any) {
+    log.debug(
+      `[mezzo-intercept.onOpen] Network request open to ${method} ${url}`,
+      { xhr }
+    );
+    // bump the counter
+    mezzoCounter++;
+
+    const guid = mezzoClient.recordingClient.captureApiRequest(method, url);
+    // tag
+    xhr._trackingName = mezzoCounter;
+    xhr._guid = guid;
+  }
+
+  /**
+   * Send the network request to the server
+   * https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
    *
    * @param {*} data - The data sent to the server.
    * @param {*} instance - The XMLHTTPRequest instance.
    */
-  function onSend(data, xhr) {
+  function onSend(data: Record<string, unknown>, xhr: any) {
+    log.debug('[mezzo-intercept.onSend] Network request sent', { data, xhr });
     if (options.ignoreUrls && options.ignoreUrls.test(xhr._url)) {
-      xhr._skipReactotron = true;
+      xhr._skipMezzoCapture = true;
       return;
     }
 
     // bump the counter
-    reactotronCounter++;
+    // mezzoCounter++;
 
-    // tag
-    xhr._trackingName = reactotronCounter;
+    // // tag
+    // xhr._trackingName = mezzoCounter;
 
+    // mezzoClient.captureApiRequest(method, url);
     // cache
-    requestCache[reactotronCounter] = {
+    requestCache[mezzoCounter] = {
       data: data,
       xhr,
       stopTimer: startTimer(),
@@ -84,8 +123,27 @@ export const interceptReactNativeFetch = (pluginConfig: ClientOptions = {}) => {
    * @param {*} type - Not sure.
    * @param {*} xhr - The XMLHttpRequest instance.
    */
-  function onResponse(status, timeout, response, url, type, xhr) {
-    if (xhr._skipReactotron) {
+  function onResponse(
+    status: number,
+    timeout: boolean,
+    response: any,
+    url: string,
+    type: any,
+    xhr: any
+  ) {
+    log.debug('[mezzo-intercept.onResponse] Network response: ', {
+      status,
+      timeout,
+      response,
+      url,
+      type,
+      xhr,
+    });
+    if (xhr._skipMezzoCapture) {
+      log.debug(
+        '[mezzo-intercept.onResponse] Skipping processing of response for ',
+        url
+      );
       return;
     }
 
@@ -98,6 +156,7 @@ export const interceptReactNativeFetch = (pluginConfig: ClientOptions = {}) => {
 
     // fetch and clear the request data from the cache
     const rid = xhr._trackingName;
+    const guid = xhr._guid;
     const cachedRequest = requestCache[rid] || {};
     requestCache[rid] = null;
 
@@ -118,12 +177,16 @@ export const interceptReactNativeFetch = (pluginConfig: ClientOptions = {}) => {
       '';
 
     const sendResponse = (responseBodyText) => {
-      let body = `~~~ skipped ~~~`;
+      let body: string | Record<string, unknown> = `~~~ skipped ~~~`;
       if (responseBodyText) {
         try {
           // all i am saying, is give JSON a chance...
           body = JSON.parse(responseBodyText);
         } catch (boom) {
+          log.error(
+            '[mezzo-intercept.onResponse] Failed to parse response json, using',
+            boom
+          );
           body = response;
         }
       }
@@ -133,10 +196,12 @@ export const interceptReactNativeFetch = (pluginConfig: ClientOptions = {}) => {
         headers: xhr.responseHeaders || null,
       };
 
-      // send this off to Reactotron
-      // (reactotron as any).apiResponse(tronRequest, tronResponse, stopTimer()); // TODO: Fix
-      console.log('TODO finish implementng me, send request off');
-      mezzoClient.captureApiResponse(mezzoRequest, mezzoResponse, stopTimer());
+      mezzoClient.recordingClient.captureApiResponse(
+        mezzoRequest,
+        mezzoResponse,
+        stopTimer(),
+        guid
+      );
     };
 
     // can we use the real response?
@@ -160,16 +225,14 @@ export const interceptReactNativeFetch = (pluginConfig: ClientOptions = {}) => {
         sendResponse(response);
       }
     } else {
+      log.debug('[mezzo-intercept.onResponse] Not sending real response');
       sendResponse('');
     }
   }
 
   // register our monkey-patch
+  XHRInterceptor.setOpenCallback(onOpen);
   XHRInterceptor.setSendCallback(onSend);
   XHRInterceptor.setResponseCallback(onResponse);
   XHRInterceptor.enableInterception();
-
-  // nothing of use to offer to the plugin
-  // return {};
-  // return mezzoClient;
 };

@@ -28,6 +28,9 @@
       "@caribou-crew/mezzo-interceptor-react-native": [
         "libs/interceptor-react-native/src/index.ts"
       ],
+      "@caribou-crew/mezzo-interceptor-react-native-with-reactotron": [
+        "libs/interceptor-react-native-with-reactotron/src/index.ts"
+      ],
       "@caribou-crew/mezzo-interfaces": ["libs/interfaces/src/index.ts"],
       "@caribou-crew/mezzo-utils-logger": ["libs/utils-logger/src/index.ts"]
     },

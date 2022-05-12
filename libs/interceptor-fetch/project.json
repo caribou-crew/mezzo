@@ -1,5 +1,4 @@
 {
-  "root": "libs/interceptor-fetch",
   "sourceRoot": "libs/interceptor-fetch/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +13,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/interceptor-fetch"],
       "options": {
-        "jestConfig": "libs/interceptor-fetch/jest.config.js",
+        "jestConfig": "libs/interceptor-fetch/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -26,7 +25,8 @@
         "tsConfig": "libs/interceptor-fetch/tsconfig.lib.json",
         "packageJson": "libs/interceptor-fetch/package.json",
         "main": "libs/interceptor-fetch/src/index.ts",
-        "assets": ["libs/interceptor-fetch/*.md"]
+        "assets": ["libs/interceptor-fetch/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     }
   },

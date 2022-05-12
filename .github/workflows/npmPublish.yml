@@ -15,11 +15,27 @@ jobs:
       - run: npm ci
       - run: npm run test
       - run: npm run build:core:prod
-      - run: npm publish dist/libs/utils-logger --access public
+      - run: npm publish dist/libs/constants --access public
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish dist/libs/interceptor-react-native --access public
+      - run: npm publish dist/libs/core --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/core-client --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - run: npm publish dist/libs/interceptor-fetch --access public
+      #   continue-on-error: true
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - run: npm publish dist/libs/interceptor-react-native --access public
+      #   continue-on-error: true
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/interceptor-react-native-with-reactotron --access public
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -31,10 +47,7 @@ jobs:
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish dist/libs/constants --access public
+      - run: npm publish dist/libs/utils-logger --access public
         continue-on-error: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish dist/libs/core --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

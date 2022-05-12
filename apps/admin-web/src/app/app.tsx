@@ -5,7 +5,6 @@ import Header from './components/Header';
 import HomeScreen from './components/HomeScreen';
 import RecordScreen from './components/RecordScreen';
 import { PUBLIC_URL } from './utils/urlPrefix';
-console.log('Using public URL: ', PUBLIC_URL);
 
 // If prod, routes are /mezzo and /mezzo/record instead of / and /record
 export const App = () => {

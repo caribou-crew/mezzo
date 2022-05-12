@@ -1,5 +1,4 @@
 {
-  "root": "libs/core",
   "sourceRoot": "libs/core/src",
   "projectType": "library",
   "targets": {
@@ -14,7 +13,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/core"],
       "options": {
-        "jestConfig": "libs/core/jest.config.js",
+        "jestConfig": "libs/core/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -39,7 +38,8 @@
         "tsConfig": "libs/core/tsconfig.lib.json",
         "packageJson": "libs/core/package.json",
         "main": "libs/core/src/index.ts",
-        "assets": ["libs/core/*.md", "libs/core/src/resources/**/!(*.ts)"]
+        "assets": ["libs/core/*.md", "libs/core/src/resources/**/!(*.ts)"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     }
   },
