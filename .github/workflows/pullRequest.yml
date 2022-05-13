@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 'lts/*'
+          node-version: 16
       - name: Npm install
         run: npm install
       - name: install nx
@@ -35,7 +35,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 'lts/*'
+          node-version: 16
       - name: Npm install
         run: npm install
       - name: Lint
@@ -50,7 +50,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 'lts/*'
+          node-version: 16
       - name: Npm install
         run: npm install
       - name: Format
