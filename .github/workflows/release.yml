@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: 16
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
       # - name: list tags
       #   run: git tag
       - name: setup git config
@@ -102,6 +103,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
+          registry-url: 'https://registry.npmjs.org'
       - name: Npm install
         run: npm ci
       - name: install nx

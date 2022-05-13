@@ -98,6 +98,7 @@
     "node-fetch": "^2.6.7",
     "nx": "14.1.4",
     "prettier": "^2.5.1",
+    "react-native": "^0.68.2",
     "react-test-renderer": "18.1.0",
     "rn-host-detect": "^1.2.0",
     "supertest": "^6.2.2",
