@@ -14,7 +14,7 @@
     "build:executor": "npx tsc tools/executors/buildCoreWithWeb/impl",
     "build:shared-libs": "nx run-many --target=build --projects=constants,interfaces,interceptor-fetch,interceptor-react-native,core-client,utils-logger,interceptor-react-native-with-reactotron",
     "build:prod": "cross-env NODE_ENV=production nx run-many --all --prod --exclude=workspace --target=build && nx prepare core-server",
-    "bumpVersion": "nx run-many workspace:version --skipProjectChangelog --syncVersions --origin=upstream && npm run format:fix",
+    "bumpVersion:ci": "nx run workspace:version",
     "commit": "cz",
     "test": "nx run-many --all --exclude=workspace --target=test --parallel",
     "test:cloud": "cross-env NX_BRANCH=testing nx run-many --all --exclude=workspace --target=test --parallel",

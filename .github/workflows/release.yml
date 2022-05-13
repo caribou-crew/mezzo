@@ -1,0 +1,66 @@
+name: Bump Version and Create Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - name: list tags
+        run: git tag
+      - name: Install dependencies
+        run: npm ci
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Bump Version
+        run: npm run bumpVersion:ci
+      - name: Format Files
+        run: npm run format:fix
+      - name: Commit Files
+        run: |
+          git add -A
+          git commit --amend --no-edit
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@main
+      - name: Push changes (manual)
+        run: git push origin ${{ github.ref }}
+      - name: Push tag (manual)
+        run: git push origin v${{ steps.package-version.outputs.current-version }}
+      # TODO create draft release
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
+          generateReleaseNotes: true
+          tag: v${{ steps.package-version.outputs.current-version }}
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     body: |
+      #       Changes in this Release
+      #       - First Change
+      #       - Second Change
+      #     draft: false
+      #     prerelease: false
+      # TODO push to npm
