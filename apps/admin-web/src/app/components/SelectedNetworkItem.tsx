@@ -52,32 +52,20 @@ const SelectedNetworkItem = (props: Props) => {
             DeltaTime: {deltaTime}
           </Typography>
           <Typography variant="subtitle2">Request:</Typography>
-          <Typography variant="body2">
-            Headers:{' '}
-            {
-              <span style={{ color: 'green' }}>
-                {JSON.stringify(request?.headers)}
-              </span>
-            }
-          </Typography>
+          <Typography variant="body2">Headers:</Typography>
+          <pre style={{ backgroundColor: '#f1f1f1', overflowX: 'scroll' }}>
+            {JSON.stringify(request?.headers, null, 2)}
+          </pre>
           <Typography variant="subtitle2">Response:</Typography>
           <Typography variant="body2">Status: {response?.status}</Typography>
-          <Typography variant="body2">
-            Headers:{' '}
-            {
-              <span style={{ color: 'green' }}>
-                {JSON.stringify(response?.headers)}
-              </span>
-            }
-          </Typography>
-          <Typography variant="body2">
-            Body:{' '}
-            {
-              <span style={{ color: 'green' }}>
-                {JSON.stringify(response?.body)}
-              </span>
-            }
-          </Typography>
+          <Typography variant="body2">Headers:</Typography>
+          <pre style={{ backgroundColor: '#f1f1f1', overflowX: 'scroll' }}>
+            {JSON.stringify(response?.headers, null, 2)}
+          </pre>
+          <Typography variant="body2">Body:</Typography>
+          <pre style={{ backgroundColor: '#f1f1f1', overflowX: 'scroll' }}>
+            {JSON.stringify(response?.body, null, 2)}
+          </pre>
         </Container>
       </Box>
     </Paper>
