@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    name: Release
+  create-release:
+    name: Create Tag & Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,19 +19,29 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
-      - name: list tags
-        run: git tag
-      - name: Install dependencies
-        run: npm ci
+          cache: 'npm'
+      # - name: list tags
+      #   run: git tag
       - name: setup git config
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+      - name: Install dependencies
+        run: npm ci
       # Troubleshooting issue on bump version - Error: fatal: Unable to create '/home/runner/work/mezzo/mezzo/.git/index.lock': File exists.
-      - name: Sleep for 30 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '2s'
+      # - name: Sleep for 30 seconds
+      #   uses: jakejarvis/wait-action@master
+      #   with:
+      #     time: '2s'
+      # - name: Cache node modules
+      #   uses: actions/cache@v3
+      #   env:
+      #     cache-name: cache-node-modules
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-build-${{ env.cache-name }}-
       - name: Bump Version
         run: npm run bumpVersion:ci
       # there is some quirkiness here, but some files are modified that don't pass formatting standards, so force formatting & ammend
@@ -47,22 +57,22 @@ jobs:
           git commit --amend --no-edit
           git tag -f v${{ steps.package-version.outputs.current-version }}
       # TODO update so that bot can push to main, or PR and auto merge to main (look for existing action to help)
-      # - name: Push changes (manual)
-      #   run: git push origin ${{ github.ref }}
-      # - name: Push tag (manual)
-      #   run: git push origin v${{ steps.package-version.outputs.current-version }}
-      - name: Push changes (action)
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-      - name: Push tag (action)
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          default_bump: false
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.package-version.outputs.current-version}}
+      - name: Push changes (manual)
+        run: git push origin ${{ github.ref }}
+      - name: Push tag (manual)
+        run: git push origin v${{ steps.package-version.outputs.current-version }}
+      # - name: Push changes (action)
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: ${{ github.ref }}
+      # - name: Push tag (action)
+      #   id: tag_version
+      #   uses: mathieudutour/github-tag-action@v6.0
+      #   with:
+      #     default_bump: false
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     custom_tag: ${{ steps.package-version.outputs.current-version}}
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -70,3 +80,50 @@ jobs:
           # draft: true
           generateReleaseNotes: true
           tag: v${{ steps.package-version.outputs.current-version }}
+  build-lib:
+    needs: create-release
+    strategy:
+      matrix:
+        project:
+          [
+            'core-client',
+            'interceptor-react-native-with-reactotron',
+            'interfaces',
+            'constants',
+            'utils-logger',
+          ]
+    name: Build lib
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 'lts/*'
+      - name: Npm install
+        run: npm ci
+      - name: install nx
+        run: npm i -g nx
+      - name: Build
+        run: nx build ${{ matrix.project }}
+      - name: Publish
+        run: npm publish dist/libs/${{ matrix.project }} --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  build-core-server:
+    needs: create-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run build:prod
+      - run: npm publish dist/libs/core-server --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

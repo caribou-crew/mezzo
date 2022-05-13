@@ -1,50 +1,50 @@
-name: Publish Release to NPM
-on:
-  release:
-    types: [created]
-jobs:
-  build-lib:
-    strategy:
-      matrix:
-        project:
-          [
-            'core-client',
-            'interceptor-react-native-with-reactotron',
-            'interfaces',
-            'constants',
-            'utils-logger',
-          ]
-    name: Build lib
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 'lts/*'
-      - name: Npm install
-        run: npm ci
-      - name: install nx
-        run: npm i -g nx
-      - name: Build
-        run: nx build ${{ matrix.project }}
-      - name: Publish
-        run: npm publish dist/libs/${{ matrix.project }} --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  build-core-server:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm run build:prod
-      - run: npm publish dist/libs/core-server --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+# name: Publish Release to NPM
+# on:
+#   release:
+#     types: [created]
+# jobs:
+#   build-lib:
+#     strategy:
+#       matrix:
+#         project:
+#           [
+#             'core-client',
+#             'interceptor-react-native-with-reactotron',
+#             'interfaces',
+#             'constants',
+#             'utils-logger',
+#           ]
+#     name: Build lib
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 10
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v1
+#       - name: Setup Node
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: 'lts/*'
+#       - name: Npm install
+#         run: npm ci
+#       - name: install nx
+#         run: npm i -g nx
+#       - name: Build
+#         run: nx build ${{ matrix.project }}
+#       - name: Publish
+#         run: npm publish dist/libs/${{ matrix.project }} --access public
+#         env:
+#           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#   build-core-server:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 10
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 'lts/*'
+#           registry-url: 'https://registry.npmjs.org'
+#       - run: npm ci
+#       - run: npm run build:prod
+#       - run: npm publish dist/libs/core-server --access public
+#         env:
+#           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
