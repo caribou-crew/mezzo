@@ -29,38 +29,27 @@ jobs:
           git config user.email "<>"
       - name: Bump Version
         run: npm run bumpVersion:ci
+      # there is some quirkiness here, but some files are modified that don't pass formatting standards, so force formatting & ammend
+      # But when ammending commit tag is thrown off, so re-apply tag too
       - name: Format Files
         run: npm run format:fix
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@main
       - name: Commit Files
         run: |
           git add -A
           git commit --amend --no-edit
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
+          git tag -f v${{ steps.package-version.outputs.current-version }}
+      # TODO update so that bot can push to main, or PR and auto merge to main (look for existing action to help)
       - name: Push changes (manual)
         run: git push origin ${{ github.ref }}
       - name: Push tag (manual)
         run: git push origin v${{ steps.package-version.outputs.current-version }}
-      # TODO create draft release
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          draft: true
+          # prerelease: true
+          # draft: true
           generateReleaseNotes: true
           tag: v${{ steps.package-version.outputs.current-version }}
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     body: |
-      #       Changes in this Release
-      #       - First Change
-      #       - Second Change
-      #     draft: false
-      #     prerelease: false
-      # TODO push to npm
