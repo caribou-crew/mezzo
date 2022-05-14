@@ -76,10 +76,6 @@ jobs:
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish dist/libs/core-client --access public
-        continue-on-error: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm publish dist/libs/constants --access public
         continue-on-error: true
         env:
