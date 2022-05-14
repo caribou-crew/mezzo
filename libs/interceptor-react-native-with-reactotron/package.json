@@ -1,6 +1,6 @@
 {
   "name": "@caribou-crew/mezzo-interceptor-react-native-with-reactotron",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "peerDependencies": {
     "reactotron-core-client": "2.x.x",
     "react-native": "0.x.x"
