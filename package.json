@@ -28,7 +28,6 @@
   },
   "private": true,
   "dependencies": {
-    "@caribou-crew/mezzo-constants": "file:dist/libs/constants",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fontsource/roboto": "^4.5.5",

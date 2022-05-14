@@ -4,6 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/caribou-crew/mezzo/tree/main/libs/utils-logger"
+    "url": "https://github.com/caribou-crew/mezzo.git",
+    "directory": "libs/utils-logger"
   }
 }

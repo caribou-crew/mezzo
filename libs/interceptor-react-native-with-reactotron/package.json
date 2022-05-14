@@ -8,6 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/caribou-crew/mezzo/tree/main/libs/interceptor-react-native-with-reactotron"
+    "url": "https://github.com/caribou-crew/mezzo.git",
+    "directory": "libs/interceptor-react-native-with-reactotron"
   }
 }
