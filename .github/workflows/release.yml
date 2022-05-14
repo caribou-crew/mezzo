@@ -21,32 +21,14 @@ jobs:
           node-version: 16
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
-      # - name: list tags
-      #   run: git tag
       - name: setup git config
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
       - name: Install dependencies
         run: npm ci
-      # Troubleshooting issue on bump version - Error: fatal: Unable to create '/home/runner/work/mezzo/mezzo/.git/index.lock': File exists.
-      # - name: Sleep for 30 seconds
-      #   uses: jakejarvis/wait-action@master
-      #   with:
-      #     time: '2s'
-      # - name: Cache node modules
-      #   uses: actions/cache@v3
-      #   env:
-      #     cache-name: cache-node-modules
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-build-${{ env.cache-name }}-
       - name: Bump Version
         run: npm run bumpVersion:ci
-      # there is some quirkiness here, but some files are modified that don't pass formatting standards, so force formatting & ammend
-      # But when ammending commit tag is thrown off, so re-apply tag too
       - name: Format Files
         run: npm run format:fix
       - name: get-npm-version
@@ -81,51 +63,92 @@ jobs:
           # draft: true
           generateReleaseNotes: true
           tag: v${{ steps.package-version.outputs.current-version }}
-  build-lib:
-    needs: create-release
-    strategy:
-      matrix:
-        project:
-          [
-            'core-client',
-            'interceptor-react-native-with-reactotron',
-            'interfaces',
-            'constants',
-            'utils-logger',
-          ]
-    name: Build lib
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
-          registry-url: 'https://registry.npmjs.org'
-      - name: Npm install
-        run: npm ci
-      - name: install nx
-        run: npm i -g nx
-      - name: Build
-        run: nx build ${{ matrix.project }}
-      - name: Publish
-        run: npm publish dist/libs/${{ matrix.project }} --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  build-core-server:
-    needs: create-release
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm run build:prod
+      # Kicking off new dependent jobs clone the original commit (I believe) not the one I just made in this job so version # is out of sync when publishing, for now keep all in one job
+      - name: Build All
+        run: npm run build:prod
       - run: npm publish dist/libs/core-server --access public
+        continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/core-client --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/core-client --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/constants --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/interceptor-react-native-with-reactotron --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/interfaces --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/utils-logger --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - run: npm publish dist/libs/interceptor-fetch --access public
+      #   continue-on-error: true
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - run: npm publish dist/libs/interceptor-react-native --access public
+      #   continue-on-error: true
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # build-lib:
+  #   needs: create-release
+  #   strategy:
+  #     matrix:
+  #       project: [
+  #           'core-client',
+  #           'interceptor-react-native-with-reactotron',
+  #           'interfaces',
+  #           'constants',
+  #           'utils-logger',
+  #           # 'interceptor-react-native',
+  #           # 'interceptor-fetch'
+  #         ]
+  #   name: Build lib
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 10
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v1
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 16
+  #         registry-url: 'https://registry.npmjs.org'
+  #     - name: Npm install
+  #       run: npm ci
+  #     - name: install nx
+  #       run: npm i -g nx
+  #     - name: Build
+  #       run: nx build ${{ matrix.project }}
+  #     - name: Publish
+  #       run: npm publish dist/libs/${{ matrix.project }} --access public
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # build-core-server:
+  #   needs: create-release
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 10
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+  #         registry-url: 'https://registry.npmjs.org'
+  #     - run: npm ci
+  #     - run: npm run build:prod
+  #     - run: npm publish dist/libs/core-server --access public
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
