@@ -2,6 +2,8 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.6.8](https://github.com/caribou-crew/mezzo/compare/v0.6.7...v0.6.8) (2022-05-14)
+
 ## [0.6.7](https://github.com/caribou-crew/mezzo/compare/v0.6.6...v0.6.7) (2022-05-14)
 
 ## [0.6.6](https://github.com/caribou-crew/mezzo/compare/v0.6.5...v0.6.6) (2022-05-13)
