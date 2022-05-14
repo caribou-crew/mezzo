@@ -4,5 +4,10 @@
   "peerDependencies": {
     "reactotron-core-client": "2.x.x",
     "react-native": "0.x.x"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caribou-crew/mezzo/tree/main/libs/interceptor-react-native-with-reactotron"
   }
 }
