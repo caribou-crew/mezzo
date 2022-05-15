@@ -24,6 +24,7 @@ import {
 } from '@caribou-crew/mezzo-interfaces';
 import { addRedirect } from './utils/redirect-endpoints';
 import curry from './utils/curry';
+import generateMock from './plugins/generate-mock';
 import recordingServer from './plugins/record-endpoints';
 import jsonBodyParser from './plugins/json-body-parser';
 import cors from './plugins/cors';
@@ -46,6 +47,7 @@ export const corePlugins: MezzoServerPlugin[] = [
   cors(),
   adminEndpoints(),
   recordingServer(),
+  generateMock(),
 ];
 
 const DEFAULT_OPTIONS: MezzoStartOptions = {

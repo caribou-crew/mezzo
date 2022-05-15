@@ -13,6 +13,7 @@ export const MEZZO_API_PATH = '/_admin/api';
 export const MEZZO_API_POST_RECORD_REQUEST = `${MEZZO_API_PATH}/record/request`;
 export const MEZZO_API_POST_RECORD_RESPONSE = `${MEZZO_API_PATH}/record/response`;
 export const MEZZO_API_GET_RECORDINGS = `${MEZZO_API_PATH}/recordings`;
+export const MEZZO_API_PUT_GENERATE_MOCK = `${MEZZO_API_PATH}/mock`;
 
 // WS Messages
 export const MEZZO_WS_API_REQUEST = 'api.request';

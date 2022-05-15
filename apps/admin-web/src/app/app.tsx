@@ -4,6 +4,7 @@ import { CssBaseline } from '@mui/material';
 import Header from './components/Header';
 import HomeScreen from './components/HomeScreen';
 import RecordScreen from './components/RecordScreen';
+import GenerateMock from './components/GenerateMock';
 import { PUBLIC_URL } from './utils/urlPrefix';
 
 // If prod, routes are /mezzo and /mezzo/record instead of / and /record
@@ -15,6 +16,7 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<HomeScreen />} />
         <Route path="/record" element={<RecordScreen />} />
+        <Route path="/generate" element={<GenerateMock />} />
       </Routes>
     </Router>
   );
