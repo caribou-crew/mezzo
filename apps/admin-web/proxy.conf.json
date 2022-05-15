@@ -1,4 +1,8 @@
 {
+  "/": {
+    "target": "http://localhost:8000",
+    "secure": false
+  },
   "/_admin/routes": {
     "target": "http://localhost:8000",
     "secure": false
