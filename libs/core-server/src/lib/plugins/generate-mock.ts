@@ -22,7 +22,7 @@ function setupAPI(app: express.Express) {
   );
 
   app.post(MEZZO_API_PUT_GENERATE_MOCK, (req, res, next) => {
-    const file = req.files.sampleFile as fileUpload.UploadedFile; // Fix wrongly typed definition. https://github.com/marc2332/DefinitelyTyped/commit/d59016211f919aa330ff29eef3b2096048e2e813 fixes it in @types/node, but only works for v1.1  so we need to use @types/express-fileupload which has the wrong type
+    const file = req.files.mockResponseFile as fileUpload.UploadedFile; // Fix wrongly typed definition. https://github.com/marc2332/DefinitelyTyped/commit/d59016211f919aa330ff29eef3b2096048e2e813 fixes it in @types/node, but only works for v1.1  so we need to use @types/express-fileupload which has the wrong type
     const { method, routePath, id, icons, titleIcons, variant } = req.body;
     const generatedId = id || `${method} ${routePath}`;
     const extension = file.name.split('.').pop();
