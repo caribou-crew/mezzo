@@ -28,6 +28,17 @@ if (arg === 'start') {
       const dynamicFeed = { name: 'dynamic_feed' };
       const link = { name: 'link' };
       const database = { name: 'storage' };
+      mezzo.profile('Profile 1', [
+        { routeID: 'GET /api/food/meat', variantID: 'variant1' },
+      ]);
+      mezzo.profile('Profile 2', [
+        {
+          routeID: 'POST /api/food/drink',
+          variantID:
+            'variant-with-a-very-descriptive-name-for-testing-purposes',
+        },
+      ]);
+
       mezzo
         .route({
           id: 'GET /api/food/meat',

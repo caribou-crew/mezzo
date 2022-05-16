@@ -18,6 +18,8 @@ import {
 } from '@caribou-crew/mezzo-constants';
 
 import {
+  Profile,
+  RouteVariant,
   // MezzoStartOptions,
   ServerConnectionOptions,
   VariantCategory,
@@ -63,8 +65,8 @@ const DEFAULT_OPTIONS: MezzoStartOptions = {
 
 export class Mezzo {
   public options: MezzoStartOptions = Object.assign({}, DEFAULT_OPTIONS);
-  // public plugins: MezzoServerPlugin[] = [];
   public userRoutes: Route[] = [];
+  public userProfiles: Profile[] = [];
   public globalVariants: VariantInputData[] = [];
   public sessionState: SessionState;
   server: Server;
@@ -83,6 +85,7 @@ export class Mezzo {
 
   private _resetRouteState = () => {
     this.userRoutes.length = 0;
+    this.userProfiles.length = 0;
     this.globalVariants.length = 0;
   };
 
@@ -98,6 +101,9 @@ export class Mezzo {
 
   private _addRouteToState = (myRoute: Route) => {
     this.userRoutes.push(myRoute);
+  };
+  private _addProfileToState = (profile: Profile) => {
+    this.userProfiles.push(profile);
   };
 
   private _initialize() {
@@ -212,6 +218,17 @@ export class Mezzo {
     this._addRouteToState(myRoute);
 
     return myRoute;
+  };
+
+  public profile = (name: string, variants: RouteVariant[]) => {
+    if (this.app == undefined) {
+      logger.error(
+        'You have not yet initialied the app, please start before adding profiles'
+      );
+      throw new Error('App not yet initialized');
+    }
+
+    this._addProfileToState({ name, variants });
   };
 
   /**
