@@ -8,6 +8,7 @@ import {
   X_REQUEST_VARIANT,
 } from '@caribou-crew/mezzo-constants';
 import { fileIOPort } from './testPorts';
+import mezzoClient from '@caribou-crew/mezzo-core-client';
 
 describe('route-file-io', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
@@ -16,6 +17,7 @@ describe('route-file-io', () => {
   });
 
   let mockedDirectory;
+  let client;
   const routePath1 = '/respondWithFile';
   const routeId1 = `GET ${routePath1}`;
 
@@ -48,6 +50,7 @@ describe('route-file-io', () => {
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
     const port = fileIOPort;
+    client = mezzoClient({ port });
     request = SuperTestRequest(`http://localhost:${port}`);
     mockedDirectory = path.join(resourcesPath, 'some-custom-mocked-data');
     await mezzo.start({
@@ -161,7 +164,7 @@ describe('route-file-io', () => {
             return mezzo.util.respondWithFile(route, req, res);
           },
         });
-      await mezzo.clientUtil.setMockVariant([
+      await client.setMockVariant([
         { routeID: routeId4Html, variantID: variant1 },
       ]);
       const res = await request.get(routePath4Html);
@@ -248,9 +251,8 @@ describe('route-file-io', () => {
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ variant: _default });
 
-      await mezzo.clientUtil.setMockVariant([
-        { routeID: routeId2, variantID: variant1 },
-      ]);
+      // await mezzo.clientUtil.setMockVariant([
+      await client.setMockVariant([{ routeID: routeId2, variantID: variant1 }]);
 
       const res2 = await request.get(routePath2);
       expect(res2.body).toEqual({ variant: variant1 });
@@ -288,7 +290,7 @@ describe('route-file-io', () => {
       const res = await request.get('/part1/someDynamicPart2Path');
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ variant: _default });
-      await mezzo.clientUtil.setMockVariant([
+      await client.setMockVariant([
         { routeID: routeId3Dynamic, variantID: variant1 },
       ]);
       const res2 = await request.get('/part1/someDynamicPart2Path');
@@ -371,7 +373,7 @@ describe('route-file-io', () => {
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ variant: _default });
 
-      await mezzo.clientUtil.setMockVariantForSession(sessionId, [
+      await client.setMockVariantForSession(sessionId, [
         { routeID: routeId2, variantID: variant1 },
       ]);
 

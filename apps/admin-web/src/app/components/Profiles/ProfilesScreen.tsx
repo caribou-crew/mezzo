@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Container, Button } from '@mui/material';
 import { Profile } from '@caribou-crew/mezzo-interfaces';
-import { MezzoClient } from '@caribou-crew/mezzo-core-client';
+import mezzoClient from '@caribou-crew/mezzo-core-client';
 import CopyIcon from '@mui/icons-material/CopyAll';
 import {
   deleteLocalProfile,
@@ -20,16 +20,13 @@ SyntaxHighlighter.registerLanguage('javascript', js);
 type Props = Record<string, never>;
 
 export default function ProfilesScreen(props: Props) {
-  const client = new MezzoClient().initVariant();
+  const client = mezzoClient();
   const [remoteProfiles, setRemoteProfiles] = useState<Profile[]>([]);
   const [localProfiles, setLocalProfiles] = useState<Profile[]>([]);
   const [saveAsRemote, setSaveAsRemote] = useState('');
   useEffect(() => {
     const fetchData = async () => {
-      // client.variantClient.get
-      // const response = await fetch(`${MEZZO_API_PATH}/profiles`);
-      // const remoteProfiles: ProfileResponse = await response.json();
-      const { data } = (await client.variantClient?.getRemoteProfiles()) ?? {};
+      const { data } = (await client.getRemoteProfiles()) ?? {};
       if (data) {
         setRemoteProfiles(data.profiles);
       }
@@ -49,7 +46,7 @@ export default function ProfilesScreen(props: Props) {
         <div key={profile.name}>
           <Button
             onClick={() => {
-              client.variantClient?.setMockVariant(profile.variants);
+              client.setMockVariant(profile.variants);
             }}
           >
             Load
@@ -63,7 +60,7 @@ export default function ProfilesScreen(props: Props) {
         <div key={profile.name}>
           <Button
             onClick={() => {
-              client.variantClient?.setMockVariant(profile.variants);
+              client.setMockVariant(profile.variants);
             }}
           >
             Load
@@ -93,8 +90,7 @@ export default function ProfilesScreen(props: Props) {
           if (enteredName) {
             console.log('Save with name', enteredName);
             // Fetch current variants
-            const { data } =
-              (await client.variantClient?.getActiveVariants()) ?? {};
+            const { data } = (await client.getActiveVariants()) ?? {};
             if (data?.variants) {
               // Save to local
               saveLocalProfile({
@@ -116,8 +112,7 @@ export default function ProfilesScreen(props: Props) {
         onClick={async () => {
           const enteredName = prompt('Please enter your name');
           if (enteredName) {
-            const { data } =
-              (await client.variantClient?.getActiveVariants()) ?? {};
+            const { data } = (await client.getActiveVariants()) ?? {};
             if (data?.variants) {
               setSaveAsRemote(
                 `mezzo.profile('${enteredName}', ${JSON.stringify(

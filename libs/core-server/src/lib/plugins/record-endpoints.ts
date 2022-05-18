@@ -1,17 +1,12 @@
 import * as WebSocket from 'ws';
 import * as express from 'express';
-import {
-  MEZZO_API_POST_RECORD_REQUEST,
-  MEZZO_API_POST_RECORD_RESPONSE,
-  MEZZO_API_GET_RECORDINGS,
-} from '@caribou-crew/mezzo-constants';
+import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
 import {
   RecordedItem,
   SocketRequestResponseMessage,
 } from '@caribou-crew/mezzo-interfaces';
 import { Mezzo } from '../core';
 import logger from '@caribou-crew/mezzo-utils-logger';
-// import { v4 as uuidv4 } from 'uuid';
 
 function generateGuid() {
   let result, i, j;
@@ -36,46 +31,6 @@ let id = 0;
 const data: RecordedItem[] = [];
 
 function setupAPI(app: express.Express) {
-  // recording API calls moved to WS
-  //   app.post(MEZZO_API_POST_RECORD_REQUEST, (req, res) => {
-  //     console.log('Got record request ');
-  //     const { uuid, config, resource, startTime } = req.body;
-  //     const item = {
-  //       uuid,
-  //       startTime,
-  //       resource,
-  //       request: {
-  //         config,
-  //       },
-  //       response: undefined,
-  //     };
-  //     // TODO temporarily don't allow REST way to update
-  //     console.warn('REST implementation of recording temporarily disallowed');
-  //     // data.push(item);
-  //     res.sendStatus(201);
-  //     // TODO trigger update to anyone listening on socket
-  //     clients.forEach(({ ws }) => {
-  //       ws.send(JSON.stringify(item));
-  //     });
-  //   });
-  //   app.post(MEZZO_API_POST_RECORD_RESPONSE, (req, res) => {
-  //     const { duration, endTime, url, uuid, ...rest } = req.body;
-  //     const existingIndex = data.findIndex((i) => i.uuid === uuid);
-  //     const updatedItem = {
-  //       ...data[existingIndex],
-  //       duration,
-  //       endTime,
-  //       url,
-  //       response: {
-  //         ...rest,
-  //       },
-  //     };
-  //     console.warn('REST implementation of recording temporarily disallowed');
-  //     // data[existingIndex] = updatedItem;
-  //     res.sendStatus(201);
-  //     // TODO trigger update to anyone listening on socket
-  //     notifyAllClientsJSON(updatedItem, 'api.response');
-  //   });
   logger.info('Adding GET endpoint');
   app.get(MEZZO_API_GET_RECORDINGS, (req, res) => {
     logger.info('Inside GET endpoint');
@@ -86,17 +41,14 @@ function setupAPI(app: express.Express) {
 }
 
 function notifyAllClientsJSON(message: any, type?: string) {
-  logger.debug(`Sending message to all ${clients.length} clients`, {
-    message,
-    type,
-  });
+  logger.debug(`Sending message to all ${clients.length} clients`);
   clients.forEach(({ ws }) => {
     ws.send(JSON.stringify({ type, ...message }));
   });
 }
 
 function processRequestResponseMessage(message: SocketRequestResponseMessage) {
-  logger.debug('Processing message: ', message);
+  logger.debug('Processing message: ');
   if (message.type != null) {
     const { request, response } = message.payload;
     const item: RecordedItem = {
@@ -128,11 +80,14 @@ function processMessage(message, ws: WebSocket) {
   // attempt to parse
   try {
     const data = JSON.parse(message);
+    logger.debug('Message received', data?.type);
     if (data?.type === 'api.response') {
-      logger.debug('Received api response', data);
+      logger.debug('Received api response');
       processRequestResponseMessage(data);
     } else if (data?.type === 'ping') {
       ws.send(JSON.stringify({ type: 'pong' }));
+    } else if (data?.type === 'close') {
+      closeClient(ws);
     }
   } catch (e) {
     logger.error('Error parsings ws message', e);
@@ -153,13 +108,7 @@ function setupWebSocketServer(mezzo: Mezzo) {
     );
 
     ws.on('message', (message: string) => {
-      // logger.debug('Message received');
-      logger.debug('Message received: %s', message);
-      if (message.toString() === 'Close') {
-        closeClient(ws);
-      } else {
-        processMessage(message, ws);
-      }
+      processMessage(message, ws);
       // ws.send(`Hello, you sent -> ${message}`);
     });
     //send immediatly when client connets

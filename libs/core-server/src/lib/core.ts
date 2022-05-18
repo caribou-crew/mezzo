@@ -11,8 +11,6 @@ import * as fsDefault from 'fs';
 import { SessionState } from './models/sessionState';
 import {
   DEFAULT_PORT,
-  MEZZO_API_PATH,
-  LOCAL_HOST,
   DEFAULT_VARIANT_CATEGORY,
   GLOBAL_VARIANT_CATEGORY,
 } from '@caribou-crew/mezzo-constants';
@@ -20,8 +18,6 @@ import {
 import {
   Profile,
   RouteVariant,
-  // MezzoStartOptions,
-  ServerConnectionOptions,
   VariantCategory,
 } from '@caribou-crew/mezzo-interfaces';
 import { addRedirect } from './utils/redirect-endpoints';
@@ -29,11 +25,7 @@ import curry from './utils/curry';
 import recordingServer from './plugins/record-endpoints';
 import jsonBodyParser from './plugins/json-body-parser';
 import cors from './plugins/cors';
-import { ClientUtils } from './utils/client-utils';
 
-// type MezzoServerPlugin = (mezzo: Mezzo) => void;
-
-// TODO: Figure out best way to type Mezzo server class and put in shared interface
 type MezzoServerPlugin = (mezzo: Mezzo) => Record<string, any>;
 export interface MezzoStartOptions {
   port: number | string;
@@ -51,16 +43,8 @@ export const corePlugins: MezzoServerPlugin[] = [
 ];
 
 const DEFAULT_OPTIONS: MezzoStartOptions = {
-  // createSocket: null,
-  // hostname: LOCAL_HOST,
   port: DEFAULT_PORT,
-  // name: "reactotron-core-client",
-  // secure: false,
   plugins: corePlugins,
-  // safeRecursion: true,
-  // onCommand: () => null,
-  // onConnect: () => null,
-  // onDisconnect: () => null,
 };
 
 export class Mezzo {
@@ -74,12 +58,9 @@ export class Mezzo {
   app: express.Express;
   private fs;
   public util: CommonUtils;
-  public clientUtil: ClientUtils;
   public log = {
     setLogLevel,
   };
-  // public mockedDirectory;
-  // public port;
   public redirect;
   public variantCategories: VariantCategory[] = [];
 
@@ -117,7 +98,6 @@ export class Mezzo {
       this.fs,
       this.options.mockedDirectory
     );
-    this.clientUtil = new ClientUtils(this);
 
     this.sessionState = new SessionState();
     this.variantCategories = [
@@ -245,13 +225,6 @@ export class Mezzo {
       route.variant(variantData);
     });
   };
-
-  getConnectionFromOptions(options?: ServerConnectionOptions) {
-    const protocol = options?.useHttps ? 'https' : 'http';
-    const hostname = options?.hostname ?? LOCAL_HOST;
-    const port = options?.port ?? this.options.port;
-    return `${protocol}://${hostname}:${port}${MEZZO_API_PATH}`;
-  }
 }
 
 export default new Mezzo();

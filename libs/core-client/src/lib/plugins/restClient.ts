@@ -8,30 +8,28 @@ import {
   GetRoutesResponse,
   Profile,
   ProfileResponse,
-  ServerConnectionOptions,
+  IRESTClientOptions,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
 import axios from 'axios';
 
-const DEFAULT_OPTIONS: ServerConnectionOptions = {
-  hostname: 'localhost',
-  port: 8000,
-  useHttps: false,
-};
+export interface IMezzoRouteClient {
+  setMockVariant: (payload: SetRouteVariant) => Promise<void>;
+  setMockVariantForSession: (
+    sessionId: string,
+    payload: SetRouteVariant
+  ) => Promise<void>;
+}
 
-export class MezzoVariantClient {
-  options: ServerConnectionOptions = Object.assign({}, DEFAULT_OPTIONS);
+export class RESTClient {
+  options: IRESTClientOptions;
 
-  constructor(options?: ServerConnectionOptions) {
-    // this.options = options;
-    this.options = {
-      ...this.options,
-      ...options,
-    };
+  constructor(options: IRESTClientOptions) {
+    this.options = options;
   }
 
-  getConnectionFromOptions(options?: ServerConnectionOptions) {
-    const protocol = options?.useHttps ? 'https' : 'http';
+  getConnectionFromOptions(options?: IRESTClientOptions) {
+    const protocol = options?.secure ? 'https' : 'http';
     const hostname = options?.hostname ?? LOCAL_HOST;
     const port = options?.port ?? this.options.port;
     return `${protocol}://${hostname}:${port}${MEZZO_API_PATH}`;
@@ -39,7 +37,7 @@ export class MezzoVariantClient {
 
   public setMockVariant = async (
     payload: SetRouteVariant,
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/routeVariants/set`;
@@ -49,7 +47,7 @@ export class MezzoVariantClient {
   public setMockVariantForSession = async (
     sessionId: string,
     payload: SetRouteVariant,
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState/set/${sessionId}`;
@@ -58,7 +56,7 @@ export class MezzoVariantClient {
 
   public updateMockVariant = async (
     payload: SetRouteVariant,
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/routeVariants/update`;
@@ -68,7 +66,7 @@ export class MezzoVariantClient {
   public updateMockVariantForSession = async (
     sessionId: string,
     payload: SetRouteVariant,
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState/update/${sessionId}`;
@@ -76,7 +74,7 @@ export class MezzoVariantClient {
   };
 
   public resetMockVariant = async (
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/routeVariants`;
@@ -85,7 +83,7 @@ export class MezzoVariantClient {
 
   public resetMockVariantForSession = async (
     sessionId: string,
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState/${sessionId}`;
@@ -93,23 +91,21 @@ export class MezzoVariantClient {
   };
 
   public resetMockVariantForAllSessions = async (
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState`;
     await axios.delete(url);
   };
 
-  public getRoutes = async (
-    options: ServerConnectionOptions = this.options
-  ) => {
+  public getRoutes = async (options: IRESTClientOptions = this.options) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/routes`;
     return axios.get<GetRoutesResponse>(url);
   };
 
   public getActiveVariants = async (
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/activeVariants`;
@@ -117,7 +113,7 @@ export class MezzoVariantClient {
   };
 
   public getRemoteProfiles = async (
-    options: ServerConnectionOptions = this.options
+    options: IRESTClientOptions = this.options
   ) => {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/profiles`;
@@ -129,9 +125,4 @@ export class MezzoVariantClient {
       JSON.parse(localStorage.getItem(PROFILE_NAMESPACE) || '[]') ?? [];
     return data;
   };
-}
-
-export function createVariantClient(options?: ServerConnectionOptions) {
-  const client = new MezzoVariantClient(options);
-  return client;
 }

@@ -1,11 +1,10 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import * as log from 'loglevel';
 import { RecordedItem } from '@caribou-crew/mezzo-interfaces';
-import {
-  MezzoClient,
-  MezzoRecordingClient,
-} from '@caribou-crew/mezzo-core-client';
-import { DEFAULT_PORT } from '@caribou-crew/mezzo-constants';
+import MezzoClient from '@caribou-crew/mezzo-core-client';
+import { toast } from 'react-toastify';
+import debounce from 'lodash.debounce';
+
 log.setDefaultLevel('debug');
 
 interface MyState {
@@ -58,38 +57,53 @@ function reducer(state: MyState, action: MyAction) {
 const initialState: MyState = {
   items: [],
 };
+
 export default function useRecordingClient() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const mezzoClient = useRef<MezzoRecordingClient | null>(null);
+  const mezzoClient = useRef<ReturnType<typeof MezzoClient> | null>(null);
+
+  const toastDebounced = debounce(toast, 500);
 
   useEffect(() => {
     const onCommand = (data: any) => {
-      log.debug('[RecordScreen useEffect] on command', data);
+      log.debug('[useRecordingClinet] on command', data);
       if (data.type === 'api.response') {
         const message: RecordedItem = data;
         log.debug('[RecordScreen] onCommand api.response', message);
         dispatch({ type: 'add', payload: message });
       }
     };
-    const mc = new MezzoClient().initRecording({
-      createSocket: (path?: string) => new WebSocket(path ?? ''),
-      port: DEFAULT_PORT,
-      host: 'localhost',
-      name: 'Admin Web',
-      client: {},
-      getClientId: () => {
-        return new Promise((resolve) => resolve('Some Temp id from client'));
-      },
-      onCommand,
-    });
-    mezzoClient.current = mc.recordingClient;
+
+    if (mezzoClient.current == null) {
+      const mc = MezzoClient({
+        createSocket: (path?: string) => new WebSocket(path ?? ''),
+        name: 'Admin Web',
+        onCommand,
+        onDisconnect: () => {
+          toast.dismiss();
+          toastDebounced.cancel();
+          toastDebounced('Connection to server lost', { type: 'error' });
+          log.warn('[connection] Disconnect');
+        },
+        onConnect: () => {
+          log.info('[connection] Connect');
+          toast.dismiss();
+          toastDebounced.cancel();
+          toastDebounced('Connection established', { type: 'success' });
+        },
+      });
+
+      log.debug('[useRecordingClinet] connecting');
+      mezzoClient.current = mc;
+      mezzoClient.current.connect();
+    }
 
     return () => {
-      if (mezzoClient.current?.readyState === WebSocket.OPEN) {
-        mezzoClient.current?.send('Close');
-        mezzoClient.current?.close();
-      }
+      log.info('[useRecordingClient] unmount, calling close on socket');
+      mezzoClient.current?.send('close');
+      mezzoClient.current?.close();
+      mezzoClient.current = null;
     };
   }, [dispatch]);
 

@@ -5,10 +5,8 @@ import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo, MezzoStartOptions } from '../core';
 import * as path from 'path';
 import { version } from '../../../package.json';
-// import { StaticRouter } from 'react-router-dom/server';
 import {
   GetRoutesResponse,
-  // MezzoStartOptions,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
 
