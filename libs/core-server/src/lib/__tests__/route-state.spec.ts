@@ -77,3 +77,5 @@ describe('route-state', () => {
       expect(res3.status).toBe(200);
       expect(res3.body.variant).toBe(_default);
     });
+  });
+});
