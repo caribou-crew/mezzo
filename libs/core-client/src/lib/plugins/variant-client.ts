@@ -1,5 +1,13 @@
-import { LOCAL_HOST, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import {
+  PROFILE_NAMESPACE,
+  LOCAL_HOST,
+  MEZZO_API_PATH,
+} from '@caribou-crew/mezzo-constants';
+import {
+  GetActiveVariantsResponse,
+  GetRoutesResponse,
+  Profile,
+  ProfileResponse,
   ServerConnectionOptions,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
@@ -48,6 +56,15 @@ export class MezzoVariantClient {
     await axios.post(url, payload);
   };
 
+  public updateMockVariant = async (
+    payload: SetRouteVariant,
+    options: ServerConnectionOptions = this.options
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/routeVariants/update`;
+    await axios.post(url, payload);
+  };
+
   public updateMockVariantForSession = async (
     sessionId: string,
     payload: SetRouteVariant,
@@ -81,6 +98,36 @@ export class MezzoVariantClient {
     const baseUri = this.getConnectionFromOptions(options);
     const url = `${baseUri}/sessionVariantState`;
     await axios.delete(url);
+  };
+
+  public getRoutes = async (
+    options: ServerConnectionOptions = this.options
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/routes`;
+    return axios.get<GetRoutesResponse>(url);
+  };
+
+  public getActiveVariants = async (
+    options: ServerConnectionOptions = this.options
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/activeVariants`;
+    return axios.get<GetActiveVariantsResponse>(url);
+  };
+
+  public getRemoteProfiles = async (
+    options: ServerConnectionOptions = this.options
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/profiles`;
+    return axios.get<ProfileResponse>(url);
+  };
+
+  public getLocalProfiles = () => {
+    const data: Profile[] =
+      JSON.parse(localStorage.getItem(PROFILE_NAMESPACE) || '[]') ?? [];
+    return data;
   };
 }
 

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
+import { DEFAULT_VARIANT, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '@caribou-crew/mezzo-utils-logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo, MezzoStartOptions } from '../core';
@@ -22,7 +22,37 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     res.json(response);
   });
 
+  /**
+   * Don't preserve existing, just apply new variant(s) in replace of old
+   */
   app.post(`${MEZZO_API_PATH}/routeVariants/set`, (req, res) => {
+    const payload: SetRouteVariant = req.body;
+
+    // Reset all routes back to default variant
+    mezzo.userRoutes.forEach((i) => {
+      i.setVariant(DEFAULT_VARIANT);
+    });
+
+    payload.forEach((item) => {
+      const index = findRouteIndexById(item.routeID, mezzo.userRoutes);
+      const foundRoute = mezzo.userRoutes[index];
+      if (foundRoute) {
+        const updatedItem = foundRoute.setVariant(item.variantID);
+        mezzo.userRoutes[index] = updatedItem;
+      } else {
+        logger.warn(
+          `Could not find route for ${item.routeID} to set variant ${item.variantID}`
+        );
+      }
+    });
+
+    res.sendStatus(200);
+  });
+
+  /**
+   * Preserve old variant(s) while setting new
+   */
+  app.post(`${MEZZO_API_PATH}/routeVariants/update`, (req, res) => {
     const payload: SetRouteVariant = req.body;
 
     payload.forEach((item) => {
@@ -78,6 +108,48 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     mezzo.sessionState.resetSessionVariantState();
     res.sendStatus(200);
   });
+
+  /**
+   * Used by profiles to get the current list of active variants that are not set to default
+   * This is handy if client wants to save the current configurate as a profile
+   */
+  app.get(`${MEZZO_API_PATH}/activeVariants`, (req, res) => {
+    const nonDefaults = [];
+    mezzo.userRoutes.forEach((route) => {
+      if (route.getActiveVariant() !== DEFAULT_VARIANT) {
+        nonDefaults.push({
+          routeID: route.id,
+          variantID: route.getActiveVariant(),
+        });
+      }
+    });
+    res.json({ variants: nonDefaults });
+  });
+
+  /**
+   * Returns data set in call to mezzo.profile
+   */
+  app.get(`${MEZZO_API_PATH}/profiles`, (req, res) => {
+    res.json({ profiles: mezzo.userProfiles });
+    // const nonDefaults = [];
+    // mezzo.userRoutes.forEach((route) => {
+    //   if (route.getActiveVariant() !== DEFAULT_VARIANT) {
+    //     nonDefaults.push({
+    //       routeID: route.id,
+    //       variantID: route.getActiveVariant(),
+    //     });
+    //   }
+    // });
+    // res.json({ variants: nonDefaults });
+  });
+
+  /**
+   * TODO: If i want to suppot local & global profiles, should client fetch list and structure of profiles
+   * and then when "setting" a profile just call setMockVariants passing in data?
+   * In this way local & remote profiles are set identically, which is same way regular variants are set
+   */
+  // app.post(`${MEZZO_API_PATH}/profile`, (req, res) => {
+  // });
 };
 
 const staticPath = path.join(__dirname, '..', '..', 'public');
@@ -89,7 +161,11 @@ export const addAdminStaticSite = (
 
   logger.debug(`Adding endpoint: ${rootAdmin} reading html from ${staticPath}`);
 
-  const validClientRoutes = [rootAdmin, `${rootAdmin}/record`];
+  const validClientRoutes = [
+    rootAdmin,
+    `${rootAdmin}/record`,
+    `${rootAdmin}/profiles`,
+  ];
 
   validClientRoutes.forEach((clientRoute) => {
     logger.debug(`Adding nedpoint ${clientRoute} for server side reload`);

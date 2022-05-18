@@ -45,9 +45,11 @@ export class Route {
     return variantRequestHeader || sessionVariant || routeStateVariant;
   }
 
-  // public getActiveVariant(activeVariantId: string) {
+  /**
+   *
+   * @returns The active variant based on rouet state, note this does not account for session or request header "overrides".
+   */
   public getActiveVariant() {
-    // return this._variants.get(activeVariantId);
     return this._activeVariant;
   }
 

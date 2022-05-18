@@ -38,6 +38,11 @@ export interface RouteVariant {
   variantID: string;
 }
 
+export interface Profile {
+  name: string;
+  variants: RouteVariant[];
+}
+
 export type SetRouteVariant = RouteVariant[];
 
 /**
@@ -90,6 +95,14 @@ export interface RecordedResponse {
   status: number;
   statusText: string;
   type: string;
+}
+
+export interface GetActiveVariantsResponse {
+  variants: RouteVariant[];
+}
+
+export interface ProfileResponse {
+  profiles: Profile[];
 }
 
 export interface ClientOptions {

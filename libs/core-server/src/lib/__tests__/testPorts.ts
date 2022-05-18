@@ -3,6 +3,7 @@
  * can use a different port when spinning up a real mezzo server to avoid collision
  */
 export const adminEndpointsPort = 3000;
+export const adminEndpointsProfilesPort = 3010;
 export const corePort = 3100;
 export const redirectPort = 3200;
 export const routeExpressPort = 3300;

@@ -17,3 +17,6 @@ export const MEZZO_API_GET_RECORDINGS = `${MEZZO_API_PATH}/recordings`;
 // WS Messages
 export const MEZZO_WS_API_REQUEST = 'api.request';
 export const MEZZO_WS_API_RESPONSE = 'api.response';
+
+// Client
+export const PROFILE_NAMESPACE = 'mezzo-profiles';

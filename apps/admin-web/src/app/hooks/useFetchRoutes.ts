@@ -1,6 +1,11 @@
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import { RouteItemType, VariantCategory } from '@caribou-crew/mezzo-interfaces';
+import {
+  GetRoutesResponse,
+  RouteItemType,
+  VariantCategory,
+} from '@caribou-crew/mezzo-interfaces';
 import { useEffect, useState } from 'react';
+import { MezzoClient } from '@caribou-crew/mezzo-core-client';
 
 export interface URLHashCallback {
   routes: RouteItemType[];
@@ -9,7 +14,7 @@ export interface URLHashCallback {
 
 /**
  * Fetches array of routes via api
- * @returns
+ * @return
  */
 export default function useFetchRoutes() {
   const [routes, setRoutes] = useState<RouteItemType[]>([]);
@@ -17,19 +22,21 @@ export default function useFetchRoutes() {
   const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
     []
   );
+  const client = new MezzoClient().initVariant();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${MEZZO_API_PATH}/routes`);
-      const data = await response.json();
-      setRoutes(data.routes);
-      setVersion(data.appVersion);
-      setVariantCategories(
-        (data.variantCategories || []).sort(
-          (a: VariantCategory, b: VariantCategory) =>
-            (a?.order ?? 0) - (b?.order ?? 0)
-        )
-      );
+      const { data } = (await client.variantClient?.getRoutes()) || {};
+      if (data) {
+        setRoutes(data?.routes);
+        setVersion(data?.appVersion);
+        setVariantCategories(
+          (data?.variantCategories || []).sort(
+            (a: VariantCategory, b: VariantCategory) =>
+              (a?.order ?? 0) - (b?.order ?? 0)
+          )
+        );
+      }
     };
 
     fetchData().catch(console.error);

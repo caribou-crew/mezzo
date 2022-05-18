@@ -42,6 +42,11 @@ export default function Headers(props: Props) {
       path: `/record`,
       isLink: true,
     },
+    {
+      label: 'Profiles',
+      path: `/profiles`,
+      isLink: true,
+    },
     // {
     //   label: 'Reset State',
     //   path: `${MEZZO_API_PATH}/routeVariants`,
