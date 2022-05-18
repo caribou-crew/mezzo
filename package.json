@@ -62,6 +62,7 @@
     "@jscutlery/semver": "^2.23.4",
     "@nrwl/cli": "14.1.4",
     "@nrwl/cypress": "14.1.4",
+    "@nrwl/devkit": "^14.1.7",
     "@nrwl/eslint-plugin-nx": "14.1.4",
     "@nrwl/express": "14.1.4",
     "@nrwl/jest": "14.1.4",
