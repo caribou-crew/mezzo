@@ -1,5 +1,5 @@
 import mezzoClient from '../core-client';
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import { startServer, waitForSocketState } from './utils/webSocketTestUtils';
 
 export function timeout(ms: number) {

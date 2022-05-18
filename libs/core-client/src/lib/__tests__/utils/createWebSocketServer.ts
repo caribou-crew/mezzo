@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 function createWebSocketServer(server) {
   const wss = new WebSocket.Server({ server });
   wss.on('connection', function (webSocket) {

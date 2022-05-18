@@ -1,7 +1,7 @@
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import { fs, vol } from 'memfs';
 import mezzo from '../core';
-import * as path from 'path';
+import path from 'path';
 import { resourcesPath } from '../utils/pathHelpers';
 import {
   X_REQUEST_SESSION,

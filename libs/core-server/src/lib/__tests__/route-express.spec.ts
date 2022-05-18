@@ -1,4 +1,4 @@
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import { routeExpressPort } from './testPorts';
 

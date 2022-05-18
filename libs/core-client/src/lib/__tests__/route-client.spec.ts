@@ -1,4 +1,4 @@
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import mezzo from '@caribou-crew/mezzo-core-server';
 import MezzoClient from '../core-client';
 import { X_REQUEST_SESSION } from '@caribou-crew/mezzo-constants';

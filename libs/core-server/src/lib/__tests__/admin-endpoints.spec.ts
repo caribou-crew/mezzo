@@ -2,7 +2,7 @@ import {
   DEFAULT_VARIANT_CATEGORY,
   MEZZO_API_PATH,
 } from '@caribou-crew/mezzo-constants';
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 import { adminEndpointsPort } from './testPorts';

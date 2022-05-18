@@ -1,5 +1,5 @@
 import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import { recordingServerPort } from './testPorts';
 import logger from '@caribou-crew/mezzo-utils-logger';

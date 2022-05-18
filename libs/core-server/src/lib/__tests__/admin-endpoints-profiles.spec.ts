@@ -1,5 +1,5 @@
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import MezzoClient from '@caribou-crew/mezzo-core-client';
 import { adminEndpointsProfilesPort } from './testPorts';

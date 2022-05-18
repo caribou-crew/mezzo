@@ -1,10 +1,10 @@
 import { createServer, Server } from 'http';
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import logger, { setLogLevel } from '@caribou-crew/mezzo-utils-logger';
 
 import { CommonUtils } from './utils/common-utils';
 import { MiddlewareFn, RouteInputData, VariantInputData } from '../types';
-import * as express from 'express';
+import express from 'express';
 import { Route } from './models/route-model';
 import adminEndpoints from './plugins/admin-endpoints';
 import * as fsDefault from 'fs';

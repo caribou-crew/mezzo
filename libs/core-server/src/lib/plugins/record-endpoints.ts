@@ -1,5 +1,5 @@
-import * as WebSocket from 'ws';
-import * as express from 'express';
+import WebSocket from 'ws';
+import express from 'express';
 import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
 import {
   RecordedItem,
