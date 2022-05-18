@@ -1,28 +1,16 @@
-export default class ConnectionManager {
-  private webSocket: any;
-
-  constructor(path?: string) {
-    this.webSocket = new WebSocket(path);
-  }
-
-  send(payload: any) {
-    if (this.webSocket.readyState === 1) {
-      this.webSocket.send(payload);
-    }
-  }
-
-  on(event: 'open' | 'close' | 'message', callback: any) {
-    if (event === 'open') {
-      this.webSocket.onopen = callback;
-    } else if (event === 'message') {
-      this.webSocket.onmessage = (evt) => callback(evt.data);
-    }
-  }
-
-  close() {
-    console.log(
-      '[interceptor-react-native.connectionManager close] RN socket close'
-    );
-    this.webSocket.close();
-  }
+export default function connectionManager(path: string) {
+  const ws = new WebSocket(path);
+  return {
+    send: ws.send,
+    close: ws.close,
+    set onopen(cb: () => void) {
+      ws.onopen = cb;
+    },
+    set onclose(cb: () => void) {
+      ws.onclose = cb;
+    },
+    set onmessage(cb: () => void) {
+      ws.onmessage = cb;
+    },
+  };
 }

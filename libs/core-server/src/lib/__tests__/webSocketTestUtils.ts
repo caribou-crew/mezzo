@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 
 export function waitForSocketState(socket: WebSocket, state: number) {
   return new Promise<void>(function (resolve) {

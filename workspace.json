@@ -6,8 +6,6 @@
     "constants": "libs/constants",
     "core-client": "libs/core-client",
     "core-server": "libs/core-server",
-    "interceptor-fetch": "libs/interceptor-fetch",
-    "interceptor-react-native": "libs/interceptor-react-native",
     "interceptor-react-native-with-reactotron": "libs/interceptor-react-native-with-reactotron",
     "interfaces": "libs/interfaces",
     "utils-logger": "libs/utils-logger",

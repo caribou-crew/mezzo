@@ -1,13 +1,15 @@
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import mezzo from '../core';
-import { MezzoClient } from '@caribou-crew/mezzo-core-client';
+import MezzoClient from '@caribou-crew/mezzo-core-client';
 import { adminEndpointsProfilesPort } from './testPorts';
 
 describe('admin-endpoints-profile', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   const port = adminEndpointsProfilesPort;
+  let client;
   beforeAll(() => {
+    client = MezzoClient({ port });
     global.console = require('console'); // Don't stack trace out all console logs
     process.env.LOG_LEVEL = 'warn';
   });
@@ -48,8 +50,7 @@ describe('admin-endpoints-profile', () => {
     });
     it('should return variants when set', async () => {
       const payload = [{ routeID: 'route2', variantID: 'route2-variant' }];
-      const client = new MezzoClient().initVariant({ port });
-      await client.variantClient.setMockVariant(payload);
+      await client.setMockVariant(payload);
 
       const res = await request.get(`${MEZZO_API_PATH}/activeVariants`);
       expect(res.status).toBe(200);

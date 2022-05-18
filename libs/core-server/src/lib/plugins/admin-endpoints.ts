@@ -1,14 +1,12 @@
-import * as express from 'express';
+import express from 'express';
 import { DEFAULT_VARIANT, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '@caribou-crew/mezzo-utils-logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo, MezzoStartOptions } from '../core';
 import * as path from 'path';
 import { version } from '../../../package.json';
-// import { StaticRouter } from 'react-router-dom/server';
 import {
   GetRoutesResponse,
-  // MezzoStartOptions,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
 

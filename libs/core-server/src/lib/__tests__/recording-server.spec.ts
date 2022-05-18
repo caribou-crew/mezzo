@@ -1,13 +1,7 @@
-import {
-  MEZZO_API_POST_RECORD_REQUEST,
-  MEZZO_API_POST_RECORD_RESPONSE,
-  MEZZO_API_GET_RECORDINGS,
-} from '@caribou-crew/mezzo-constants';
-import * as SuperTestRequest from 'supertest';
+import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
+import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import { recordingServerPort } from './testPorts';
-import { waitForSocketState } from './webSocketTestUtils';
-import * as WebSocket from 'ws';
 import logger from '@caribou-crew/mezzo-utils-logger';
 
 const movies = [

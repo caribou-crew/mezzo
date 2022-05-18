@@ -1,6 +1,6 @@
 import mezzo from '../index';
 import { Server } from 'http';
-import * as SuperTestRequest from 'supertest';
+import SuperTestRequest from 'supertest';
 import * as path from 'path';
 import { resourcesPath } from '../lib/utils/pathHelpers';
 

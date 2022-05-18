@@ -1,5 +1,4 @@
-import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
-import { MezzoClient } from '@caribou-crew/mezzo-core-client';
+import mezzoClient from '@caribou-crew/mezzo-core-client';
 import {
   RouteItemType,
   SetRouteVariant,
@@ -32,15 +31,8 @@ export default function VariantButton(props: Props) {
             variantID: variant.id,
           },
         ];
-        const client = new MezzoClient().initVariant();
-        client.variantClient?.updateMockVariant(myVariants);
-        // fetch(`${MEZZO_API_PATH}/routeVariants/set`, {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify(myVariants),
-        // });
+        const client = mezzoClient();
+        client.updateMockVariant(myVariants);
         setActiveVariant(variant.id);
       }}
     >

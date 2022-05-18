@@ -1,50 +1,46 @@
 import * as XHRInterceptor from 'react-native/Libraries/Network/XHRInterceptor';
 import * as queryString from 'query-string';
 import { Reactotron, ReactotronCore } from 'reactotron-core-client';
-import { MezzoClient } from '@caribou-crew/mezzo-core-client';
-import ConnectionManager from './utils/connection-manager';
+import MezzoClient from '@caribou-crew/mezzo-core-client';
+import connectionManager from './utils/connection-manager';
+import { IClientOptions } from '@caribou-crew/mezzo-interfaces';
+import * as log from 'loglevel';
 
 /**
  * Don't include the response bodies for images by default.
  */
 const DEFAULT_CONTENT_TYPES_RX = /^(image)\/.*$/i;
 
-export interface NetworkingOptions {
+export interface MezzoAndReactotronNetworkingOptions {
   ignoreContentTypes?: RegExp;
-  ignoreUrls?: RegExp;
-  mezzoPort?: number;
-  host?: string;
+  ignoreUrls?: RegExp[];
 }
 
-// const DEFAULTS: NetworkingOptions = {
-const DEFAULTS = {
-  getClientId: () => {
-    return new Promise((resolve) => resolve('Some Temp id'));
-  },
-  proxyHack: true,
+const DEFAULTS: MezzoAndReactotronNetworkingOptions = {
+  ignoreContentTypes: DEFAULT_CONTENT_TYPES_RX,
+  ignoreUrls: [],
 };
 
 export default <ReactotronSubtype = ReactotronCore>(
-    pluginConfig: NetworkingOptions = {}
+    pluginConfig?: MezzoAndReactotronNetworkingOptions,
+    mezzoClientOptions?: IClientOptions
   ) =>
   (reactotron: Reactotron<ReactotronSubtype> & ReactotronSubtype) => {
-    const options = Object.assign({}, DEFAULTS, pluginConfig);
-
-    const mezzoOptions: any = {
-      ...options,
-      port: options.mezzoPort,
-      createSocket: (path: string) => new ConnectionManager(path), // eslint-disable-line
+    const { ignoreContentTypes, ignoreUrls } = {
+      ...DEFAULTS,
+      ...pluginConfig,
     };
 
-    const mezzoClient = new MezzoClient().initRecording(mezzoOptions);
+    const mezzoOptions: IClientOptions = {
+      ...mezzoClientOptions,
+      createSocket: (path: string) => connectionManager(path), // eslint-disable-line
+    };
 
-    // a RegExp to suppess adding the body cuz it costs a lot to serialize
-    const ignoreContentTypes =
-      options.ignoreContentTypes || DEFAULT_CONTENT_TYPES_RX;
+    const mezzoClient = MezzoClient(mezzoOptions);
+    mezzoClient.connect();
 
     // a XHR call tracker
     let xhrCounter = 1000;
-    // let reactotronCounter = 1000;
 
     // a temporary cache to hold requests so we can match up the data
     const requestCache = {};
@@ -63,7 +59,7 @@ export default <ReactotronSubtype = ReactotronCore>(
       // bump the counter
       xhrCounter++;
 
-      const guid = mezzoClient?.recordingClient.captureApiRequest(method, url);
+      const guid = mezzoClient.captureApiRequest(method, url);
       // tag
       xhr._trackingName = xhrCounter;
       xhr._guid = guid;
@@ -76,9 +72,12 @@ export default <ReactotronSubtype = ReactotronCore>(
      * @param {*} instance - The XMLHTTPRequest instance.
      */
     function onSend(data: Record<string, unknown>, xhr: any) {
-      if (options.ignoreUrls && options.ignoreUrls.test(xhr._url)) {
+      if (ignoreUrls.some((regex) => regex.test(xhr._url))) {
+        log.info('~~~~~~~Skipping reactotron for URL pattern: ', xhr._url);
         xhr._skipReactotron = true;
         return;
+      } else {
+        log.info('~~~~Not skipping for url ', xhr._url);
       }
 
       //   // bump the counter
@@ -163,13 +162,10 @@ export default <ReactotronSubtype = ReactotronCore>(
         };
 
         const stopTime = stopTimer();
-        // send this off to Reactotron
-        // (reactotron as any).apiResponse(mezzoRequest, mezzoResponse, stopTime); // TODO: Fix
-        console.log('Captpuring response to reactotron');
+
+        log.debug('Captpuring response to reactotron and mezzo');
         reactotron.apiResponse(mezzoRequest, mezzoResponse, stopTime);
-        // Send off to mezzo
-        console.log('Captpuring response to mezzo');
-        mezzoClient?.recordingClient.captureApiResponse(
+        mezzoClient.captureApiResponse(
           mezzoRequest,
           mezzoResponse,
           stopTime,

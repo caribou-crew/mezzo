@@ -10,6 +10,7 @@ import { ReflexContainer, ReflexSplitter, ReflexElement } from 'react-reflex';
 import SelectedNetworkItem from './SelectedNetworkItem';
 import useRecordingClient from '../hooks/useRecordingClient';
 import { dummyData } from '../utils/dummyData';
+import { ToastContainer } from 'react-toastify';
 
 log.setDefaultLevel('debug');
 
@@ -69,6 +70,14 @@ export default function RecordScreen(props: Props) {
           <SelectedNetworkItem {...selectedNetworkItem} />
         )}
       </ReflexElementTSFix>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ReflexContainerTSFix>
   );
 }

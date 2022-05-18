@@ -1,42 +1,50 @@
-import {
-  ClientOptions,
-  ServerConnectionOptions,
-} from '@caribou-crew/mezzo-interfaces';
+import { IClientOptions } from '@caribou-crew/mezzo-interfaces';
 import * as log from 'loglevel';
-import {
-  createRecordingClient,
-  MezzoRecordingClient,
-} from './plugins/recording-client';
-import {
-  createVariantClient,
-  MezzoVariantClient,
-} from './plugins/variant-client';
+import { webSocketClient } from './plugins/webSocketClient';
+import { RESTClient } from './plugins/restClient';
 
 log.setDefaultLevel('debug');
 
-export class MezzoClient {
-  public recordingClient: MezzoRecordingClient | null = null;
-  public variantClient: MezzoVariantClient | null = null;
+const DEFAULT_OPTIONS: IClientOptions = {
+  hostname: 'localhost',
+  createSocket: undefined,
+  port: 8000,
+  name: 'mezzo-core-client',
+  secure: false,
+  onCommand: () => null,
+  onConnect: () => null,
+  onDisconnect: () => null,
+};
 
-  public initRecording(recordingOptions?: ClientOptions) {
-    this.recordingClient = createRecordingClient(recordingOptions);
-    return this;
-  }
+export default function mezzoClient(clientOptions?: IClientOptions) {
+  const options = {
+    ...DEFAULT_OPTIONS,
+    ...clientOptions,
+  };
 
-  public initVariant(variantOptions?: ServerConnectionOptions) {
-    this.variantClient = createVariantClient(variantOptions);
-    return this;
-  }
+  console.log('MC with options: ', options);
 
-  // constructor() {
-  // variantOptions?: ServerConnectionOptions // recordingOptions?: ClientOptions,
-  // this.variantClient = createVariantClient(variantOptions);
-  // }
+  const wsClient = webSocketClient(options);
+  const restClient = new RESTClient(options);
+
+  return {
+    setMockVariant: restClient.setMockVariant,
+    setMockVariantForSession: restClient.setMockVariantForSession,
+    updateMockVariant: restClient.updateMockVariant,
+    updateMockVariantForSession: restClient.updateMockVariantForSession,
+    resetMockVariant: restClient.resetMockVariant,
+    resetMockVariantForSession: restClient.resetMockVariantForSession,
+    resetMockVariantForAllSessions: restClient.resetMockVariantForAllSessions,
+    getRoutes: restClient.getRoutes,
+    getActiveVariants: restClient.getActiveVariants,
+    getRemoteProfiles: restClient.getRemoteProfiles,
+    getLocalProfiles: restClient.getLocalProfiles,
+
+    send: wsClient.send,
+    captureApiRequest: wsClient.captureApiRequest,
+    captureApiResponse: wsClient.captureApiResponse,
+    connect: wsClient.connect,
+    close: wsClient.close,
+    readyState: wsClient.readyState,
+  };
 }
-
-// export function createClient(options?: ClientOptions) {
-//   const client = new MezzoClient();
-//   client.configure(options);
-//   client.connect();
-//   return client;
-// }
