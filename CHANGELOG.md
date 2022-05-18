@@ -2,6 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [0.7.0](https://github.com/caribou-crew/mezzo/compare/v0.6.8...v0.7.0) (2022-05-18)
+
+### Bug Fixes
+
+- **dev admin-web:** fix proxy from 4200 react web to 8000 express ([80d1faa](https://github.com/caribou-crew/mezzo/commit/80d1faa9c81bbfbb19761e1b9e4185d86e7bff21))
+
+### Features
+
+- client rework and optimizations ([#119](https://github.com/caribou-crew/mezzo/issues/119)) ([22d0f69](https://github.com/caribou-crew/mezzo/commit/22d0f6963e86ec7b47ffc7485fef34424e0b88d6))
+- support local and global profiles ([#116](https://github.com/caribou-crew/mezzo/issues/116)) ([4ee1575](https://github.com/caribou-crew/mezzo/commit/4ee1575130b627cd6d2899569c2ceca5d69db8bc))
+
 ## [0.6.8](https://github.com/caribou-crew/mezzo/compare/v0.6.7...v0.6.8) (2022-05-14)
 
 ## [0.6.7](https://github.com/caribou-crew/mezzo/compare/v0.6.6...v0.6.7) (2022-05-14)
