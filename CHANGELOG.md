@@ -2,6 +2,12 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.7.1](https://github.com/caribou-crew/mezzo/compare/v0.7.0...v0.7.1) (2022-05-19)
+
+### Bug Fixes
+
+- **react-native:** fix socket connection in react-native so that it can send ([5122e1b](https://github.com/caribou-crew/mezzo/commit/5122e1bb45135de44f30276673b449fa2771ab52))
+
 # [0.7.0](https://github.com/caribou-crew/mezzo/compare/v0.6.8...v0.7.0) (2022-05-18)
 
 ### Bug Fixes
