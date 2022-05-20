@@ -10,6 +10,7 @@ import {
   ProfileResponse,
   IRESTClientOptions,
   SetRouteVariant,
+  RecordedItem,
 } from '@caribou-crew/mezzo-interfaces';
 import axios from 'axios';
 
@@ -124,5 +125,19 @@ export class RESTClient {
     const data: Profile[] =
       JSON.parse(localStorage.getItem(PROFILE_NAMESPACE) || '[]') ?? [];
     return data;
+  };
+
+  public getRecordings = async (options: IRESTClientOptions = this.options) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/recordings`;
+    return axios.get<{ items: RecordedItem[] }>(url);
+  };
+
+  public deleteRecordings = async (
+    options: IRESTClientOptions = this.options
+  ) => {
+    const baseUri = this.getConnectionFromOptions(options);
+    const url = `${baseUri}/recordings`;
+    return axios.delete(url);
   };
 }
