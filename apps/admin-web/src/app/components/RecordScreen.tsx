@@ -69,15 +69,15 @@ export default function RecordScreen(props: Props) {
         {selectedNetworkItem && (
           <SelectedNetworkItem {...selectedNetworkItem} />
         )}
+        <ToastContainer
+          position="bottom-center"
+          autoClose={2000}
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </ReflexElementTSFix>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={2000}
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </ReflexContainerTSFix>
   );
 }
