@@ -2,6 +2,13 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [0.8.0](https://github.com/caribou-crew/mezzo/compare/v0.7.1...v0.8.0) (2022-05-20)
+
+### Features
+
+- add theme provided update admin page styling ([#124](https://github.com/caribou-crew/mezzo/issues/124)) ([7072749](https://github.com/caribou-crew/mezzo/commit/707274953af199a5d3a78e75ff9d971139c2b2a4))
+- clear recording button ([#125](https://github.com/caribou-crew/mezzo/issues/125)) ([84a548a](https://github.com/caribou-crew/mezzo/commit/84a548add001657379b56152ef2a4300475d809c))
+
 ## [0.7.1](https://github.com/caribou-crew/mezzo/compare/v0.7.0...v0.7.1) (2022-05-19)
 
 ### Bug Fixes
