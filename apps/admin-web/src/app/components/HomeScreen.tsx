@@ -97,6 +97,7 @@ export default function Home(props: Props) {
         <Button
           fullWidth
           variant="outlined"
+          sx={{ backgroundColor: '#FFFFFF' }}
           onClick={() => setSort('method')}
           startIcon={getSortIcon('method')}
         >
@@ -105,6 +106,7 @@ export default function Home(props: Props) {
         <Button
           fullWidth
           variant="outlined"
+          sx={{ backgroundColor: '#FFFFFF' }}
           onClick={() => setSort('path')}
           startIcon={getSortIcon('path')}
         >
@@ -113,6 +115,7 @@ export default function Home(props: Props) {
         <Button
           fullWidth
           variant="outlined"
+          sx={{ backgroundColor: '#FFFFFF' }}
           color="error"
           onClick={() => setSort('')}
           startIcon={getSortIcon('')}
@@ -127,6 +130,7 @@ export default function Home(props: Props) {
     return (
       <TextField
         fullWidth
+        sx={{ backgroundColor: '#FFFFFF' }}
         id="outlined-search"
         type="search"
         label="Filter"
