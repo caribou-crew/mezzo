@@ -72,12 +72,12 @@ describe('recordingServer', () => {
   // });
 
   describe('view recordings', () => {
-    it('should be a GET endpoint', async () => {
+    it.only('should be a GET endpoint', async () => {
       const url = MEZZO_API_GET_RECORDINGS;
 
       const res = await request.get(url);
       expect(res.status).toBe(200);
-      expect(res.body).toEqual({ data: [] });
+      expect(res.body).toEqual({ items: [] });
     });
   });
 

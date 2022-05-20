@@ -26,12 +26,11 @@ export default function RecordScreen(props: Props) {
 
   useEffect(() => {
     async function fetchAllRecordsings() {
-      const response = await fetch(MEZZO_API_GET_RECORDINGS);
-      const { data } = await response.json();
-      log.debug('[RecordScreen] Setting payload data to: ', data);
+      const response = await mezzoClient?.current?.getRecordings();
+      const recordedItems = response?.data?.items ?? [];
       dispatch({
         type: 'set',
-        payload: data,
+        payload: recordedItems,
       });
     }
     fetchAllRecordsings();
@@ -48,6 +47,15 @@ export default function RecordScreen(props: Props) {
             }}
           >
             Load dummy data
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={async () => {
+              await mezzoClient.current?.deleteRecordings();
+              dispatch({ type: 'reset' });
+            }}
+          >
+            Clear
           </Button>
           <br />
           <Typography>Total items: {state.items.length}</Typography>

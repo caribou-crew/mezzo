@@ -13,7 +13,7 @@ interface MyState {
 
 interface MyAction {
   type: string;
-  payload: RecordedItem | RecordedItem[];
+  payload?: RecordedItem | RecordedItem[];
 }
 
 function reducer(state: MyState, action: MyAction) {
@@ -47,6 +47,12 @@ function reducer(state: MyState, action: MyAction) {
       return {
         ...state,
         items: payload,
+      };
+    }
+    case 'reset': {
+      return {
+        ...state,
+        items: [],
       };
     }
     default:

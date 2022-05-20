@@ -22,7 +22,7 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
     ...clientOptions,
   };
 
-  console.log('MC with options: ', options);
+  log.debug('MC with options: ', options);
 
   const wsClient = webSocketClient(options);
   const restClient = new RESTClient(options);
@@ -39,6 +39,8 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
     getActiveVariants: restClient.getActiveVariants,
     getRemoteProfiles: restClient.getRemoteProfiles,
     getLocalProfiles: restClient.getLocalProfiles,
+    getRecordings: restClient.getRecordings,
+    deleteRecordings: restClient.deleteRecordings,
 
     send: wsClient.send,
     captureApiRequest: wsClient.captureApiRequest,

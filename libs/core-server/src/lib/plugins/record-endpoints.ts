@@ -28,15 +28,19 @@ interface Clients {
 const clients: Clients[] = [];
 let id = 0;
 
-const data: RecordedItem[] = [];
+const recordedItems: RecordedItem[] = [];
 
 function setupAPI(app: express.Express) {
   logger.info('Adding GET endpoint');
   app.get(MEZZO_API_GET_RECORDINGS, (req, res) => {
     logger.info('Inside GET endpoint');
     res.send({
-      data,
+      items: recordedItems,
     });
+  });
+  app.delete(MEZZO_API_GET_RECORDINGS, (req, res) => {
+    recordedItems.length = 0;
+    res.sendStatus(204);
   });
 }
 
@@ -60,7 +64,7 @@ function processRequestResponseMessage(message: SocketRequestResponseMessage) {
       deltaTime: message.deltaTime,
       duration: message.payload.duration,
     };
-    data.push(item);
+    recordedItems.push(item);
     notifyAllClientsJSON(item, 'api.response');
   } else {
     logger.warn(
