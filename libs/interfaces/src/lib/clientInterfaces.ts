@@ -29,6 +29,12 @@ export interface ISharedClientOptions {
    * prior implementations were useHttps
    */
   secure?: boolean;
+
+  /**
+   * Will relative urls be used?
+   * If so host, port, and secure properties are ignored
+   */
+  useRelativeUrl?: boolean;
 }
 
 export type IRESTClientOptions = ISharedClientOptions;

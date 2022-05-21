@@ -17,7 +17,9 @@ export default function useFetchRoutes() {
   const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
     []
   );
-  const client = mezzoClient();
+  const client = mezzoClient({
+    useRelativeUrl: true,
+  });
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, Container, Typography } from '@mui/material';
-import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
 
 import { RecordedItem } from '@caribou-crew/mezzo-interfaces';
 import NetworkItem from './NetworkItem';

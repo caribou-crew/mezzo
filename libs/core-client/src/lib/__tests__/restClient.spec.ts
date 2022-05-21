@@ -4,7 +4,57 @@ import MezzoClient from '../core-client';
 import { X_REQUEST_SESSION } from '@caribou-crew/mezzo-constants';
 // import { corePort } from './testPorts';
 
-describe('client route utils', () => {
+describe('restClient connection options', () => {
+  let client: ReturnType<typeof MezzoClient>;
+
+  beforeEach(() => {
+    client = MezzoClient();
+  });
+
+  it('should allow relative URLs', () => {
+    client = MezzoClient({
+      useRelativeUrl: true,
+    });
+    const url = client.getConnectionFromOptions();
+    expect(url).toBe('/_admin/api');
+  });
+  it('should construct the URL accurately', () => {
+    client = MezzoClient();
+    const url = client.getConnectionFromOptions();
+    expect(url).toBe('http://localhost:8000/_admin/api');
+  });
+  it('should allow for no port', () => {
+    client = MezzoClient({
+      port: null,
+    });
+    const url = client.getConnectionFromOptions();
+    expect(url).toBe('http://localhost/_admin/api');
+  });
+  it('secure domain with no port', () => {
+    client = MezzoClient({
+      port: null,
+      hostname: 'www.example.com',
+      secure: true,
+    });
+    const url = client.getConnectionFromOptions();
+    expect(url).toBe('https://www.example.com/_admin/api');
+  });
+  it('should allow overwiting clinet options at the function level', () => {
+    client = MezzoClient({
+      port: 8080,
+      hostname: 'localhost',
+      secure: true,
+    });
+    const url = client.getConnectionFromOptions({
+      port: 8081,
+      hostname: '127.0.0.1',
+      secure: false,
+    });
+    expect(url).toBe('http://127.0.0.1:8081/_admin/api');
+  });
+});
+
+describe('restClient', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   beforeAll(() => {
     // global.console = require('console'); // Don't stack trace out all console logs
@@ -25,7 +75,6 @@ describe('client route utils', () => {
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
     const port = 3020;
-    // client = new MezzoClient({ port });
     client = MezzoClient({ port });
     request = SuperTestRequest(`http://localhost:${port}`);
     await mezzo.start({

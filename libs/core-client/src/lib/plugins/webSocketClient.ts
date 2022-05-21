@@ -77,7 +77,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     isConnected = true;
     const {
       createSocket,
-      secure,
+      useRelativeUrl,
       hostname,
       environment,
       port,
@@ -89,7 +89,24 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       onDisconnect,
     } = options;
 
-    const location = `ws://${hostname}:${port}`;
+    let location = `ws://${hostname}:${port}`;
+    if (useRelativeUrl) {
+      // host: "localhost:4200"
+      // hostname: "localhost"
+      // href: "http://localhost:4200/mezzo/record"
+      // origin: "http://localhost:4200"
+      // pathname: "/mezzo/record"
+      // port: "4200"
+      // protocol: "http:"
+
+      if (process.env['NODE_ENV'] === 'production') {
+        // works in prod since web & core-server are same host
+        location = `ws://${window.location.host}`;
+      } else {
+        // Works in dev since web and core-server are on separate hosts
+        location = `ws://${window.location.hostname}:${port}`;
+      }
+    }
 
     if (!createSocket) {
       log.error(
