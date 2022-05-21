@@ -21,6 +21,7 @@
       "@caribou-crew/mezzo-constants": ["libs/constants/src/index.ts"],
       "@caribou-crew/mezzo-core-client": ["libs/core-client/src/index.ts"],
       "@caribou-crew/mezzo-core-server": ["libs/core-server/src/index.ts"],
+      "@caribou-crew/mezzo-generator": ["libs/generator/src/index.ts"],
       "@caribou-crew/mezzo-interceptor-fetch": [
         "libs/interceptor-fetch/src/index.ts"
       ],

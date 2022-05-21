@@ -29,6 +29,40 @@
       "tags": []
     },
     "core-server": "libs/core-server",
+    "generator": {
+      "root": "libs/generator",
+      "sourceRoot": "libs/generator/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/generator/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/generator"],
+          "options": {
+            "jestConfig": "libs/generator/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/js:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/generator",
+            "tsConfig": "libs/generator/tsconfig.lib.json",
+            "packageJson": "libs/generator/package.json",
+            "main": "libs/generator/src/index.ts",
+            "assets": ["libs/generator/*.md"]
+          }
+        }
+      },
+      "tags": []
+    },
     "interceptor-react-native-with-reactotron": "libs/interceptor-react-native-with-reactotron",
     "interfaces": "libs/interfaces",
     "utils-generate-guid": {
