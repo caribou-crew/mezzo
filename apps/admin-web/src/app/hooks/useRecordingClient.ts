@@ -83,6 +83,7 @@ export default function useRecordingClient() {
 
     if (mezzoClient.current == null) {
       const mc = MezzoClient({
+        useRelativeUrl: true,
         createSocket: (path?: string) => new WebSocket(path ?? ''),
         name: 'Admin Web',
         onCommand,

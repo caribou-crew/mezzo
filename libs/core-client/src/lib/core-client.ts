@@ -1,7 +1,7 @@
 import { IClientOptions } from '@caribou-crew/mezzo-interfaces';
 import * as log from 'loglevel';
 import { webSocketClient } from './plugins/webSocketClient';
-import { RESTClient } from './plugins/restClient';
+import { restClient as createRestClient } from './plugins/restClient';
 
 log.setDefaultLevel('debug');
 
@@ -11,6 +11,7 @@ const DEFAULT_OPTIONS: IClientOptions = {
   port: 8000,
   name: 'mezzo-core-client',
   secure: false,
+  useRelativeUrl: false,
   onCommand: () => null,
   onConnect: () => null,
   onDisconnect: () => null,
@@ -25,7 +26,7 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
   log.debug('MC with options: ', options);
 
   const wsClient = webSocketClient(options);
-  const restClient = new RESTClient(options);
+  const restClient = createRestClient(options);
 
   return {
     setMockVariant: restClient.setMockVariant,
@@ -41,6 +42,7 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
     getLocalProfiles: restClient.getLocalProfiles,
     getRecordings: restClient.getRecordings,
     deleteRecordings: restClient.deleteRecordings,
+    getConnectionFromOptions: restClient.getConnectionFromOptions,
 
     send: wsClient.send,
     captureApiRequest: wsClient.captureApiRequest,

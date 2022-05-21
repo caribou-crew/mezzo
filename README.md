@@ -23,7 +23,7 @@ This project was generated using [Nx](https://nx.dev).
 
 The only non-intuitive piece during building vs development is in development the admin website and core APIs exist on two separate ports by 2 separate projects.
 When building to publish to npm the web project is actually injected into the core project so that it is served by the same express server powering the core module.
-This is done under the hood by the `nx prepare core` step powered bythe buildCoreWithWeb/impl file.
+This is done under the hood by the `nx prepare core-server` step powered bythe buildCoreWithWeb/impl file.
 If changes are made to that file compile it `npx tsc tools/executors/buildCoreWithWeb/impl` via `npm run build:executor`. It may mention a couple tsc errors but confirm it compiles by running `git status` (the file `tools/executors/buildCoreWithWeb/impl.js` should be updated).
 
 # Commiting
@@ -34,9 +34,7 @@ This repo uses conventional commits, an easy interactive way to stay compliant i
 
 This project uses https://github.com/jscutlery/semver, currently in synced mode.
 
-Release workspace by running `npm run bumpVersion`
-
-Run `npm publish dist/libs/core-server --access public` from the root of the project, but CI will push it all when a release is made.
+Run the "Bump Vesion and Create Release" GitHub actions job to bump the version and publish to npm.
 
 # Test
 
