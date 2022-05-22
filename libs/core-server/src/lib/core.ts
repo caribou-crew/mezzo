@@ -6,7 +6,7 @@ import { CommonUtils } from './utils/common-utils';
 import { MiddlewareFn, RouteInputData, VariantInputData } from '../types';
 import express from 'express';
 import { Route } from './models/route-model';
-import adminEndpoints from './plugins/admin-endpoints';
+import adminRouteEndpoints from './plugins/routes-endpoints';
 import * as fsDefault from 'fs';
 import { SessionState } from './models/sessionState';
 import {
@@ -25,6 +25,8 @@ import curry from './utils/curry';
 import recordingServer from './plugins/record-endpoints';
 import jsonBodyParser from './plugins/json-body-parser';
 import cors from './plugins/cors';
+import adminProfileEndpoints from './plugins/profile-endpoints';
+import adminStaticSiteEndpoints from './plugins/static-site-endpoints';
 
 type MezzoServerPlugin = (mezzo: Mezzo) => Record<string, any>;
 export interface MezzoStartOptions {
@@ -38,7 +40,9 @@ export interface MezzoStartOptions {
 export const corePlugins: MezzoServerPlugin[] = [
   jsonBodyParser(),
   cors(),
-  adminEndpoints(),
+  adminRouteEndpoints(),
+  adminProfileEndpoints(),
+  adminStaticSiteEndpoints(),
   recordingServer(),
 ];
 

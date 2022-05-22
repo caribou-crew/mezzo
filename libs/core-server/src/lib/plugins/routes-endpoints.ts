@@ -2,15 +2,14 @@ import express from 'express';
 import { DEFAULT_VARIANT, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '@caribou-crew/mezzo-utils-logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
-import { Mezzo, MezzoStartOptions } from '../core';
-import * as path from 'path';
+import { Mezzo } from '../core';
 import { version } from '../../../package.json';
 import {
   GetRoutesResponse,
   SetRouteVariant,
 } from '@caribou-crew/mezzo-interfaces';
 
-export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
+export const addAdminRouteEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
     const response: GetRoutesResponse = {
       routes: mezzo.util.serialiazeRoutes(),
@@ -123,76 +122,11 @@ export const addAdminEndpoints = (app: express.Express, mezzo: Mezzo) => {
     });
     res.json({ variants: nonDefaults });
   });
-
-  /**
-   * Returns data set in call to mezzo.profile
-   */
-  app.get(`${MEZZO_API_PATH}/profiles`, (req, res) => {
-    res.json({ profiles: mezzo.userProfiles });
-    // const nonDefaults = [];
-    // mezzo.userRoutes.forEach((route) => {
-    //   if (route.getActiveVariant() !== DEFAULT_VARIANT) {
-    //     nonDefaults.push({
-    //       routeID: route.id,
-    //       variantID: route.getActiveVariant(),
-    //     });
-    //   }
-    // });
-    // res.json({ variants: nonDefaults });
-  });
-
-  /**
-   * TODO: If i want to suppot local & global profiles, should client fetch list and structure of profiles
-   * and then when "setting" a profile just call setMockVariants passing in data?
-   * In this way local & remote profiles are set identically, which is same way regular variants are set
-   */
-  // app.post(`${MEZZO_API_PATH}/profile`, (req, res) => {
-  // });
-};
-
-const staticPath = path.join(__dirname, '..', '..', 'public');
-export const addAdminStaticSite = (
-  app: express.Express,
-  options?: MezzoStartOptions
-) => {
-  const rootAdmin = `/${options?.adminEndpoint ?? 'mezzo'}`;
-
-  logger.debug(`Adding endpoint: ${rootAdmin} reading html from ${staticPath}`);
-
-  const validClientRoutes = [
-    rootAdmin,
-    `${rootAdmin}/record`,
-    `${rootAdmin}/profiles`,
-  ];
-
-  validClientRoutes.forEach((clientRoute) => {
-    logger.debug(`Adding nedpoint ${clientRoute} for server side reload`);
-    app.use(clientRoute, express.static(staticPath));
-  });
-};
-
-export const addSiteManifest = (app: express.Express) => {
-  const items = [
-    '/favicon.ico',
-    '/favicon-32x32.png',
-    '/favicon-16x16.png',
-    '/apple-touch-icon.png',
-    '/android-chrome-512x512.png',
-    '/android-chrome-192x192.png',
-    '/site.webmanifest',
-  ];
-
-  items.forEach((i) => {
-    app.use(i, express.static(staticPath));
-  });
 };
 
 export default () => (mezzo: Mezzo) => {
-  logger.debug('Admin Endpoints attaching');
-  addAdminEndpoints(mezzo.app, mezzo);
-  addAdminStaticSite(mezzo.app, mezzo.options);
-  addSiteManifest(mezzo.app);
+  addAdminRouteEndpoints(mezzo.app, mezzo);
   return {
-    name: 'admin-endpoints-plugins',
+    name: 'routes-endpoints',
   };
 };

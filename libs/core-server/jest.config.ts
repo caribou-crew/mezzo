@@ -13,4 +13,5 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/libs/core-server',
   preset: '../../jest.preset.ts',
+  coveragePathIgnorePatterns: ['/__tests__/'],
 };
