@@ -52,9 +52,9 @@ export function webSocketClient(options: IWebSocketClientOptions) {
    */
   let isReady = false;
 
-  let readyState = -1;
+  let _readyState = -1;
 
-  let isConnected = false;
+  let _isConnected = false;
 
   /**
    * Messages that need to be sent.
@@ -65,7 +65,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
   const connect = () => {
     log.debug('[mezzo-core-client.connect]', 'Connecting to', options);
-    isConnected = true;
+    _isConnected = true;
     const {
       createSocket,
       useRelativeUrl,
@@ -75,6 +75,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       name,
       client = {},
       getClientId,
+      setClientId,
       onCommand,
       onConnect,
       onDisconnect,
@@ -120,7 +121,8 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       const clientId = await getClientIdPromise();
 
       isReady = true;
-      readyState = WebSocket.OPEN;
+      _readyState = WebSocket.OPEN;
+      console.log('Just set readystate to open', WebSocket.OPEN);
       // introduce ourselves
       send('client.intro', {
         environment,
@@ -143,10 +145,10 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     const onClose = () => {
       log.info('[mezzo-core-client.onClose] Closing socket continued');
       isReady = false;
-      readyState = WebSocket.CLOSING;
+      _readyState = WebSocket.CLOSING;
       // trigger our disconnect handler
       onDisconnect?.();
-      readyState = WebSocket.CLOSED;
+      _readyState = WebSocket.CLOSED;
 
       // as well as the plugin's onDisconnect
       // plugins.forEach((p) => p.onDisconnect && p.onDisconnect());
@@ -154,12 +156,16 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
     // fires when we receive a command, just forward it off
     const onMessage = (data: any) => {
-      const command = typeof data === 'string' ? JSON.parse(data) : data;
+      // When running via node, typeof data is `object`, but on client it is `string`
+      const command =
+        typeof data === 'string' || typeof data === 'object'
+          ? JSON.parse(data)
+          : data;
       // trigger our own command handler
       onCommand?.(command);
 
       if (command.type === 'setClientId') {
-        options.setClientId?.(command.payload);
+        setClientId?.(command.payload);
       } else if (command.type === 'ping') {
         log.debug('[heartbeat]');
         // reply with pong
@@ -178,7 +184,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
   const close = () => {
     log.info('[mezzo-core-client.close] socket closing');
-    isConnected = false;
+    _isConnected = false;
     socket.close();
   };
 
@@ -212,6 +218,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     };
 
     const serializedMessage = JSON.stringify(fullMessage);
+    // const serializedMessage = fullMessage;
 
     if (isReady) {
       log.debug('[core-client-send] attempting to send as markred as isReady');
@@ -246,12 +253,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     duration: number,
     guid = generateGuid()
   ) => {
-    const ok =
-      response &&
-      response.status &&
-      typeof response.status === 'number' &&
-      response.status >= 200 &&
-      response.status <= 299;
+    const ok = response?.status >= 200 && response?.status <= 299;
     const important = !ok;
 
     log.debug('[mezzo-core-cleint.captureApiResponse]', {
@@ -265,13 +267,14 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     send(MEZZO_WS_API_RESPONSE, { request, response, duration }, important);
   };
 
+  // Don't return strings, numbers as those won't change/update
   return {
     send,
     captureApiRequest,
     captureApiResponse,
     connect,
-    readyState,
+    getReadyState: () => _readyState,
+    isConnected: () => _isConnected,
     close,
-    isConnected,
   };
 }

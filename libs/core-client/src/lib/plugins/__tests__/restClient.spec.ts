@@ -81,7 +81,8 @@ describe('restClient connection options', () => {
 describe('restClient', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   beforeAll(() => {
-    // global.console = require('console'); // Don't stack trace out all console logs
+    global.console = require('console'); // Don't stack trace out all console logs
+    process.env.LOG_LEVEL = 'warn';
   });
 
   const route1 = 'someId';
