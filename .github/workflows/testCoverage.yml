@@ -1,0 +1,26 @@
+on: ['push', 'pull_request']
+
+name: Test Coveralls
+
+jobs:
+  build:
+    name: Jest Unit Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Npm install
+        run: npm install
+      - name: install nx
+        run: npm i -g nx
+      - name: Unit test
+        run: npm run test:ci
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
