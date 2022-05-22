@@ -8,7 +8,6 @@ import {
   SocketRequestResponseMessage,
 } from '@caribou-crew/mezzo-interfaces';
 import generateGuid from '../utils/generate-guid';
-import serialize from '../utils/serialize';
 import * as log from 'loglevel';
 import debounce from 'lodash.debounce';
 
@@ -57,14 +56,6 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
   let isConnected = false;
 
-  let lastHeartbeat = new Date();
-
-  const heartbeatTimeout: any = undefined;
-
-  /**
-   * The registered custom commands
-   */
-  const customCommands: CustomCommand[] = [];
   /**
    * Messages that need to be sent.
    */
@@ -151,9 +142,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     // fires when we disconnect
     const onClose = () => {
       log.info('[mezzo-core-client.onClose] Closing socket continued');
-      clearTimeout(heartbeatTimeout);
       isReady = false;
-      // isConnected = false;
       readyState = WebSocket.CLOSING;
       // trigger our disconnect handler
       onDisconnect?.();
@@ -165,60 +154,24 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
     // fires when we receive a command, just forward it off
     const onMessage = (data: any) => {
-      // console.debug(
-      //   '[mezzo-core-client.onMessage] Received message via socket: ',
-      //   data
-      // );
-      // console.log('Socket got message', data.toString());
       const command = typeof data === 'string' ? JSON.parse(data) : data;
-      // console.debug(`Command: ${command}`);
       // trigger our own command handler
       onCommand?.(command);
 
-      // trigger our plugins onCommand
-      // plugins.forEach((p) => p.onCommand && p.onCommand(command));
-
-      // trigger our registered custom commands
-      // if (command.type === 'custom') {
-      //   customCommands
-      //     .filter((cc) => {
-      //       if (typeof command.payload === 'string') {
-      //         return cc.command === command.payload;
-      //       }
-
-      //       return cc.command === command.payload.command;
-      //     })
-      //     .forEach((cc) =>
-      //       cc.handler(
-      //         typeof command.payload === 'object'
-      //           ? command.payload.args
-      //           : undefined
-      //       )
-      //     );
       if (command.type === 'setClientId') {
         options.setClientId?.(command.payload);
-      } else if (command.type === 'pong') {
+      } else if (command.type === 'ping') {
         log.debug('[heartbeat]');
-        lastHeartbeat = new Date();
+        // reply with pong
+        send('pong');
       }
     };
 
-    // this is ws style from require('ws') on node js
-    // if (mySocket.on) {
-    //   log.info('!!!!!!!!!!!!!!! DOES RN SEE THIS??!!!!!!!!');
-    //   mySocket.on('open', onOpen);
-    //   mySocket.on('close', onClose);
-    //   mySocket.on('message', onMessage);
-    // } else {
-    // log.info('!!!!!!!!!!!!!!! or browser !!!!!!!!');
-    // this is a browser
     mySocket.onopen = onOpen;
     mySocket.onclose = onClose;
     mySocket.onmessage = (evt: any) => onMessage(evt.data);
-    // }
 
     socket = mySocket;
-    // on = mySocket.on;
   };
 
   const connectDebounced = debounce(connect, 1000);
@@ -258,12 +211,10 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       deltaTime,
     };
 
-    const serializedMessage = serialize(fullMessage, options.proxyHack);
+    const serializedMessage = JSON.stringify(fullMessage);
 
     if (isReady) {
       log.debug('[core-client-send] attempting to send as markred as isReady');
-      // console.log('Sending command');
-      // send this command
       try {
         socket.send(serializedMessage);
       } catch {
@@ -278,7 +229,6 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       // queue it up until we can connect
       sendQueue.push(serializedMessage);
 
-      // connect();
       connectDebounced();
     }
   };
