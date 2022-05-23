@@ -3,9 +3,9 @@ import {
   MEZZO_API_PATH,
 } from '@caribou-crew/mezzo-constants';
 import SuperTestRequest from 'supertest';
-import mezzo from '../core';
+import mezzo from '../../core';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
-import { adminEndpointsPort } from './testPorts';
+import { adminEndpointsPort } from '../../__tests__/testPorts';
 
 describe('admin-endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
@@ -55,6 +55,11 @@ describe('admin-endpoints', () => {
     await mezzo.stop();
   });
 
+  // describe(`${MEZZO_API_PATH}/routeVariants/update`, () => {
+  //   it('should work', async () => {
+  //     await client.updateMockVariant()
+  //   });
+  // });
   describe(`${MEZZO_API_PATH}/routes`, () => {
     it('should return all routes for admin GUI', async () => {
       await client.setMockVariant([{ routeID: routeId, variantID: variant1 }]);

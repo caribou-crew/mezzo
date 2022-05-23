@@ -10,6 +10,9 @@ import {
 import { fileIOPort } from './testPorts';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 
+/**
+ * Tests mezzo commonUtil's respondWithFile
+ */
 describe('route-file-io', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   beforeAll(() => {

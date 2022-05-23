@@ -5,7 +5,7 @@ import logger, { setLogLevel } from '@caribou-crew/mezzo-utils-logger';
 import { CommonUtils } from './utils/common-utils';
 import { MiddlewareFn, RouteInputData, VariantInputData } from '../types';
 import express from 'express';
-import { Route } from './models/route-model';
+import { Route } from './models/routeModel';
 import adminRouteEndpoints from './plugins/routes-endpoints';
 import * as fsDefault from 'fs';
 import { SessionState } from './models/sessionState';

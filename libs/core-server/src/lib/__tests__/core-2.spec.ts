@@ -9,6 +9,10 @@ import {
 } from '@caribou-crew/mezzo-constants';
 import { routeStatePort } from './testPorts';
 
+/**
+ * Tests
+ * - request scoped variant
+ */
 describe('route-state', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   beforeAll(() => {

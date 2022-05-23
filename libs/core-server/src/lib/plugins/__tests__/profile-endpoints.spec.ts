@@ -1,10 +1,10 @@
 import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import SuperTestRequest from 'supertest';
-import mezzo from '../core';
+import mezzo from '../../core';
 import MezzoClient from '@caribou-crew/mezzo-core-client';
-import { adminEndpointsProfilesPort } from './testPorts';
+import { adminEndpointsProfilesPort } from '../../__tests__/testPorts';
 
-describe('admin-endpoints-profile', () => {
+describe('profile-endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   const port = adminEndpointsProfilesPort;
   let client;

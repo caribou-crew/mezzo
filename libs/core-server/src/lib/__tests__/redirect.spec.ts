@@ -2,6 +2,9 @@ import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import { redirectPort } from './testPorts';
 
+/**
+ * Tests support for mezzo.redirect
+ */
 describe('redirects', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
 

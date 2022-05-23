@@ -1,4 +1,4 @@
-import { Route } from '../models/route-model';
+import { Route } from '../models/routeModel';
 
 export function findRoute(method: string, path: string, userRoutes: Route[]) {
   return userRoutes.find(

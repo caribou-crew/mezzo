@@ -10,3 +10,4 @@ export const routeExpressPort = 3300;
 export const fileIOPort = 3400;
 export const routeStatePort = 3500;
 export const recordingServerPort = 3600;
+export const globalVariantPort = 3110;

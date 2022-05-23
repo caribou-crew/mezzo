@@ -1,4 +1,4 @@
-import { Route } from '../models/route-model';
+import { Route } from '../models/routeModel';
 import logger from '@caribou-crew/mezzo-utils-logger';
 import * as path from 'path';
 import * as util from 'util';

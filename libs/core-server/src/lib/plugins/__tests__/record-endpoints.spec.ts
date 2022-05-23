@@ -1,7 +1,7 @@
 import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
 import SuperTestRequest from 'supertest';
-import mezzo from '../core';
-import { recordingServerPort } from './testPorts';
+import mezzo from '../../core';
+import { recordingServerPort } from '../../__tests__/testPorts';
 import logger from '@caribou-crew/mezzo-utils-logger';
 
 const movies = [

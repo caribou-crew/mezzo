@@ -3,7 +3,7 @@ import {
   VariantCategory,
 } from '@caribou-crew/mezzo-interfaces';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { Route } from './lib/models/route-model';
+import { Route } from './lib/models/routeModel';
 
 /**
  * Input provided when creating a new route

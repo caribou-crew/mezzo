@@ -2,6 +2,18 @@ import SuperTestRequest from 'supertest';
 import mezzo from '../core';
 import { routeExpressPort } from './testPorts';
 
+/**
+ * Tests miscelaneous mezzo-core logic
+ * - route.callback
+ * - misc express logic within callback
+ *  - query string
+ *  - request params
+ * - regexp for route path
+ * - wildcard for route path (/:dynamic)
+ * - calling .variant on the route
+ * - variant changed many times
+ */
+
 describe('route-express', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   beforeAll(() => {
@@ -20,7 +32,7 @@ describe('route-express', () => {
     await mezzo.stop();
   });
   describe('async callback', () => {
-    it.only('works when callback is async', async () => {
+    it('works when callback is async', async () => {
       mezzo.route({
         id: 'someRoute',
         path: '/someRoute',

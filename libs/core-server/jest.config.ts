@@ -6,6 +6,8 @@ module.exports = {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
+  testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
+
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
