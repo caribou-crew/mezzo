@@ -2,6 +2,12 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.8.1](https://github.com/caribou-crew/mezzo/compare/v0.8.0...v0.8.1) (2022-05-23)
+
+### Bug Fixes
+
+- **mezzo-client:** support relative url path for client connect ([ab475f5](https://github.com/caribou-crew/mezzo/commit/ab475f5887ee421f2efd5316d90c3317f5c366b1)), closes [#127](https://github.com/caribou-crew/mezzo/issues/127)
+
 # [0.8.0](https://github.com/caribou-crew/mezzo/compare/v0.7.1...v0.8.0) (2022-05-20)
 
 ### Features
