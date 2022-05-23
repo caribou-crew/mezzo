@@ -8,7 +8,6 @@ import {
   SocketRequestResponseMessage,
 } from '@caribou-crew/mezzo-interfaces';
 import generateGuid from '../utils/generate-guid';
-import serialize from '../utils/serialize';
 import * as log from 'loglevel';
 import debounce from 'lodash.debounce';
 
@@ -53,18 +52,10 @@ export function webSocketClient(options: IWebSocketClientOptions) {
    */
   let isReady = false;
 
-  let readyState = -1;
+  let _readyState = -1;
 
-  let isConnected = false;
+  let _isConnected = false;
 
-  let lastHeartbeat = new Date();
-
-  const heartbeatTimeout: any = undefined;
-
-  /**
-   * The registered custom commands
-   */
-  const customCommands: CustomCommand[] = [];
   /**
    * Messages that need to be sent.
    */
@@ -74,7 +65,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
   const connect = () => {
     log.debug('[mezzo-core-client.connect]', 'Connecting to', options);
-    isConnected = true;
+    _isConnected = true;
     const {
       createSocket,
       useRelativeUrl,
@@ -84,6 +75,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       name,
       client = {},
       getClientId,
+      setClientId,
       onCommand,
       onConnect,
       onDisconnect,
@@ -129,7 +121,8 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       const clientId = await getClientIdPromise();
 
       isReady = true;
-      readyState = WebSocket.OPEN;
+      _readyState = WebSocket.OPEN;
+      console.log('Just set readystate to open', WebSocket.OPEN);
       // introduce ourselves
       send('client.intro', {
         environment,
@@ -151,13 +144,11 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     // fires when we disconnect
     const onClose = () => {
       log.info('[mezzo-core-client.onClose] Closing socket continued');
-      clearTimeout(heartbeatTimeout);
       isReady = false;
-      // isConnected = false;
-      readyState = WebSocket.CLOSING;
+      _readyState = WebSocket.CLOSING;
       // trigger our disconnect handler
       onDisconnect?.();
-      readyState = WebSocket.CLOSED;
+      _readyState = WebSocket.CLOSED;
 
       // as well as the plugin's onDisconnect
       // plugins.forEach((p) => p.onDisconnect && p.onDisconnect());
@@ -165,67 +156,35 @@ export function webSocketClient(options: IWebSocketClientOptions) {
 
     // fires when we receive a command, just forward it off
     const onMessage = (data: any) => {
-      // console.debug(
-      //   '[mezzo-core-client.onMessage] Received message via socket: ',
-      //   data
-      // );
-      // console.log('Socket got message', data.toString());
-      const command = typeof data === 'string' ? JSON.parse(data) : data;
-      // console.debug(`Command: ${command}`);
+      // When running via node, typeof data is `object`, but on client it is `string`
+      const command =
+        typeof data === 'string' || typeof data === 'object'
+          ? JSON.parse(data)
+          : data;
       // trigger our own command handler
       onCommand?.(command);
 
-      // trigger our plugins onCommand
-      // plugins.forEach((p) => p.onCommand && p.onCommand(command));
-
-      // trigger our registered custom commands
-      // if (command.type === 'custom') {
-      //   customCommands
-      //     .filter((cc) => {
-      //       if (typeof command.payload === 'string') {
-      //         return cc.command === command.payload;
-      //       }
-
-      //       return cc.command === command.payload.command;
-      //     })
-      //     .forEach((cc) =>
-      //       cc.handler(
-      //         typeof command.payload === 'object'
-      //           ? command.payload.args
-      //           : undefined
-      //       )
-      //     );
       if (command.type === 'setClientId') {
-        options.setClientId?.(command.payload);
-      } else if (command.type === 'pong') {
+        setClientId?.(command.payload);
+      } else if (command.type === 'ping') {
         log.debug('[heartbeat]');
-        lastHeartbeat = new Date();
+        // reply with pong
+        send('pong');
       }
     };
 
-    // this is ws style from require('ws') on node js
-    // if (mySocket.on) {
-    //   log.info('!!!!!!!!!!!!!!! DOES RN SEE THIS??!!!!!!!!');
-    //   mySocket.on('open', onOpen);
-    //   mySocket.on('close', onClose);
-    //   mySocket.on('message', onMessage);
-    // } else {
-    // log.info('!!!!!!!!!!!!!!! or browser !!!!!!!!');
-    // this is a browser
     mySocket.onopen = onOpen;
     mySocket.onclose = onClose;
     mySocket.onmessage = (evt: any) => onMessage(evt.data);
-    // }
 
     socket = mySocket;
-    // on = mySocket.on;
   };
 
   const connectDebounced = debounce(connect, 1000);
 
   const close = () => {
     log.info('[mezzo-core-client.close] socket closing');
-    isConnected = false;
+    _isConnected = false;
     socket.close();
   };
 
@@ -258,12 +217,11 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       deltaTime,
     };
 
-    const serializedMessage = serialize(fullMessage, options.proxyHack);
+    const serializedMessage = JSON.stringify(fullMessage);
+    // const serializedMessage = fullMessage;
 
     if (isReady) {
       log.debug('[core-client-send] attempting to send as markred as isReady');
-      // console.log('Sending command');
-      // send this command
       try {
         socket.send(serializedMessage);
       } catch {
@@ -278,7 +236,6 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       // queue it up until we can connect
       sendQueue.push(serializedMessage);
 
-      // connect();
       connectDebounced();
     }
   };
@@ -296,12 +253,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     duration: number,
     guid = generateGuid()
   ) => {
-    const ok =
-      response &&
-      response.status &&
-      typeof response.status === 'number' &&
-      response.status >= 200 &&
-      response.status <= 299;
+    const ok = response?.status >= 200 && response?.status <= 299;
     const important = !ok;
 
     log.debug('[mezzo-core-cleint.captureApiResponse]', {
@@ -315,13 +267,14 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     send(MEZZO_WS_API_RESPONSE, { request, response, duration }, important);
   };
 
+  // Don't return strings, numbers as those won't change/update
   return {
     send,
     captureApiRequest,
     captureApiResponse,
     connect,
-    readyState,
+    getReadyState: () => _readyState,
+    isConnected: () => _isConnected,
     close,
-    isConnected,
   };
 }

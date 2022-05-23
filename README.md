@@ -1,6 +1,7 @@
 # Mezzo
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![Coverage Status](https://coveralls.io/repos/github/caribou-crew/mezzo/badge.svg)](https://coveralls.io/github/caribou-crew/mezzo)
 
 ## Documentation
 

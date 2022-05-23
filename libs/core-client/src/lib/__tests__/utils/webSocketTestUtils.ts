@@ -1,7 +1,8 @@
 import * as http from 'http';
+import mezzoClient from '../../core-client';
 import createWebSocketServer from './createWebSocketServer';
 
-function startServer(port) {
+function startServer(port: number) {
   const server = http.createServer();
   createWebSocketServer(server);
   return new Promise((resolve) => {
@@ -9,13 +10,19 @@ function startServer(port) {
   });
 }
 
-function waitForSocketState(socket, state) {
+function waitForSocketState(
+  client: ReturnType<typeof mezzoClient>,
+  targetState: number
+) {
   return new Promise(function (resolve) {
     setTimeout(function () {
-      if (socket.readyState === state) {
+      // console.log(
+      //   `Current state: ${client.getReadyState()}, target: ${targetState}`
+      // );
+      if (client.getReadyState() === targetState) {
         resolve('');
       } else {
-        waitForSocketState(socket, state).then(resolve);
+        waitForSocketState(client, targetState).then(resolve);
       }
     }, 5);
   });

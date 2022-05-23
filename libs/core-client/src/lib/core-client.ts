@@ -49,6 +49,6 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
     captureApiResponse: wsClient.captureApiResponse,
     connect: wsClient.connect,
     close: wsClient.close,
-    readyState: wsClient.readyState,
+    getReadyState: wsClient.getReadyState,
   };
 }
