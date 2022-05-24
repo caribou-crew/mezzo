@@ -81,7 +81,7 @@ describe('recordingServer', () => {
   beforeAll(() => {
     // Provide node websocket implementation to client for unit testing (as opposed to what is in browser or React Native)
     Object.assign(global, { WebSocket: require('ws') });
-    global.console = require('console'); // Don't stack trace out all console logs
+    // global.console = require('console'); // Don't stack trace out all console logs
   });
 
   beforeEach(async () => {
