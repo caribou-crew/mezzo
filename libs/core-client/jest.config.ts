@@ -14,4 +14,5 @@ module.exports = {
   coverageDirectory: '../../coverage/libs/core-client',
   preset: '../../jest.preset.ts',
   coveragePathIgnorePatterns: ['/__tests__/'],
+  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.ts'],
 };

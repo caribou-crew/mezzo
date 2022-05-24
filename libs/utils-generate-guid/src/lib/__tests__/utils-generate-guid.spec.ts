@@ -1,4 +1,4 @@
-import generateGuid from '../generate-guid';
+import { generateGuid } from '../utils-generate-guid';
 
 describe('generate guid', () => {
   it('generates a random id of length 36', () => {

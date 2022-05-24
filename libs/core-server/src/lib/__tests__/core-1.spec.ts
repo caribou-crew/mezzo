@@ -1,6 +1,6 @@
 import SuperTestRequest from 'supertest';
 import mezzo from '../core';
-import { routeExpressPort } from './testPorts';
+import { routeExpressPort } from '@mezzo/core-client-server-tests';
 
 /**
  * Tests miscelaneous mezzo-core logic

@@ -92,6 +92,10 @@ jobs:
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish dist/libs/utils-generate-guid --access public
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # - run: npm publish dist/libs/interceptor-fetch --access public
       #   continue-on-error: true
       #   env:

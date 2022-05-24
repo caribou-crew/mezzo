@@ -5,7 +5,7 @@ import {
 import SuperTestRequest from 'supertest';
 import mezzo from '../../core';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
-import { adminEndpointsPort } from '../../__tests__/testPorts';
+import { adminEndpointsPort } from '@mezzo/core-client-server-tests';
 
 describe('admin-endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;

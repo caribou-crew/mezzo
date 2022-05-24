@@ -1,5 +1,5 @@
 import mezzo from '../core';
-import { globalVariantPort } from './testPorts';
+import { globalVariantPort } from '@mezzo/core-client-server-tests';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 
 /**

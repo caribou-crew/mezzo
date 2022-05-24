@@ -1,6 +1,6 @@
 import SuperTestRequest from 'supertest';
-import mezzo from '../core';
-import { redirectPort } from './testPorts';
+import mezzo from '../../core';
+import { redirectPort } from '@mezzo/core-client-server-tests';
 
 /**
  * Tests support for mezzo.redirect

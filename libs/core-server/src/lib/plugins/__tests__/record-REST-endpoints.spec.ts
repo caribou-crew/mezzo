@@ -1,7 +1,7 @@
 import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
 import SuperTestRequest from 'supertest';
 import mezzo from '../../core';
-import { recordingServerPort } from '../../__tests__/testPorts';
+import { recordingServerPort } from '@mezzo/core-client-server-tests';
 import logger from '@caribou-crew/mezzo-utils-logger';
 
 const movies = [
@@ -24,12 +24,13 @@ const movies = [
     Director: 'Francis Lawrence',
   },
 ];
-describe('recordingServer', () => {
+describe('recording REST endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   // const port = recordingServerPort + Jes;
   const port = recordingServerPort + Number(process.env.JEST_WORKER_ID);
+
   beforeAll(() => {
-    global.console = require('console'); // Don't stack trace out all console logs
+    // global.console = require('console'); // Don't stack trace out all console logs
     logger.info('Using port: ', port);
   });
 

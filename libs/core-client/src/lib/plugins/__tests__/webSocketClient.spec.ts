@@ -1,12 +1,8 @@
 import mezzoClient from '../../core-client';
-import {
-  startServer,
-  waitForSocketState,
-} from '../../__tests__/utils/webSocketTestUtils';
+import { startServer, waitForSocketState } from './utils/webSocketTestUtils';
 import WebSocket from 'ws';
 import { IClientOptions } from '@caribou-crew/mezzo-interfaces';
-import { send } from 'process';
-// import { corePort } from './testPorts';
+import { websocketPort } from '@mezzo/core-client-server-tests';
 
 const DEFAULT_DELAY = 50;
 
@@ -37,7 +33,7 @@ describe('webSocketClient', () => {
     return new WebSocket(path);
   };
 
-  const port = 3020 + Number(process.env.JEST_WORKER_ID);
+  const port = websocketPort + Number(process.env.JEST_WORKER_ID);
 
   const connectionHelper = async (options: IClientOptions) => {
     client = mezzoClient(options);
@@ -46,9 +42,6 @@ describe('webSocketClient', () => {
   };
 
   beforeAll(async () => {
-    // global.console = require('console'); // Don't stack trace out all console logs
-    // process.env.LOG_LEVEL = 'warn';
-
     // Provide node websocket implementation to client for unit testing (as opposed to what is in browser or React Native)
     Object.assign(global, { WebSocket: require('ws') });
 

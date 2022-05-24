@@ -1,13 +1,13 @@
 import SuperTestRequest from 'supertest';
 import { fs, vol } from 'memfs';
-import mezzo from '../core';
+import mezzo from '../../core';
 import path from 'path';
-import { resourcesPath } from '../utils/pathHelpers';
+import { resourcesPath } from '../pathHelpers';
 import {
   X_REQUEST_SESSION,
   X_REQUEST_VARIANT,
 } from '@caribou-crew/mezzo-constants';
-import { fileIOPort } from './testPorts';
+import { fileIOPort } from '@mezzo/core-client-server-tests';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 
 /**
@@ -16,7 +16,7 @@ import mezzoClient from '@caribou-crew/mezzo-core-client';
 describe('route-file-io', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
   beforeAll(() => {
-    global.console = require('console'); // Don't stack trace out all console logs
+    // global.console = require('console'); // Don't stack trace out all console logs
   });
 
   let mockedDirectory;

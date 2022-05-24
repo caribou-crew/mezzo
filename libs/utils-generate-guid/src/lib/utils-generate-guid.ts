@@ -1,4 +1,4 @@
-export default function generateGuid(): string {
+export function generateGuid(): string {
   let result, i, j;
   result = '';
   for (j = 0; j < 32; j++) {

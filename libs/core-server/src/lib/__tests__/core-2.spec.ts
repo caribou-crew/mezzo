@@ -3,11 +3,8 @@ import { fs, vol } from 'memfs';
 import mezzo from '../core';
 import * as path from 'path';
 import { resourcesPath } from '../utils/pathHelpers';
-import {
-  X_REQUEST_SESSION,
-  X_REQUEST_VARIANT,
-} from '@caribou-crew/mezzo-constants';
-import { routeStatePort } from './testPorts';
+import { X_REQUEST_VARIANT } from '@caribou-crew/mezzo-constants';
+import { routeStatePort } from '@mezzo/core-client-server-tests';
 
 /**
  * Tests

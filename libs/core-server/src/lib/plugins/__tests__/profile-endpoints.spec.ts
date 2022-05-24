@@ -2,7 +2,7 @@ import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import SuperTestRequest from 'supertest';
 import mezzo from '../../core';
 import MezzoClient from '@caribou-crew/mezzo-core-client';
-import { adminEndpointsProfilesPort } from '../../__tests__/testPorts';
+import { adminEndpointsProfilesPort } from '@mezzo/core-client-server-tests';
 
 describe('profile-endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
@@ -10,7 +10,7 @@ describe('profile-endpoints', () => {
   let client;
   beforeAll(() => {
     client = MezzoClient({ port });
-    global.console = require('console'); // Don't stack trace out all console logs
+    // global.console = require('console'); // Don't stack trace out all console logs
     process.env.LOG_LEVEL = 'warn';
   });
 

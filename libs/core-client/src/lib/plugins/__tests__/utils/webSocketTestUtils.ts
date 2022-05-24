@@ -1,5 +1,5 @@
 import * as http from 'http';
-import mezzoClient from '../../core-client';
+import mezzoClient from '../../../core-client';
 import createWebSocketServer from './createWebSocketServer';
 
 function startServer(port: number) {

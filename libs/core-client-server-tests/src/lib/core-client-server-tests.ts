@@ -2,7 +2,13 @@ import SuperTestRequest from 'supertest';
 import mezzo from '@caribou-crew/mezzo-core-server';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 import { X_REQUEST_SESSION } from '@caribou-crew/mezzo-constants';
-// import { corePort } from './testPorts';
+import { clientServerIntegrationPort } from './testPorts';
+export * from './testPorts';
+
+/**
+ * There may be a better way to handle this, but this way each test that runs in parallel
+ * can use a different port when spinning up a real mezzo server to avoid collision
+ */
 
 /**
  * core-server is backend express business logic
@@ -15,77 +21,12 @@ import { X_REQUEST_SESSION } from '@caribou-crew/mezzo-constants';
  */
 
 export function clientServerIntegrationTests() {
-  describe('restClient connection options', () => {
-    let client: ReturnType<typeof mezzoClient>;
-
-    beforeAll(() => {
-      global.console = require('console'); // Don't stack trace out all console logs
-      process.env.LOG_LEVEL = 'warn';
-    });
-
-    beforeEach(() => {
-      client = mezzoClient();
-    });
-
-    it('should allow relative URLs', () => {
-      client = mezzoClient({
-        useRelativeUrl: true,
-      });
-      const url = client.getConnectionFromOptions();
-      expect(url).toBe('/_admin/api');
-    });
-    it('should construct the URL accurately', () => {
-      client = mezzoClient();
-      const url = client.getConnectionFromOptions();
-      expect(url).toBe('http://localhost:8000/_admin/api');
-    });
-    it('should allow for no port', () => {
-      client = mezzoClient({
-        port: null,
-      });
-      const url = client.getConnectionFromOptions();
-      expect(url).toBe('http://localhost/_admin/api');
-    });
-    it('secure domain with no port', () => {
-      client = mezzoClient({
-        port: null,
-        hostname: 'www.example.com',
-        secure: true,
-      });
-      const url = client.getConnectionFromOptions();
-      expect(url).toBe('https://www.example.com/_admin/api');
-    });
-    it('should allow overwiting clinet options at the function level', () => {
-      client = mezzoClient({
-        port: 8080,
-        hostname: 'localhost',
-        secure: true,
-      });
-      const url = client.getConnectionFromOptions({
-        port: 8081,
-        hostname: '127.0.0.1',
-        secure: false,
-      });
-      expect(url).toBe('http://127.0.0.1:8081/_admin/api');
-    });
-    it('should use defaults with null options at client level', () => {
-      client = mezzoClient(null);
-      const url = client.getConnectionFromOptions();
-      expect(url).toBe('http://localhost:8000/_admin/api');
-    });
-    it('should use defaults with null options at function level and null options at client level', () => {
-      client = mezzoClient(null);
-      const url = client.getConnectionFromOptions(null);
-      expect(url).toBe('http://localhost:8000/_admin/api');
-    });
-  });
-
-  describe('restClient', () => {
+  describe('REST client & server integration', () => {
     let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
-    beforeAll(() => {
-      global.console = require('console'); // Don't stack trace out all console logs
-      process.env.LOG_LEVEL = 'warn';
-    });
+    // beforeAll(() => {
+    //   global.console = require('console'); // Don't stack trace out all console logs
+    //   process.env.LOG_LEVEL = 'warn';
+    // });
 
     const route1 = 'someId';
     const route1Path = '/somePath';
@@ -101,7 +42,9 @@ export function clientServerIntegrationTests() {
 
     beforeEach(async () => {
       process.env.LOG_LEVEL = 'warn';
-      const port = 3020;
+      const port =
+        clientServerIntegrationPort + Number(process.env.JEST_WORKER_ID);
+
       client = mezzoClient({ port });
       request = SuperTestRequest(`http://localhost:${port}`);
       await mezzo.start({

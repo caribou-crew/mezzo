@@ -44,5 +44,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": ["!core-client"]
+  "implicitDependencies": ["!core-client", "!core-client-server-tests"]
 }

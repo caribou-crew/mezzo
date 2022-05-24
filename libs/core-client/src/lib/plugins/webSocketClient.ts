@@ -7,7 +7,7 @@ import {
   MezzoRecordedResponse,
   SocketRequestResponseMessage,
 } from '@caribou-crew/mezzo-interfaces';
-import generateGuid from '../utils/generate-guid';
+import { generateGuid } from '@caribou-crew/mezzo-utils-generate-guid';
 import * as log from 'loglevel';
 import debounce from 'lodash.debounce';
 

@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'core-client-server-tests',
+  displayName: 'utils-generate-guid',
   preset: '../../jest.preset.ts',
   globals: {
     'ts-jest': {
@@ -11,6 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/core-client-server-tests',
-  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.ts'],
+  coverageDirectory: '../../coverage/libs/utils-generate-guid',
 };
