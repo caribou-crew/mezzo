@@ -3,8 +3,6 @@ on:
     branches:
       - master
   pull_request:
-    types:
-      - opened
 
 name: Test Coveralls
 
