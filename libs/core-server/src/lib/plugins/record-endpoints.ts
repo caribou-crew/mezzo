@@ -1,25 +1,17 @@
 import WebSocket from 'ws';
 import express from 'express';
-import { MEZZO_API_GET_RECORDINGS } from '@caribou-crew/mezzo-constants';
+import {
+  MEZZO_API_GET_RECORDINGS,
+  MEZZO_API_GET_RECORDING_CLIENTS,
+} from '@caribou-crew/mezzo-constants';
 import {
   RecordedItem,
   SocketRequestResponseMessage,
 } from '@caribou-crew/mezzo-interfaces';
 import { Mezzo } from '../core';
 import logger from '@caribou-crew/mezzo-utils-logger';
+import { generateGuid } from '@caribou-crew/mezzo-utils-generate-guid';
 
-function generateGuid() {
-  let result, i, j;
-  result = '';
-  for (j = 0; j < 32; j++) {
-    if (j == 8 || j == 12 || j == 16 || j == 20) result = result + '-';
-    i = Math.floor(Math.random() * 16)
-      .toString(16)
-      .toUpperCase();
-    result = result + i;
-  }
-  return result;
-}
 // TODO type this object in interfaces so that it can also be used via RecordingScreen.tsx
 interface Clients {
   id: number;
@@ -30,7 +22,7 @@ let id = 0;
 
 const recordedItems: RecordedItem[] = [];
 
-function setupAPI(app: express.Express) {
+function setupRestApi(app: express.Express) {
   logger.info('Adding GET endpoint');
   app.get(MEZZO_API_GET_RECORDINGS, (req, res) => {
     logger.info('Inside GET endpoint');
@@ -42,6 +34,34 @@ function setupAPI(app: express.Express) {
     recordedItems.length = 0;
     res.sendStatus(204);
   });
+  app.get(MEZZO_API_GET_RECORDING_CLIENTS, (req, res) => {
+    res.send({
+      clients: clients.map((c) => c.id),
+    });
+  });
+}
+
+function setupWebSocketServer(mezzo: Mezzo) {
+  const websocketServer = new WebSocket.Server({ server: mezzo.server });
+  websocketServer.on('connection', (ws: WebSocket) => {
+    id += 1;
+    clients.push({
+      id,
+      ws,
+    });
+    logger.info(
+      'Client connected to recording socket server, total clients: ',
+      clients.map((i) => i.id)
+    );
+
+    ws.on('message', (message: string) => {
+      // Process message from the client
+      processMessage(message, ws);
+    });
+    // If it is desired for server to send message to client on connect, add ws.send(...) here
+  });
+
+  mezzo.websocketServer = websocketServer;
 }
 
 function notifyAllClientsJSON(message: any, type?: string) {
@@ -98,34 +118,14 @@ function processMessage(message, ws: WebSocket) {
   }
 }
 
-function setupWebSocketServer(mezzo: Mezzo) {
-  const websocketServer = new WebSocket.Server({ server: mezzo.server });
-  websocketServer.on('connection', (ws: WebSocket) => {
-    id += 1;
-    clients.push({
-      id,
-      ws,
-    });
-    logger.info(
-      'Client connected to recording socket server, total clients: ',
-      clients.map((i) => i.id)
-    );
-
-    ws.on('message', (message: string) => {
-      processMessage(message, ws);
-      // ws.send(`Hello, you sent -> ${message}`);
-    });
-    //send immediatly when client connets
-    // ws.send('Welcome to the mezzo recording socket server');
-  });
-
-  mezzo.websocketServer = websocketServer;
-}
-
 export default () => (mezzo: Mezzo) => {
-  setupAPI(mezzo.app);
+  setupRestApi(mezzo.app);
   setupWebSocketServer(mezzo);
   return {
     name: 'recording-endpoints-plugin',
+    initialize: () => {
+      clients.length = 0;
+      recordedItems.length = 0;
+    },
   };
 };

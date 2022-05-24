@@ -11,6 +11,7 @@ export const GLOBAL_VARIANT_CATEGORY = 'Global Variants';
 // API endpoints
 export const MEZZO_API_PATH = '/_admin/api';
 export const MEZZO_API_GET_RECORDINGS = `${MEZZO_API_PATH}/recordings`;
+export const MEZZO_API_GET_RECORDING_CLIENTS = `${MEZZO_API_PATH}/recordings/clients`;
 
 // WS Messages
 export const MEZZO_WS_API_REQUEST = 'api.request';

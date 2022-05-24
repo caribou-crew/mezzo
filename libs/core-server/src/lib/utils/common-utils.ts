@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Route } from '../models/route-model';
+import { Route } from '../models/routeModel';
 import { FileHandlerOptions } from '../../types';
 import { getFileContents, getFilePathForRequest } from './filePathUtils';
 import logger from '@caribou-crew/mezzo-utils-logger';

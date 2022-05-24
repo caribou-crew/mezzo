@@ -31,7 +31,13 @@
         "libs/interceptor-react-native-with-reactotron/src/index.ts"
       ],
       "@caribou-crew/mezzo-interfaces": ["libs/interfaces/src/index.ts"],
-      "@caribou-crew/mezzo-utils-logger": ["libs/utils-logger/src/index.ts"]
+      "@caribou-crew/mezzo-utils-generate-guid": [
+        "libs/utils-generate-guid/src/index.ts"
+      ],
+      "@caribou-crew/mezzo-utils-logger": ["libs/utils-logger/src/index.ts"],
+      "@mezzo/core-client-server-tests": [
+        "libs/core-client-server-tests/src/index.ts"
+      ]
     },
     "resolveJsonModule": true
   },

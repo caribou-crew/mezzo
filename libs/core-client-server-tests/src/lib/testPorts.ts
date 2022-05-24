@@ -1,0 +1,12 @@
+export const adminEndpointsPort = 3050;
+export const adminEndpointsProfilesPort = 3100;
+export const websocketPort = 3200;
+export const clientServerIntegrationPort = 3250;
+export const corePort = 3300;
+export const globalVariantPort = 3350;
+export const redirectPort = 3400;
+export const routeExpressPort = 3450;
+export const fileIOPort = 3500;
+export const routeStatePort = 3550;
+export const recordingServerPort = 3600;
+export const recordingWSPort = 3650;
