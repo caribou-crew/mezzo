@@ -5,6 +5,29 @@
     "admin-web-e2e": "apps/admin-web-e2e",
     "constants": "libs/constants",
     "core-client": "libs/core-client",
+    "core-client-server-tests": {
+      "root": "libs/core-client-server-tests",
+      "sourceRoot": "libs/core-client-server-tests/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/core-client-server-tests/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/core-client-server-tests"],
+          "options": {
+            "jestConfig": "libs/core-client-server-tests/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "core-server": "libs/core-server",
     "interceptor-react-native-with-reactotron": "libs/interceptor-react-native-with-reactotron",
     "interfaces": "libs/interfaces",

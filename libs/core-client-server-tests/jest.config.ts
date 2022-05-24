@@ -1,19 +1,15 @@
 module.exports = {
-  displayName: 'core-server',
-
+  displayName: 'core-client-server-tests',
+  preset: '../../jest.preset.ts',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
-  testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
-
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/core-server',
-  preset: '../../jest.preset.ts',
-  coveragePathIgnorePatterns: ['/__tests__/', 'src/index.ts'],
+  coverageDirectory: '../../coverage/libs/core-client-server-tests',
 };
