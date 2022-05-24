@@ -123,5 +123,9 @@ export default () => (mezzo: Mezzo) => {
   setupWebSocketServer(mezzo);
   return {
     name: 'recording-endpoints-plugin',
+    initialize: () => {
+      clients.length = 0;
+      recordedItems.length = 0;
+    },
   };
 };

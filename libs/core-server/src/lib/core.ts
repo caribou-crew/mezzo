@@ -28,7 +28,12 @@ import cors from './plugins/cors';
 import adminProfileEndpoints from './plugins/profile-endpoints';
 import adminStaticSiteEndpoints from './plugins/static-site-endpoints';
 
-type MezzoServerPlugin = (mezzo: Mezzo) => Record<string, any>;
+// type MezzoServerPlugin = (mezzo: Mezzo) => Record<string, any>;
+type MezzoServerPlugin = (mezzo: Mezzo) => {
+  name: string;
+  initialize?: () => void;
+};
+
 export interface MezzoStartOptions {
   port: number | string;
   adminEndpoint?: string;
@@ -120,7 +125,10 @@ export class Mezzo {
   _processPlugins() {
     logger.debug(`About to apply ${this.options.plugins.length} plugins`);
     if (Array.isArray(this.options.plugins)) {
-      this.options.plugins.forEach((p) => this.use(p));
+      this.options.plugins.forEach((p) => {
+        const plugin = this.use(p);
+        plugin?.initialize?.();
+      });
     }
   }
 
@@ -153,8 +161,10 @@ export class Mezzo {
     if (typeof pluginCreator !== 'function') {
       throw new Error('plugins must be a function');
     }
-    const pluginData = pluginCreator.call(this, this);
+    // const pluginData = pluginCreator.call(this, this);
+    const pluginData = pluginCreator(this);
     logger.debug(`Applied plugin: ${pluginData?.name}`);
+    return pluginData;
 
     // if (typeof plugin !== 'object') {
     //   throw new Error('plugins must return an object');
