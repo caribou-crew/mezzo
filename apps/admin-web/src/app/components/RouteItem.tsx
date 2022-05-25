@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Button,
@@ -18,22 +18,24 @@ import {
 } from '@caribou-crew/mezzo-interfaces';
 import DynamicIcon from './DynamicIcon';
 import RouteCategory from './RouteCategory';
+// import * as log from 'loglevel';
 
 type Props = {
   route: RouteItemType;
-  selectedItem: string;
+  isSelected: boolean;
   initialActiveVariant: string;
-  setSelectedItem: (id: string) => void;
+  setSelectedItem?: (id: string) => void;
   variantCategories: VariantCategory[];
 };
 
 const RouteItem = ({
   route,
-  selectedItem,
+  isSelected,
   initialActiveVariant,
   setSelectedItem,
   variantCategories,
 }: Props) => {
+  // console.log('Re-rendering route item: ', route.id);
   const [activeVariant, setActiveVariant] = useState(initialActiveVariant);
 
   const getColors = () => {
@@ -84,7 +86,7 @@ const RouteItem = ({
             {route.path}
           </>
         </Typography>
-        {selectedItem !== route.id && activeVariant !== 'default' && (
+        {isSelected && activeVariant !== 'default' && (
           <Typography noWrap variant="body1">
             <b>Variant: </b>
             {activeVariant}
@@ -181,11 +183,9 @@ const RouteItem = ({
         cursor: 'pointer',
         marginBottom: 15,
       }}
-      onClick={() =>
-        route.id === selectedItem
-          ? setSelectedItem('')
-          : setSelectedItem(route.id)
-      }
+      onClick={() => {
+        isSelected ? setSelectedItem?.('') : setSelectedItem?.(route.id);
+      }}
     >
       <Box
         sx={{
@@ -197,7 +197,7 @@ const RouteItem = ({
         {_renderRouteTitle()}
         {_renderInteractiveButtons()}
       </Box>
-      {selectedItem === route.id && (
+      {isSelected && (
         <Box>
           <Divider></Divider>
           <Container
@@ -230,4 +230,5 @@ const RouteItem = ({
   );
 };
 
-export default RouteItem;
+// export default RouteItem;
+export default React.memo(RouteItem);

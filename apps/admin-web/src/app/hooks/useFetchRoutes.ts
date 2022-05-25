@@ -1,6 +1,7 @@
 import { RouteItemType, VariantCategory } from '@caribou-crew/mezzo-interfaces';
-import { useEffect, useState } from 'react';
-import mezzoClient from '@caribou-crew/mezzo-core-client';
+import { useContext, useEffect, useState } from 'react';
+import { ClientContext } from '../context';
+// import mezzoClient from '@caribou-crew/mezzo-core-client';
 
 export interface URLHashCallback {
   routes: RouteItemType[];
@@ -13,16 +14,20 @@ export interface URLHashCallback {
  */
 export default function useFetchRoutes() {
   const [routes, setRoutes] = useState<RouteItemType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [version, setVersion] = useState<string>('');
   const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
     []
   );
-  const client = mezzoClient({
-    useRelativeUrl: true,
-  });
+
+  const client = useContext(ClientContext);
+  // const client = mezzoClient({
+  //   useRelativeUrl: true,
+  // });
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const { data } = (await client.getRoutes()) || {};
       if (data) {
         setRoutes(data?.routes);
@@ -34,10 +39,11 @@ export default function useFetchRoutes() {
           )
         );
       }
+      setIsLoading(false);
     };
 
     fetchData().catch(console.error);
   }, []);
 
-  return { routes, version, variantCategories };
+  return { routes, version, variantCategories, isLoading };
 }
