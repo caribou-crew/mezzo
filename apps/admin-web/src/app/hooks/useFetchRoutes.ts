@@ -14,6 +14,7 @@ export interface URLHashCallback {
  */
 export default function useFetchRoutes() {
   const [routes, setRoutes] = useState<RouteItemType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [version, setVersion] = useState<string>('');
   const [variantCategories, setVariantCategories] = useState<VariantCategory[]>(
     []
@@ -26,6 +27,7 @@ export default function useFetchRoutes() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const { data } = (await client.getRoutes()) || {};
       if (data) {
         setRoutes(data?.routes);
@@ -37,10 +39,11 @@ export default function useFetchRoutes() {
           )
         );
       }
+      setIsLoading(false);
     };
 
     fetchData().catch(console.error);
   }, []);
 
-  return { routes, version, variantCategories };
+  return { routes, version, variantCategories, isLoading };
 }

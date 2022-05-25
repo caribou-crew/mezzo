@@ -16,6 +16,7 @@ import useFetchRoutes from '../hooks/useFetchRoutes';
 import useRouteFilter from '../hooks/useRouteFilter';
 import useRouteSort from '../hooks/useRouteSort';
 import useFilterFromURL, { setURLHash } from '../hooks/useFilterFromURL';
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
 type SortProperty = 'method' | 'path' | '';
 
@@ -24,7 +25,7 @@ type Props = Record<string, never>;
 export default function Home(props: Props) {
   const [selectedItem, setSelectedItem] = useState('');
 
-  const { routes, version, variantCategories } = useFetchRoutes();
+  const { routes, version, variantCategories, isLoading } = useFetchRoutes();
 
   const setSelectedItemCallback = React.useCallback(setSelectedItem, []);
 
@@ -166,29 +167,49 @@ export default function Home(props: Props) {
         </Grid>
       </Grid>
       <Divider />
-      <Typography
-        variant="h6"
-        sx={{
-          mt: 3,
-          '@media (max-width:475px)': {
-            textAlign: 'center',
-          },
-        }}
-        gutterBottom
-      >
-        Routes
-      </Typography>
-      {displayedRoutes.length > 0 ? (
-        <Flipper
-          flipKey={displayedRoutes.reduce(
-            (prev, current) => prev + current.id,
-            ''
-          )}
-        >
-          {renderRouteList()}
-        </Flipper>
+
+      {isLoading ? (
+        <PacmanLoader
+          // color={'#ea82e5'}
+          // color={'#46bfee'}
+          // color={'#d03e19'}
+          color={'#db851c'}
+          // color={'#fdff00'}
+          loading={isLoading}
+          css={`
+            display: block;
+            margin: 0 auto;
+            padding: 80;
+          `}
+          size={80}
+        />
       ) : (
-        _renderTypography()
+        <>
+          <Typography
+            variant="h6"
+            sx={{
+              mt: 3,
+              '@media (max-width:475px)': {
+                textAlign: 'center',
+              },
+            }}
+            gutterBottom
+          >
+            Routes
+          </Typography>
+          {displayedRoutes.length > 0 ? (
+            <Flipper
+              flipKey={displayedRoutes.reduce(
+                (prev, current) => prev + current.id,
+                ''
+              )}
+            >
+              {renderRouteList()}
+            </Flipper>
+          ) : (
+            _renderTypography()
+          )}
+        </>
       )}
       <Typography align="center" sx={{ mt: 5 }} gutterBottom>
         {version ? `v${version}` : null}
