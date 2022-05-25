@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.8.2](https://github.com/caribou-crew/mezzo/compare/v0.8.1...v0.8.2) (2022-05-25)
+
+### Bug Fixes
+
+- fix click delay on home screen when changing routes ([784d2c5](https://github.com/caribou-crew/mezzo/commit/784d2c55d8f84e2394348e3e71320c622eb90157))
+- improve profiles page load by ~8s with 200 more routes ([9f8cdc4](https://github.com/caribou-crew/mezzo/commit/9f8cdc49bb99cfbd73032a4504d4d525e756a1d3))
+- update profile on select ([#141](https://github.com/caribou-crew/mezzo/issues/141)) ([ce946b0](https://github.com/caribou-crew/mezzo/commit/ce946b0776a98ef7b0c742a1a78e69db8785d453))
+- useContext instead of creating individual mezzo clients ([004fc13](https://github.com/caribou-crew/mezzo/commit/004fc13eb98920bae3061967648244e15addca14))
+
 ## [0.8.1](https://github.com/caribou-crew/mezzo/compare/v0.8.0...v0.8.1) (2022-05-23)
 
 ### Bug Fixes
