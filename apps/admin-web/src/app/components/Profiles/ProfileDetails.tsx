@@ -72,7 +72,6 @@ const ProfileDetails = ({
             alignItems: 'center',
           }}
         >
-          {/* {type === 'local' && _renderDeleteLocalProfileButton(profile)} */}
           {type === 'local' && (
             <DeleteProfileButton
               profile={profile}

@@ -170,11 +170,7 @@ export default function Home(props: Props) {
 
       {isLoading ? (
         <PacmanLoader
-          // color={'#ea82e5'}
-          // color={'#46bfee'}
-          // color={'#d03e19'}
           color={'#db851c'}
-          // color={'#fdff00'}
           loading={isLoading}
           css={`
             display: block;

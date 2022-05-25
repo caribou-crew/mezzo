@@ -19,7 +19,6 @@ SyntaxHighlighter.registerLanguage('javascript', js);
 type Props = Record<string, never>;
 
 export default function ProfilesScreen(props: Props) {
-  console.log('Profile Screen');
   const client = useContext(ClientContext);
 
   const [remoteProfiles, setRemoteProfiles] = useState<Profile[]>([]);

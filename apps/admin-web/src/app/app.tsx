@@ -1,5 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { createContext } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { CssBaseline } from '@mui/material';
 import Header from './components/Header';
@@ -13,9 +12,6 @@ import mezzoClient from '@caribou-crew/mezzo-core-client';
 // If prod, routes are /mezzo and /mezzo/record instead of / and /record
 export const App = () => {
   const client = mezzoClient();
-  // const MyContext = React.createContext(client);
-
-  console.log('=============RERENDER APP ROOT');
   return (
     <Router basename={PUBLIC_URL}>
       <CssBaseline />
