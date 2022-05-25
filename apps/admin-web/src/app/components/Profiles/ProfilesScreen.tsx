@@ -93,6 +93,7 @@ export default function ProfilesScreen(props: Props) {
           setLocalProfiles={setLocalProfiles}
           setDetailsExpanded={setDetailsExpanded}
           detailsExpanded={detailsExpanded}
+          setActiveVariants={setActiveVariants}
           key={profile.name}
         />
       ))}
@@ -108,6 +109,7 @@ export default function ProfilesScreen(props: Props) {
           setLocalProfiles={setLocalProfiles}
           setDetailsExpanded={setDetailsExpanded}
           detailsExpanded={detailsExpanded}
+          setActiveVariants={setActiveVariants}
           key={profile.name}
         />
       ))}

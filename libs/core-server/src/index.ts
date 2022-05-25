@@ -39,7 +39,7 @@ if (arg === 'start') {
         },
       ]);
 
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 800; i++) {
         mezzo
           .route({
             id: `GET /testing/lots/of/endpoints/${i}`,

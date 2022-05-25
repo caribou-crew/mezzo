@@ -8,7 +8,7 @@ import {
   Paper,
   Divider,
 } from '@mui/material';
-import { Profile } from '@caribou-crew/mezzo-interfaces';
+import { Profile, RouteVariant } from '@caribou-crew/mezzo-interfaces';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import ProfileButton from './ProfileButton';
 import DeleteProfileButton from './DeleteProfileButton';
@@ -27,6 +27,7 @@ const ProfileDetails = ({
   setLocalProfiles,
   setDetailsExpanded,
   detailsExpanded,
+  setActiveVariants,
 }: {
   profile: Profile;
   type: string;
@@ -38,6 +39,7 @@ const ProfileDetails = ({
   setSelectedProfile: (arg0: string) => void;
   selectedProfile: string;
   detailsExpanded: DetailsExpanded;
+  setActiveVariants: (arg0: RouteVariant[]) => void;
 }) => {
   return (
     <Paper key={profile.name} sx={{ mb: 1.5 }}>
@@ -62,6 +64,7 @@ const ProfileDetails = ({
             profile={profile}
             client={client}
             selectedProfile={selectedProfile}
+            setActiveVariants={setActiveVariants}
           />
           <Typography variant="subtitle1">{profile.name}</Typography>
         </Box>
