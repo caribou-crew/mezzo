@@ -11,7 +11,9 @@ import mezzoClient from '@caribou-crew/mezzo-core-client';
 
 // If prod, routes are /mezzo and /mezzo/record instead of / and /record
 export const App = () => {
-  const client = mezzoClient();
+  const client = mezzoClient({
+    useRelativeUrl: true,
+  });
   return (
     <Router basename={PUBLIC_URL}>
       <CssBaseline />
