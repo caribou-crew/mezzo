@@ -39,6 +39,31 @@ if (arg === 'start') {
         },
       ]);
 
+      for (let i = 0; i < 200; i++) {
+        mezzo
+          .route({
+            id: `GET /testing/lots/of/endpoints/${i}`,
+            path: `/testing/lots/of/endpoints/${i}`,
+            titleIcons: [
+              {
+                name: 'code',
+                link: 'https://github.com/caribou-crew/mezzo',
+              },
+            ],
+            icons: [database, dynamicFeed, link],
+            handler: function (req, res) {
+              res.json({ someKey: 'A' });
+            },
+          })
+          .variant({
+            id: 'variant1',
+            icons: [database],
+            handler: function (req, res) {
+              res.json({ someKey: 'B' });
+            },
+          });
+      }
+
       mezzo
         .route({
           id: 'GET /api/food/meat',
