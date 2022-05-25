@@ -26,6 +26,8 @@ export default function Home(props: Props) {
 
   const { routes, version, variantCategories } = useFetchRoutes();
 
+  const setSelectedItemCallback = React.useCallback(setSelectedItem, []);
+
   const {
     routes: filteredRoutes,
     setFilterValue,
@@ -49,9 +51,9 @@ export default function Home(props: Props) {
             route={route}
             variantCategories={variantCategories}
             key={route.id}
-            selectedItem={selectedItem}
+            isSelected={route.id === selectedItem}
             initialActiveVariant={route.activeVariant}
-            setSelectedItem={(id) => setSelectedItem(id)}
+            setSelectedItem={setSelectedItemCallback} // does not trigger re-render
           ></RouteItem>
         </div>
       </Flipped>
