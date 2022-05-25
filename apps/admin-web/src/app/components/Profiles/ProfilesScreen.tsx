@@ -19,7 +19,7 @@ import {
 } from '@mui/icons-material';
 import useFetchRoutes from '../../hooks/useFetchRoutes';
 import { Profile, RouteVariant } from '@caribou-crew/mezzo-interfaces';
-import mezzoClient from '@caribou-crew/mezzo-core-client';
+// import mezzoClient from '@caribou-crew/mezzo-core-client';
 import {
   deleteLocalProfile,
   getLocalProfiles,
@@ -30,7 +30,7 @@ import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript';
 import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { ClientContext } from '../../context';
+import { ClientContext } from '../../context';
 import { arraysEqual } from '../../utils/equality';
 
 SyntaxHighlighter.registerLanguage('javascript', js);
@@ -38,8 +38,8 @@ SyntaxHighlighter.registerLanguage('javascript', js);
 type Props = Record<string, never>;
 
 export default function ProfilesScreen(props: Props) {
-  const client = mezzoClient();
-  // const client = useContext(ClientContext);
+  // const client = mezzoClient();
+  const client = useContext(ClientContext);
   const { routes } = useFetchRoutes();
 
   const [remoteProfiles, setRemoteProfiles] = useState<Profile[]>([]);
