@@ -1,0 +1,11 @@
+  })
+  .variant({
+      id: '{{ httpVerb }} {{ endpoint }} {{ variantName }}',
+      label: '{{ label }}',
+      path: '{{endpoint}}',
+      method: '{{ httpVerb }}',
+      callback: (req, res, route) => {
+        mezzo.util.respondWithFile(route, req, res, { code: {{ responseCode }} });
+      },
+  });
+  // -- generator {{ httpVerb }} variant hook --

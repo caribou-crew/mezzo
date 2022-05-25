@@ -1,0 +1,18 @@
+import mezzo from '@caribou-crew/mezzo-core';
+
+mezzo
+  .route({
+    id: '{{ httpVerb }} {{ endpoint }}',
+    path: '{{endpoint}}',
+    method: '{{ httpVerb }}',
+    callback: (req, res, route) => {
+      mezzo.util.respondWithFile(route, req, res, { code: {{ responseCode }} });
+    },
+  });
+  // -- generator {{ httpVerb }} variant hook --
+  // The above line is required for the generator and should not be changed
+  {{#each unusedHttpMethods as |method| }}
+  
+  // -- unused generator {{ method }} variant hook --
+  // The above line is required for the generator and should not be changed
+  {{/each}}
