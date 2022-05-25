@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import {
   Container,
-  Button,
   Typography,
   IconButton,
   Box,
@@ -18,9 +17,8 @@ import {
   ExpandLess,
   CopyAll,
 } from '@mui/icons-material';
-import { blue, green, purple } from '@mui/material/colors';
 import useFetchRoutes from '../../hooks/useFetchRoutes';
-import { Profile, RouteItemType } from '@caribou-crew/mezzo-interfaces';
+import { Profile, RouteVariant } from '@caribou-crew/mezzo-interfaces';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 import {
   deleteLocalProfile,
@@ -32,7 +30,8 @@ import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript';
 import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { profile } from 'console';
+// import { ClientContext } from '../../context';
+import { arraysEqual } from '../../utils/equality';
 
 SyntaxHighlighter.registerLanguage('javascript', js);
 
@@ -40,11 +39,13 @@ type Props = Record<string, never>;
 
 export default function ProfilesScreen(props: Props) {
   const client = mezzoClient();
+  // const client = useContext(ClientContext);
   const { routes } = useFetchRoutes();
 
   const [remoteProfiles, setRemoteProfiles] = useState<Profile[]>([]);
   const [localProfiles, setLocalProfiles] = useState<Profile[]>([]);
   const [saveAsRemote, setSaveAsRemote] = useState('');
+  const [activeVariants, setActiveVariants] = useState<RouteVariant[]>([]);
 
   const [selectedProfile, setSelectedProfile] = useState('');
   const [detailsExpanded, setDetailsExpanded] = useState({
@@ -62,6 +63,16 @@ export default function ProfilesScreen(props: Props) {
       // Also read from localstorage
       const localProfiles = getLocalProfiles();
       setLocalProfiles(localProfiles);
+    };
+
+    fetchData().catch(console.error);
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = (await client.getActiveVariants()) ?? {};
+      if (data) {
+        setActiveVariants(data.variants);
+      }
     };
 
     fetchData().catch(console.error);
@@ -190,49 +201,34 @@ export default function ProfilesScreen(props: Props) {
     );
   };
 
+  /**
+   * TODO optimize me, this call can take ~10 seconds if we have say 200+ routes
+   */
   const _getMatchingProfileCheck = () => {
-    let profileName = '';
-    const selectedVariants: { routeID: string; variantID: string }[] = [];
+    const profiles = [...remoteProfiles, ...localProfiles];
 
-    //Get active variants that are not default variant
-    routes.forEach((route) => {
-      console.log('route', route);
-      if (route.activeVariant !== 'default') {
-        selectedVariants.push({
-          routeID: route.id,
-          variantID: route.activeVariant,
-        });
-      }
-    });
-
-    // Exit Early since only default varaints are selected
-    if (selectedVariants.length === 0) {
-      return 'Default route variants are currently selected.';
-    }
-
-    //We only want to warn about remote profiles to prevent duplication
-    remoteProfiles.forEach((profile) => {
-      if (
-        JSON.stringify(profile.variants) === JSON.stringify(selectedVariants)
-      ) {
+    let profileName;
+    profiles.some((profile) => {
+      if (arraysEqual(profile.variants, activeVariants)) {
         profileName = profile.name;
-        return;
+        return true;
       }
+      return false;
     });
 
-    return profileName !== ''
-      ? `Selected routes and variants match remote profile: ${profileName}`
+    return profileName
+      ? `Selected routes and variants match profile: ${profileName}`
       : 'No remote profiles match these selections';
   };
 
-  const _renderCurrentSelectedRoutes = (route: RouteItemType) => {
+  const _renderCurrentSelectedRoutes = (variant: RouteVariant) => {
     return (
       <Box sx={{ pt: 0.5, pb: 0.5 }}>
         <Typography noWrap variant="body1">
-          <b>Route:</b> {route.id}
+          <b>Route:</b> {variant.routeID}
         </Typography>
         <Typography noWrap variant="body1">
-          <b>Selected Varaint:</b> {route.activeVariant}
+          <b>Selected Varaint:</b> {variant.variantID}
         </Typography>
       </Box>
     );
@@ -289,10 +285,8 @@ export default function ProfilesScreen(props: Props) {
       <Typography variant="h6">Current Selected Routes:</Typography>
       <Paper sx={{ pt: 1, pb: 1 }}>
         <Container>
-          {routes.map(
-            (route) =>
-              route.activeVariant !== 'default' &&
-              _renderCurrentSelectedRoutes(route)
+          {activeVariants.map((variant) =>
+            _renderCurrentSelectedRoutes(variant)
           )}
           <Typography sx={{ pt: 2 }} color="red">
             {_getMatchingProfileCheck()}{' '}
