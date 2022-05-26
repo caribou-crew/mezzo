@@ -52,7 +52,7 @@ describe('route-file-io', () => {
   `;
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
-    const port = fileIOPort;
+    const port = fileIOPort + Number(process.env.JEST_WORKER_ID);
     client = mezzoClient({ port });
     request = SuperTestRequest(`http://localhost:${port}`);
     mockedDirectory = path.join(resourcesPath, 'some-custom-mocked-data');

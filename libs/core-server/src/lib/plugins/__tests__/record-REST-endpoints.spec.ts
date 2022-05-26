@@ -26,7 +26,6 @@ const movies = [
 ];
 describe('recording REST endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
-  // const port = recordingServerPort + Jes;
   const port = recordingServerPort + Number(process.env.JEST_WORKER_ID);
 
   beforeAll(() => {

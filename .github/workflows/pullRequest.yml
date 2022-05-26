@@ -4,28 +4,29 @@ on:
   pull_request:
 
 jobs:
-  unit-tests:
-    strategy:
-      matrix:
-        project:
-          ['admin-web', 'core-server', 'core-client', 'utils-generate-guid']
-    name: Jest Unit Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
-      - name: Npm install
-        run: npm install
-      - name: install nx
-        run: npm i -g nx
-      - name: Unit test
-        run: nx test ${{ matrix.project }}
-        # run: npm run testAll
+  # Should be covered by testCoverage.yml
+  # unit-tests:
+  #   strategy:
+  #     matrix:
+  #       project:
+  #         ['admin-web', 'core-server', 'core-client', 'utils-generate-guid']
+  #   name: Jest Unit Test
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v1
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 16
+  #     - name: Npm install
+  #       run: npm install
+  #     - name: install nx
+  #       run: npm i -g nx
+  #     - name: Unit test
+  #       run: nx test ${{ matrix.project }}
+  #       # run: npm run testAll
   linting:
     name: Linting
     runs-on: ubuntu-latest

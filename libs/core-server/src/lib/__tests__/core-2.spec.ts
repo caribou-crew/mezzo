@@ -25,7 +25,7 @@ describe('route-state', () => {
   const sessionId = '123';
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
-    const port = routeStatePort;
+    const port = routeStatePort + Number(process.env.JEST_WORKER_ID);
     request = SuperTestRequest(`http://localhost:${port}`);
     mockedDirectory = path.join(resourcesPath, 'some-custom-mocked-data');
     await mezzo.start({

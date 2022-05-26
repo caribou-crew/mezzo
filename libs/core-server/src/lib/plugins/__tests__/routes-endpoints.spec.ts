@@ -20,7 +20,7 @@ describe('admin-endpoints', () => {
   let client;
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
-    const port = adminEndpointsPort;
+    const port = adminEndpointsPort + Number(process.env.JEST_WORKER_ID);
     client = mezzoClient({ port });
     request = SuperTestRequest(`http://localhost:${port}`);
     await mezzo.start({
