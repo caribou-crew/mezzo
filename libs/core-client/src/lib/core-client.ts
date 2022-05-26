@@ -6,9 +6,9 @@ import { restClient as createRestClient } from './plugins/restClient';
 log.setDefaultLevel('debug');
 
 const DEFAULT_OPTIONS: IClientOptions = {
-  hostname: 'localhost',
+  hostname: undefined,
   createSocket: undefined,
-  port: 8000,
+  port: undefined,
   name: 'mezzo-core-client',
   secure: false,
   useRelativeUrl: false,
@@ -22,6 +22,19 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
     ...DEFAULT_OPTIONS,
     ...clientOptions,
   };
+
+  if (!clientOptions?.useRelativeUrl) {
+    if (
+      clientOptions?.port === undefined &&
+      clientOptions?.hostname === undefined
+    ) {
+      log.debug('Assuming localhost:8000 as no host provided');
+      options.hostname = 'localhost';
+      options.port = 8000;
+    } else if (clientOptions?.hostname === undefined) {
+      options.hostname = 'localhost';
+    }
+  }
 
   log.debug('MC with options: ', options);
 

@@ -18,6 +18,7 @@ import debounce from 'lodash.debounce';
 // } from '@caribou-crew/mezzo-constants';
 const MEZZO_WS_API_REQUEST = 'api.request';
 const MEZZO_WS_API_RESPONSE = 'api.response';
+const DEFAULT_PORT = 8000;
 
 log.setDefaultLevel('debug');
 
@@ -81,7 +82,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       onDisconnect,
     } = options;
 
-    let location = `ws://${hostname}:${port}`;
+    let location = `ws://${hostname}:${port ?? DEFAULT_PORT}`;
     if (useRelativeUrl) {
       // host: "localhost:4200"
       // hostname: "localhost"
@@ -96,7 +97,7 @@ export function webSocketClient(options: IWebSocketClientOptions) {
         location = `ws://${window.location.host}`;
       } else {
         // Works in dev since web and core-server are on separate hosts
-        location = `ws://${window.location.hostname}:${port}`;
+        location = `ws://${window.location.hostname}:${port ?? DEFAULT_PORT}`;
       }
     }
 

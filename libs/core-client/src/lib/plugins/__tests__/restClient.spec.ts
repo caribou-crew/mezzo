@@ -30,10 +30,11 @@ describe('restClient connection options', () => {
   });
   it('should allow for no port', () => {
     client = mezzoClient({
+      hostname: 'example.com',
       port: null,
     });
     const url = client.getConnectionFromOptions();
-    expect(url).toBe('http://localhost/_admin/api');
+    expect(url).toBe('http://example.com/_admin/api');
   });
   it('secure domain with no port', () => {
     client = mezzoClient({
