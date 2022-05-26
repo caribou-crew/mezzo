@@ -167,8 +167,6 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       if (command.type === 'setClientId') {
         setClientId?.(command.payload);
       } else if (command.type === 'ping') {
-        log.debug('[heartbeat]');
-        // reply with pong
         send('pong');
       }
     };
@@ -218,10 +216,8 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     };
 
     const serializedMessage = JSON.stringify(fullMessage);
-    // const serializedMessage = fullMessage;
 
     if (isReady) {
-      log.debug('[core-client-send] attempting to send as markred as isReady');
       try {
         socket.send(serializedMessage);
       } catch {

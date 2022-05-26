@@ -73,10 +73,9 @@ export default function useRecordingClient() {
 
   useEffect(() => {
     const onCommand = (data: any) => {
-      log.debug('[useRecordingClinet] on command', data);
+      log.debug('[useRecordingClient] received', data);
       if (data.type === 'api.response') {
         const message: RecordedItem = data;
-        log.debug('[RecordScreen] onCommand api.response', message);
         dispatch({ type: 'add', payload: message });
       }
     };
@@ -108,7 +107,7 @@ export default function useRecordingClient() {
 
     return () => {
       log.info('[useRecordingClient] unmount, calling close on socket');
-      mezzoClient.current?.send('close');
+      mezzoClient.current?.send('close'); // server will detect disconnect, but this way client can also signal it's done
       mezzoClient.current?.close();
       mezzoClient.current = null;
     };
