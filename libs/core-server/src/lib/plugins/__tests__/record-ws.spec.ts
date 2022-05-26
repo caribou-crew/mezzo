@@ -111,7 +111,9 @@ describe('recordingServer', () => {
     await connectionHelper({
       onCommand: (data) => {
         console.log('Got message: ', data);
-        messages.push(data);
+        if (data.type !== 'ping') {
+          messages.push(data);
+        }
       },
       createSocket,
       port,
@@ -140,7 +142,9 @@ describe('recordingServer', () => {
     await connectionHelper({
       onCommand: (data) => {
         console.log('Clinet 1 Got message: ', data);
-        messages.push(data);
+        if (data.type !== 'ping') {
+          messages.push(data);
+        }
       },
       createSocket,
       port,
@@ -149,8 +153,9 @@ describe('recordingServer', () => {
     // Client 2
     const otherClient = mezzoClient({
       onCommand: (data) => {
-        console.log('Client 2 got message: ', data);
-        client2Messages.push(data);
+        if (data.type !== 'ping') {
+          client2Messages.push(data);
+        }
       },
       createSocket,
       port,
