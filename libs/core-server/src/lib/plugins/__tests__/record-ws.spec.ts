@@ -1,9 +1,7 @@
 import mezzo from '../../core';
 import { recordingWSPort } from '@mezzo/core-client-server-tests';
 import SuperTestRequest from 'supertest';
-import logger from '@caribou-crew/mezzo-utils-logger';
 import { WebSocket } from 'ws';
-// import { webSocketClient } from '@caribou-crew/mezzo-core-client';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 import { IClientOptions } from '@caribou-crew/mezzo-interfaces';
 import { MEZZO_API_GET_RECORDING_CLIENTS } from '@caribou-crew/mezzo-constants';
@@ -56,7 +54,6 @@ function timeout(ms: number) {
 
 describe('recordingServer', () => {
   const port = recordingWSPort + Number(process.env.JEST_WORKER_ID);
-  // let ws: WebSocket;
   let client: ReturnType<typeof mezzoClient>;
   let messages = [];
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
@@ -98,13 +95,10 @@ describe('recordingServer', () => {
         res.json(movies);
       },
     });
-    // ws = new WebSocket(`ws:localhost:${port}`);
   });
   afterEach(async () => {
-    // ws.close();
     client?.close();
     await mezzo.stop();
-    await timeout(DEFAULT_DELAY);
   });
 
   it('client sending response capture should receive api.response type message', async () => {

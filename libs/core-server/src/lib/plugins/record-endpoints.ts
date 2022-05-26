@@ -5,6 +5,7 @@ import {
   MEZZO_API_GET_RECORDING_CLIENTS,
 } from '@caribou-crew/mezzo-constants';
 import {
+  IMezzoServerPlugin,
   RecordedItem,
   SocketRequestResponseMessage,
 } from '@caribou-crew/mezzo-interfaces';
@@ -139,14 +140,24 @@ function processMessage(message, client: Client) {
   }
 }
 
-export default () => (mezzo: Mezzo) => {
-  setupRestApi(mezzo.app);
-  setupWebSocketServer(mezzo);
-  return {
-    name: 'recording-endpoints-plugin',
-    initialize: () => {
-      clients.length = 0;
-      recordedItems.length = 0;
-    },
+export default () =>
+  (mezzo: Mezzo): IMezzoServerPlugin => {
+    setupRestApi(mezzo.app);
+    setupWebSocketServer(mezzo);
+    return {
+      name: 'recording-endpoints-plugin',
+      initialize: () => {
+        clients.length = 0;
+        recordedItems.length = 0;
+      },
+      onStop: () => {
+        clients.forEach((client) => {
+          clearTimeout(client.disconnectTimeout);
+          clearTimeout(client.pingTimeout);
+        });
+        recordedItems.length = 0;
+        clients.length = 0;
+        id = 0;
+      },
+    };
   };
-};
