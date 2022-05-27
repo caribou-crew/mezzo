@@ -9,7 +9,7 @@ describe('redirects', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
 
   beforeEach(async () => {
-    const port = redirectPort;
+    const port = redirectPort + Number(process.env.JEST_WORKER_ID);
     request = SuperTestRequest(`http://localhost:${port}`);
     await mezzo.start({
       port,

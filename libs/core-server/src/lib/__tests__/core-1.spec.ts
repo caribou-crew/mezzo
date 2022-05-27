@@ -22,7 +22,7 @@ describe('route-express', () => {
 
   beforeEach(async () => {
     process.env.LOG_LEVEL = 'warn';
-    const port = routeExpressPort;
+    const port = routeExpressPort + Number(process.env.JEST_WORKER_ID);
     request = SuperTestRequest(`http://localhost:${port}`);
     await mezzo.start({
       port,

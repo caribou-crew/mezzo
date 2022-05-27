@@ -147,12 +147,9 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       log.info('[mezzo-core-client.onClose] Closing socket continued');
       isReady = false;
       _readyState = WebSocket.CLOSING;
-      // trigger our disconnect handler
+      connectDebounced?.cancel(); // if for some reason a connection attempt debounce is in flight but we disconnect, cancel (unit test was not stopping properly on close w/out this)
       onDisconnect?.();
       _readyState = WebSocket.CLOSED;
-
-      // as well as the plugin's onDisconnect
-      // plugins.forEach((p) => p.onDisconnect && p.onDisconnect());
     };
 
     // fires when we receive a command, just forward it off
@@ -168,8 +165,6 @@ export function webSocketClient(options: IWebSocketClientOptions) {
       if (command.type === 'setClientId') {
         setClientId?.(command.payload);
       } else if (command.type === 'ping') {
-        log.debug('[heartbeat]');
-        // reply with pong
         send('pong');
       }
     };
@@ -219,10 +214,8 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     };
 
     const serializedMessage = JSON.stringify(fullMessage);
-    // const serializedMessage = fullMessage;
 
     if (isReady) {
-      log.debug('[core-client-send] attempting to send as markred as isReady');
       try {
         socket.send(serializedMessage);
       } catch {

@@ -6,7 +6,7 @@ import { adminEndpointsProfilesPort } from '@mezzo/core-client-server-tests';
 
 describe('profile-endpoints', () => {
   let request: SuperTestRequest.SuperTest<SuperTestRequest.Test>;
-  const port = adminEndpointsProfilesPort;
+  const port = adminEndpointsProfilesPort + Number(process.env.JEST_WORKER_ID);
   let client;
   beforeAll(() => {
     client = MezzoClient({ port });
