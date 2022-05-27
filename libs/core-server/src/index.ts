@@ -21,6 +21,16 @@ if (arg === 'start') {
           order: -1,
         },
       ],
+      // If desired you can specify which plugins you want to use, suppressing profile or routes will suppress the options in web
+      // plugins: [
+      //   jsonBodyParser(),
+      //   cors(),
+      //   adminRouteEndpoints(),
+      //   adminProfileEndpoints(), // if you comment me out, profile tab goes away
+      //   adminStaticSiteEndpoints(),
+      //   serverInfoEndpoints(),
+      //   recordingServer(), // If you comment me out, recording tab goes away
+      // ],
     });
 
     if (process.env.USE_DUMMY_DATA === 'true') {

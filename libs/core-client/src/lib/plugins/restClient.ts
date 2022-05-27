@@ -11,6 +11,7 @@ import {
   IRESTClientOptions,
   SetRouteVariant,
   RecordedItem,
+  GetInfoResponse,
 } from '@caribou-crew/mezzo-interfaces';
 import axios from 'axios';
 import * as log from 'loglevel';
@@ -105,7 +106,6 @@ export function restClient(clientOptions: IRESTClientOptions) {
   const getRoutes = async (options?: IRESTClientOptions) => {
     const baseUri = getConnectionFromOptions(options);
     const url = `${baseUri}/routes`;
-    // const url = `/routes`;
     return axios.get<GetRoutesResponse>(url);
   };
 
@@ -139,6 +139,12 @@ export function restClient(clientOptions: IRESTClientOptions) {
     return axios.delete(url);
   };
 
+  const getInfo = async (options?: IRESTClientOptions) => {
+    const baseUri = getConnectionFromOptions(options);
+    const url = `${baseUri}/info`;
+    return axios.get<GetInfoResponse>(url);
+  };
+
   return {
     getConnectionFromOptions,
     setMockVariant,
@@ -154,5 +160,6 @@ export function restClient(clientOptions: IRESTClientOptions) {
     getLocalProfiles,
     getRecordings,
     deleteRecordings,
+    getInfo,
   };
 }

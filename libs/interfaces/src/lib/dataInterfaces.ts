@@ -7,9 +7,12 @@ export interface RouteOrVariantIcon {
 }
 
 export interface GetRoutesResponse {
-  appVersion: string;
   routes: RouteItemType[];
   variantCategories: VariantCategory[];
+}
+export interface GetInfoResponse {
+  appVersion: string;
+  plugins: string[];
 }
 
 export interface VariantItem {

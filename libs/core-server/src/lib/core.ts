@@ -16,6 +16,7 @@ import {
 } from '@caribou-crew/mezzo-constants';
 
 import {
+  IMezzoServerPlugin,
   Profile,
   RouteVariant,
   VariantCategory,
@@ -27,12 +28,9 @@ import jsonBodyParser from './plugins/json-body-parser';
 import cors from './plugins/cors';
 import adminProfileEndpoints from './plugins/profile-endpoints';
 import adminStaticSiteEndpoints from './plugins/static-site-endpoints';
+import serverInfoEndpoints from './plugins/server-info-endpoints';
 
-// type MezzoServerPlugin = (mezzo: Mezzo) => Record<string, any>;
-type MezzoServerPlugin = (mezzo: Mezzo) => {
-  name: string;
-  initialize?: () => void;
-};
+type MezzoServerPlugin = (mezzo: Mezzo) => IMezzoServerPlugin;
 
 export interface MezzoStartOptions {
   port: number | string;
@@ -49,6 +47,7 @@ export const corePlugins: MezzoServerPlugin[] = [
   adminProfileEndpoints(),
   adminStaticSiteEndpoints(),
   recordingServer(),
+  serverInfoEndpoints(),
 ];
 
 const DEFAULT_OPTIONS: MezzoStartOptions = {
@@ -65,6 +64,7 @@ export class Mezzo {
   server: Server;
   websocketServer: WebSocket.Server;
   app: express.Express;
+  pluginNames: string[] = [];
   private fs;
   public util: CommonUtils;
   public log = {
@@ -72,6 +72,7 @@ export class Mezzo {
   };
   public redirect;
   public variantCategories: VariantCategory[] = [];
+  public onStopCallbacks = [];
 
   private _resetRouteState = () => {
     this.userRoutes.length = 0;
@@ -128,6 +129,9 @@ export class Mezzo {
       this.options.plugins.forEach((p) => {
         const plugin = this.use(p);
         plugin?.initialize?.();
+        if (plugin?.onStop) {
+          this.onStopCallbacks.push(plugin.onStop);
+        }
       });
     }
   }
@@ -161,16 +165,14 @@ export class Mezzo {
     if (typeof pluginCreator !== 'function') {
       throw new Error('plugins must be a function');
     }
-    // const pluginData = pluginCreator.call(this, this);
     const pluginData = pluginCreator(this);
     logger.debug(`Applied plugin: ${pluginData?.name}`);
+
+    if (typeof pluginData !== 'object') {
+      throw new Error('plugins must return an object');
+    }
+    this.pluginNames.push(pluginData.name);
     return pluginData;
-
-    // if (typeof plugin !== 'object') {
-    //   throw new Error('plugins must return an object');
-    // }
-
-    // this.plugins.push(plugin);
   }
 
   public stop = async (serverArg?: Server) => {
@@ -180,11 +182,9 @@ export class Mezzo {
         logger.debug(
           '***************Stopping Mezzo mocking server ***************'
         );
-        // if (this.websocketServer) {
-        //   logger.debug('Stopping websocket server too');
-        //   this.websocketServer.close();
-        // }
+        this.onStopCallbacks.forEach((i) => i?.());
         serverToStop.close(resolve);
+        this.pluginNames.length = 0;
         this.app = undefined;
       } else {
         logger.warn(
