@@ -178,7 +178,7 @@ const RouteItem = ({
   return (
     <Paper
       style={{
-        backgroundColor: getColors().backgroundColor,
+        // backgroundColor: 'white',
         overflow: 'hidden',
         cursor: 'pointer',
         marginBottom: 15,

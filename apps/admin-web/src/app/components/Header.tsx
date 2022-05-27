@@ -11,13 +11,11 @@ import {
   MenuItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-// import { MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import HelpIcon from '@mui/icons-material/Help';
 import { openInNewTab } from '../utils/urlHelper';
-import { Link, useNavigate } from 'react-router-dom';
-// import * as path from 'path';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   name: string;
@@ -81,7 +79,7 @@ export default function Headers(props: Props) {
   };
 
   return (
-    <AppBar position="relative">
+    <AppBar color="primary" enableColorOnDark>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -143,7 +141,7 @@ export default function Headers(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <Logo title={props.name} style={{ width: 100 }} fill="white" />
+            <Logo title={props.name} style={{ width: 100 }} />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {/* Nav bar */}
@@ -165,7 +163,6 @@ export default function Headers(props: Props) {
             onClick={() =>
               openInNewTab('https://github.com/caribou-crew/mezzo')
             }
-            color="inherit"
           >
             <GitHubIcon />
           </IconButton>
@@ -177,7 +174,6 @@ export default function Headers(props: Props) {
             onClick={() =>
               openInNewTab('https://caribou-crew.github.io/mezzo/')
             }
-            color="inherit"
           >
             <HelpIcon />
           </IconButton>
