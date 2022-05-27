@@ -37,8 +37,7 @@ export function restClient(clientOptions: IRESTClientOptions) {
     const protocol = options?.secure ? 'https' : 'http';
     const hostname = options?.hostname ?? LOCAL_HOST;
     const portValue = options?.port ?? clientOptions?.port;
-    const portIfDefined = portValue === null ? '' : `:${portValue}`;
-    // return `${protocol}://${hostname}:${port}${MEZZO_API_PATH}`;
+    const portIfDefined = portValue == null ? '' : `:${portValue}`;
     return `${protocol}://${hostname}${portIfDefined}${MEZZO_API_PATH}`;
   };
 
