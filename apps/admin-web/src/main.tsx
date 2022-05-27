@@ -12,8 +12,11 @@ import App from './app/app';
 
 const appTheme = createTheme({
   palette: {
-    background: {
-      default: '#F8F8F9',
+    mode: 'dark',
+    primary: {
+      main: '#0455b5',
+      light: '#3677C3',
+      dark: '#023B7E',
     },
   },
 });
