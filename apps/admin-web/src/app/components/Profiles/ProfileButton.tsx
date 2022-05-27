@@ -1,7 +1,10 @@
 import { Profile, RouteVariant } from '@caribou-crew/mezzo-interfaces';
 import mezzoClient from '@caribou-crew/mezzo-core-client';
 import { IconButton } from '@mui/material';
-import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
+import {
+  RadioButtonChecked,
+  RadioButtonUncheckedOutlined,
+} from '@mui/icons-material';
 
 const ProfileButton = ({
   setSelectedProfile,
@@ -21,7 +24,8 @@ const ProfileButton = ({
   return (
     <IconButton
       color="primary"
-      onClick={() => {
+      onClick={(event) => {
+        event.stopPropagation();
         client.setMockVariant(profile.variants);
         setActiveVariants(profile.variants);
         setSelectedProfile(profile.name);
@@ -29,9 +33,9 @@ const ProfileButton = ({
       }}
     >
       {selectedProfile === profile.name ? (
-        <CheckBox />
+        <RadioButtonChecked />
       ) : (
-        <CheckBoxOutlineBlank />
+        <RadioButtonUncheckedOutlined />
       )}
     </IconButton>
   );

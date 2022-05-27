@@ -3,7 +3,7 @@ import mezzoClient from '@caribou-crew/mezzo-core-client';
 import {
   Container,
   Typography,
-  IconButton,
+  Icon,
   Box,
   Paper,
   Divider,
@@ -42,7 +42,21 @@ const ProfileDetails = ({
   setActiveVariants: (arg0: RouteVariant[]) => void;
 }) => {
   return (
-    <Paper key={profile.name} sx={{ mb: 1.5 }}>
+    <Paper
+      key={profile.name}
+      sx={{ mb: 1.5 }}
+      onClick={() => {
+        profile.name === detailsExpanded.profileName
+          ? setDetailsExpanded({
+              profileName: '',
+              isExpanded: false,
+            })
+          : setDetailsExpanded({
+              profileName: profile.name,
+              isExpanded: !detailsExpanded,
+            });
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
@@ -81,26 +95,14 @@ const ProfileDetails = ({
               setLocalProfiles={setLocalProfiles}
             />
           )}
-          <IconButton
-            onClick={() => {
-              profile.name === detailsExpanded.profileName
-                ? setDetailsExpanded({
-                    profileName: '',
-                    isExpanded: false,
-                  })
-                : setDetailsExpanded({
-                    profileName: profile.name,
-                    isExpanded: !detailsExpanded,
-                  });
-            }}
-          >
+          <Icon sx={{ mr: 1 }}>
             {detailsExpanded.profileName === profile.name &&
             !detailsExpanded.isExpanded ? (
               <ExpandLess />
             ) : (
               <ExpandMore />
             )}
-          </IconButton>
+          </Icon>
         </Box>
       </Box>
       {detailsExpanded.profileName === profile.name && (
