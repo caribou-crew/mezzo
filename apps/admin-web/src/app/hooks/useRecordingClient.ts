@@ -2,8 +2,6 @@ import { useEffect, useReducer, useRef } from 'react';
 import * as log from 'loglevel';
 import { RecordedItem } from '@caribou-crew/mezzo-interfaces';
 import MezzoClient from '@caribou-crew/mezzo-core-client';
-import { toast } from 'react-toastify';
-import debounce from 'lodash.debounce';
 
 log.setDefaultLevel('debug');
 
@@ -69,8 +67,6 @@ export default function useRecordingClient() {
 
   const mezzoClient = useRef<ReturnType<typeof MezzoClient> | null>(null);
 
-  const toastDebounced = debounce(toast, 500);
-
   useEffect(() => {
     const onCommand = (data: any) => {
       log.debug('[useRecordingClient] received', data);
@@ -87,16 +83,10 @@ export default function useRecordingClient() {
         name: 'Admin Web',
         onCommand,
         onDisconnect: () => {
-          toast.dismiss();
-          toastDebounced.cancel();
-          toastDebounced('Connection to server lost', { type: 'error' });
           log.warn('[connection] Disconnect');
         },
         onConnect: () => {
           log.info('[connection] Connect');
-          toast.dismiss();
-          toastDebounced.cancel();
-          toastDebounced('Connection established', { type: 'success' });
         },
       });
 
