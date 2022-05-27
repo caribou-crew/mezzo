@@ -1,7 +1,7 @@
 import { Container, Typography, IconButton, Box, Paper } from '@mui/material';
 import { CopyAll } from '@mui/icons-material';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github';
+import { vs2015 } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { toast } from 'react-toastify';
 
 const SaveAsRemote = ({ saveAsRemote }: { saveAsRemote: string }) => {
@@ -9,7 +9,7 @@ const SaveAsRemote = ({ saveAsRemote }: { saveAsRemote: string }) => {
     return null;
   }
   return (
-    <Paper sx={{ backgroundColor: '#FFFFFF', pt: 1, pb: 1, mb: 1 }}>
+    <Paper sx={{ pt: 1, pb: 1, mb: 1 }}>
       <Container>
         <Box
           sx={{
@@ -35,11 +35,10 @@ const SaveAsRemote = ({ saveAsRemote }: { saveAsRemote: string }) => {
         </Box>
         <SyntaxHighlighter
           language="javascript"
-          style={github}
+          style={vs2015}
           customStyle={{
             padding: 0,
             margin: 0,
-            backgroundColor: '#FFFFFF',
           }}
           wrapLongLines={true}
         >

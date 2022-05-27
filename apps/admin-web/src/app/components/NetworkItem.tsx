@@ -1,13 +1,5 @@
-import {
-  Container,
-  Button,
-  Paper,
-  Typography,
-  Box,
-  Divider,
-} from '@mui/material';
+import { TableCell, TableRow } from '@mui/material';
 
-import { red, purple, green, blue, orange } from '@mui/material/colors';
 import { RecordedItem } from '@caribou-crew/mezzo-interfaces';
 
 interface Props extends RecordedItem {
@@ -24,59 +16,21 @@ const NetworkItem = ({
   duration,
   onClick,
 }: Props) => {
-  const getColors = () => {
-    // let backgroundColor;
-    // let textColor;
-    // if (endTime == null) {
-    //   backgroundColor = orange[50];
-    //   textColor = orange[800];
-    // } else {
-    const backgroundColor = green[50];
-    const textColor = green[800];
-    // }
-    return { backgroundColor, textColor };
-  };
-
-  const _renderTitle = () => {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          overflow: 'hidden',
-          p: 0.2,
-          gap: 0,
-        }}
-      >
-        <Typography noWrap variant="body1">
-          <b>{request.method}</b> {url}
-        </Typography>
-      </Box>
-    );
-  };
-
   return (
-    <Paper
-      style={{
-        backgroundColor: getColors().backgroundColor,
-        overflow: 'hidden',
-        cursor: 'pointer',
-        marginBottom: 1,
-        padding: 0,
-      }}
+    <TableRow
+      key={uuid}
+      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       onClick={onClick}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-        style={{ padding: 0 }}
-      >
-        {_renderTitle()}
-      </Box>
-    </Paper>
+      <TableCell component="th" scope="row">
+        {response?.status}
+      </TableCell>
+      <TableCell align="left">{request.method}</TableCell>
+      <TableCell align="left">{url}</TableCell>
+      <TableCell align="right">{new Date(date).toISOString()}</TableCell>
+      <TableCell align="right">{deltaTime}</TableCell>
+      <TableCell align="right">{duration.toFixed(2)}</TableCell>
+    </TableRow>
   );
 };
 

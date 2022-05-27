@@ -69,12 +69,15 @@ export default function ProfilesScreen(props: Props) {
   }
 
   return (
-    <Container component="main" maxWidth="lg" sx={{ marginTop: 3 }}>
+    <Container component="main" maxWidth="lg" sx={{ mt: 10 }}>
       <Typography variant="h6">Current Selected Routes:</Typography>
       <Paper sx={{ pt: 1, pb: 1 }}>
         <Container>
           <Variants variants={activeVariants} />
-          <Typography sx={{ pt: 2 }} color="red">
+          <Typography
+            sx={{ pt: activeVariants.length > 0 ? 2 : 0 }}
+            color="red"
+          >
             {matchedProfile
               ? `Selected routes and variants match profile: ${matchedProfile}`
               : 'No remote profiles match these selections'}

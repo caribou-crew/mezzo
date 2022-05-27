@@ -100,7 +100,6 @@ export default function Home(props: Props) {
         <Button
           fullWidth
           variant="outlined"
-          sx={{ backgroundColor: '#FFFFFF' }}
           onClick={() => setSort('method')}
           startIcon={getSortIcon('method')}
         >
@@ -109,7 +108,6 @@ export default function Home(props: Props) {
         <Button
           fullWidth
           variant="outlined"
-          sx={{ backgroundColor: '#FFFFFF' }}
           onClick={() => setSort('path')}
           startIcon={getSortIcon('path')}
         >
@@ -118,7 +116,6 @@ export default function Home(props: Props) {
         <Button
           fullWidth
           variant="outlined"
-          sx={{ backgroundColor: '#FFFFFF' }}
           color="error"
           onClick={() => setSort('')}
           startIcon={getSortIcon('')}
@@ -133,7 +130,6 @@ export default function Home(props: Props) {
     return (
       <TextField
         fullWidth
-        sx={{ backgroundColor: '#FFFFFF' }}
         id="outlined-search"
         type="search"
         label="Filter"
@@ -157,7 +153,7 @@ export default function Home(props: Props) {
   };
 
   return (
-    <Container component="main" maxWidth="lg">
+    <Container component="main" maxWidth="lg" sx={{ mt: 10 }}>
       <Grid container spacing={1} sx={{ my: 2 }}>
         <Grid item xs={12} sm={12} md={6}>
           {_renderShowByContainer()}
@@ -169,16 +165,17 @@ export default function Home(props: Props) {
       <Divider />
 
       {isLoading ? (
-        <PacmanLoader
-          color={'#db851c'}
-          loading={isLoading}
-          css={`
-            display: block;
-            margin: 0 auto;
-            padding: 80;
-          `}
-          size={80}
-        />
+        <Container sx={{ mt: 16 }}>
+          <PacmanLoader
+            color={'#db851c'}
+            loading={isLoading}
+            css={`
+              display: block;
+              margin: 0 auto;
+            `}
+            size={80}
+          />
+        </Container>
       ) : (
         <>
           <Typography
