@@ -2,6 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [0.9.0](https://github.com/caribou-crew/mezzo/compare/v0.8.3...v0.9.0) (2022-05-27)
+
+### Bug Fixes
+
+- update host and port defaults ([#142](https://github.com/caribou-crew/mezzo/issues/142)) ([5344c82](https://github.com/caribou-crew/mezzo/commit/5344c82da23e04bd96415eb2065bb2d4c3ab3b16))
+- **web sockets:** server detects disconnected clients and closes them ([#143](https://github.com/caribou-crew/mezzo/issues/143)) ([1ca24ab](https://github.com/caribou-crew/mezzo/commit/1ca24ab92205d9b940372ae23ff775bd6c77de38)), closes [#129](https://github.com/caribou-crew/mezzo/issues/129)
+
+### Features
+
+- client refactoring and styling ([#144](https://github.com/caribou-crew/mezzo/issues/144)) ([55f87a1](https://github.com/caribou-crew/mezzo/commit/55f87a19fc39d902cdec9de33fd0f30cd18ab9e9))
+
 ## [0.8.3](https://github.com/caribou-crew/mezzo/compare/v0.8.2...v0.8.3) (2022-05-25)
 
 ### Bug Fixes
