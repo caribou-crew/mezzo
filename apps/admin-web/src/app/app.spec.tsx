@@ -2,7 +2,7 @@ import { cleanup, getAllByText, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import App from './app';
 
-describe('App', () => {
+describe.skip('App', () => {
   afterEach(() => {
     delete global['fetch'];
     cleanup();

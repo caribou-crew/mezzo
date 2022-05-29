@@ -56,6 +56,7 @@ export default function mezzoClient(clientOptions?: IClientOptions) {
     getRecordings: restClient.getRecordings,
     deleteRecordings: restClient.deleteRecordings,
     getConnectionFromOptions: restClient.getConnectionFromOptions,
+    getInfo: restClient.getInfo,
 
     send: wsClient.send,
     captureApiRequest: wsClient.captureApiRequest,

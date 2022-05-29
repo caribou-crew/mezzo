@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 
 type Props = {
   name: string;
+  isProfileEnabled: boolean;
+  isRecordingEnabled: boolean;
 };
 
 export default function Headers(props: Props) {
@@ -35,27 +37,21 @@ export default function Headers(props: Props) {
       path: '/',
       isLink: true,
     },
-    {
+  ];
+  if (props.isRecordingEnabled) {
+    navItems.push({
       label: 'Record',
       path: `/record`,
       isLink: true,
-    },
-    {
+    });
+  }
+  if (props.isProfileEnabled) {
+    navItems.push({
       label: 'Profiles',
       path: `/profiles`,
       isLink: true,
-    },
-    // {
-    //   label: 'Reset State',
-    //   path: `${MEZZO_API_PATH}/routeVariants`,
-    //   method: 'DELETE',
-    // },
-    // {
-    //   label: 'Reset Route Settings',
-    //   path: 'https://github.com/caribou-crew/mezzo',
-    //   method: 'GET',
-    // },
-  ];
+    });
+  }
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 

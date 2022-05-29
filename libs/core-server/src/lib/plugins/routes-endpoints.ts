@@ -3,7 +3,6 @@ import { DEFAULT_VARIANT, MEZZO_API_PATH } from '@caribou-crew/mezzo-constants';
 import logger from '@caribou-crew/mezzo-utils-logger';
 import { findRouteIndexById } from '../utils/routeMatchingUtils';
 import { Mezzo } from '../core';
-import { version } from '../../../package.json';
 import {
   GetRoutesResponse,
   SetRouteVariant,
@@ -13,7 +12,6 @@ export const addAdminRouteEndpoints = (app: express.Express, mezzo: Mezzo) => {
   app.get(`${MEZZO_API_PATH}/routes`, (req, res) => {
     const response: GetRoutesResponse = {
       routes: mezzo.util.serialiazeRoutes(),
-      appVersion: version,
       variantCategories: mezzo.variantCategories,
     };
     res.json(response);

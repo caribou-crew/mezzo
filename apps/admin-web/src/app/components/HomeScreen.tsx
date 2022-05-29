@@ -25,7 +25,7 @@ type Props = Record<string, never>;
 export default function Home(props: Props) {
   const [selectedItem, setSelectedItem] = useState('');
 
-  const { routes, version, variantCategories, isLoading } = useFetchRoutes();
+  const { routes, variantCategories, isLoading } = useFetchRoutes();
 
   const setSelectedItemCallback = React.useCallback(setSelectedItem, []);
 
@@ -204,9 +204,6 @@ export default function Home(props: Props) {
           )}
         </>
       )}
-      <Typography align="center" sx={{ mt: 5 }} gutterBottom>
-        {version ? `v${version}` : null}
-      </Typography>
     </Container>
   );
 }
