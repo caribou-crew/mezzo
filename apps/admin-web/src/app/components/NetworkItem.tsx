@@ -25,24 +25,18 @@ const NetworkItem = ({
 
   const getStatusSymbol = (status: any) => {
     let icon = <ChangeCircle />;
+    const statusDigit = Math.floor(status / 100);
 
-    switch (status) {
-      case 200:
-      case 201:
+    switch (statusDigit) {
+      case 2:
         icon = <CheckBox color="success" />;
         break;
-
-      case 500:
-      case 504:
+      case 5:
         icon = <Cancel color="error" />;
         break;
-      case 400:
-      case 404:
-      case 411:
-      case 417:
+      case 4:
         icon = <Warning color="warning" />;
         break;
-
       default:
         icon = <ChangeCircle color="primary" />;
         break;
