@@ -153,7 +153,7 @@ export default function Home(props: Props) {
   };
 
   return (
-    <Container component="main" maxWidth="lg" sx={{ mt: 10 }}>
+    <Container component="main" maxWidth="lg">
       <Grid container spacing={1} sx={{ my: 2 }}>
         <Grid item xs={12} sm={12} md={6}>
           {_renderShowByContainer()}

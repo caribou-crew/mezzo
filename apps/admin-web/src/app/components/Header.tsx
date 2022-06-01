@@ -75,7 +75,7 @@ export default function Headers(props: Props) {
   };
 
   return (
-    <AppBar color="primary" enableColorOnDark>
+    <AppBar color="primary" enableColorOnDark position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

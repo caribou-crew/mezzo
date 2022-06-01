@@ -69,7 +69,7 @@ export default function ProfilesScreen(props: Props) {
   }
 
   return (
-    <Container component="main" maxWidth="lg" sx={{ mt: 10 }}>
+    <Container component="main" maxWidth="lg">
       <Typography variant="h6">Current Selected Routes:</Typography>
       <Paper sx={{ pt: 1, pb: 1 }}>
         <Container>
