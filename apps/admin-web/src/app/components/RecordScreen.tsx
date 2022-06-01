@@ -97,7 +97,7 @@ export default function RecordScreen(props: Props) {
             setSelectedNetworkItem(undefined);
           }}
         >
-          {width > 960 ? 'Load dummy data' : <Clear />}
+          {width > 960 ? 'Clear' : <Clear />}
         </Button>
         <Button variant="outlined" sx={{ mt: 2 }} onClick={() => {}}>
           {width > 960 ? 'Export All' : <KeyboardDoubleArrowUp />}
