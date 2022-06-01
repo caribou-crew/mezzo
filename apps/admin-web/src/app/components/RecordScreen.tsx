@@ -99,15 +99,15 @@ export default function RecordScreen(props: Props) {
         >
           {width > 960 ? 'Clear' : <Clear />}
         </Button>
-        <Button variant="outlined" sx={{ mt: 2 }} onClick={() => {}}>
+        <Button variant="outlined" sx={{ mt: 2 }}>
           {width > 960 ? 'Export All' : <KeyboardDoubleArrowUp />}
         </Button>
         {selectedNetworkItem && (
           <>
-            <Button variant="outlined" sx={{ mt: 2 }} onClick={() => {}}>
+            <Button variant="outlined" sx={{ mt: 2 }}>
               {width > 960 ? 'Export Selected' : <KeyboardArrowUp />}
             </Button>
-            <Button variant="outlined" sx={{ mt: 2 }} onClick={() => {}}>
+            <Button variant="outlined" sx={{ mt: 2 }}>
               {width > 960 ? 'Copy Selected as CURL' : <Code />}
             </Button>
           </>
@@ -117,8 +117,6 @@ export default function RecordScreen(props: Props) {
   };
 
   const _renderRecordingTable = () => {
-    console.log('selected Item', selectedNetworkItem);
-    console.log('Inner', width);
     return (
       <TableContainer component={Paper}>
         <Table stickyHeader={true} size="small">
