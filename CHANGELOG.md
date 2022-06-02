@@ -2,6 +2,12 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.10.1](https://github.com/caribou-crew/mezzo/compare/v0.10.0...v0.10.1) (2022-06-02)
+
+### Bug Fixes
+
+- export reference to plugins for consumer ([b426b80](https://github.com/caribou-crew/mezzo/commit/b426b80507d4a7f2e3c3ed4ef92c45c7d6520c01))
+
 # [0.10.0](https://github.com/caribou-crew/mezzo/compare/v0.9.0...v0.10.0) (2022-06-02)
 
 ### Features
