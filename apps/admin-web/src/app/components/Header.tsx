@@ -75,7 +75,7 @@ export default function Headers(props: Props) {
   };
 
   return (
-    <AppBar color="primary" enableColorOnDark>
+    <AppBar color="primary" enableColorOnDark position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -137,7 +137,7 @@ export default function Headers(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <Logo title={props.name} style={{ width: 100 }} />
+            <Logo title={props.name} style={{ width: 100 }} fill="white" />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {/* Nav bar */}

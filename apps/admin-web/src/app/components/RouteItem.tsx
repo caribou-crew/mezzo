@@ -8,7 +8,7 @@ import {
   Divider,
 } from '@mui/material';
 
-import { red, purple, green, blue, orange } from '@mui/material/colors';
+import { red, purple, green, blue, orange, grey } from '@mui/material/colors';
 import { OpenInNew } from '@mui/icons-material';
 import { openInNewTab, openJsonInNewTab } from '../utils/urlHelper';
 import {
@@ -18,7 +18,6 @@ import {
 } from '@caribou-crew/mezzo-interfaces';
 import DynamicIcon from './DynamicIcon';
 import RouteCategory from './RouteCategory';
-// import * as log from 'loglevel';
 
 type Props = {
   route: RouteItemType;
@@ -35,7 +34,6 @@ const RouteItem = ({
   setSelectedItem,
   variantCategories,
 }: Props) => {
-  // console.log('Re-rendering route item: ', route.id);
   const [activeVariant, setActiveVariant] = useState(initialActiveVariant);
 
   const getColors = () => {
@@ -167,9 +165,7 @@ const RouteItem = ({
             width: '100px',
           }}
         >
-          <Typography sx={{ color: 'white', textAlign: 'center' }}>
-            {route.method}
-          </Typography>
+          <Typography sx={{ textAlign: 'center' }}>{route.method}</Typography>
         </Container>
       </Box>
     );
@@ -178,7 +174,6 @@ const RouteItem = ({
   return (
     <Paper
       style={{
-        // backgroundColor: 'white',
         overflow: 'hidden',
         cursor: 'pointer',
         marginBottom: 15,
@@ -208,11 +203,11 @@ const RouteItem = ({
           >
             <Typography variant="subtitle2">Details</Typography>
             <Typography variant="body2">
-              Route Id: {<span style={{ color: 'green' }}>{route.id}</span>}
+              Route Id: {<span style={{ color: grey[400] }}>{route.id}</span>}
             </Typography>
             <Typography noWrap variant="body2">
               Active Variant Id:{' '}
-              {<span style={{ color: 'green' }}>{activeVariant}</span>}
+              {<span style={{ color: grey[400] }}>{activeVariant}</span>}
             </Typography>
             {variantCategories.map((category, index) => (
               <RouteCategory
