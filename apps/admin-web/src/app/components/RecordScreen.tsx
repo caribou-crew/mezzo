@@ -153,6 +153,7 @@ export default function RecordScreen(props: Props) {
               <NetworkItem
                 key={item.uuid}
                 {...item}
+                isSelected={item.uuid === selectedNetworkItem?.uuid}
                 onClick={() => setSelectedNetworkItem(item)}
               />
             ))}

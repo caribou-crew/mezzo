@@ -5,7 +5,8 @@ import { Cancel, Warning, CheckBox, ChangeCircle } from '@mui/icons-material';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 interface Props extends RecordedItem {
-  onClick: any;
+  isSelected: boolean;
+  onClick: () => void;
 }
 
 const NetworkItem = ({
@@ -16,6 +17,7 @@ const NetworkItem = ({
   date,
   deltaTime,
   duration,
+  isSelected,
   onClick,
 }: Props) => {
   const { width } = useWindowDimensions();
@@ -48,6 +50,7 @@ const NetworkItem = ({
     <TableRow
       key={uuid}
       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+      style={{ backgroundColor: isSelected ? 'gray' : undefined }}
       onClick={onClick}
     >
       <TableCell padding="checkbox" component="th" scope="row">
