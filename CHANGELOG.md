@@ -2,6 +2,12 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.10.2](https://github.com/caribou-crew/mezzo/compare/v0.10.1...v0.10.2) (2022-06-02)
+
+### Bug Fixes
+
+- useRelativeUrl for web client ([1e514d1](https://github.com/caribou-crew/mezzo/commit/1e514d1f291a6aa107e08554c3b17f3f8e41b187))
+
 ## [0.10.1](https://github.com/caribou-crew/mezzo/compare/v0.10.0...v0.10.1) (2022-06-02)
 
 ### Bug Fixes
