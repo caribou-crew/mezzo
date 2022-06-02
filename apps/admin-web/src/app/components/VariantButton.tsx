@@ -31,7 +31,9 @@ export default function VariantButton(props: Props) {
             variantID: variant.id,
           },
         ];
-        const client = mezzoClient();
+        const client = mezzoClient({
+          useRelativeUrl: true,
+        });
         client.updateMockVariant(myVariants);
         setActiveVariant(variant.id);
       }}
