@@ -39,6 +39,7 @@ export interface SocketRequestResponseMessage {
         request: MezzoRecordedRequest;
         response: MezzoRecordedResponse;
         duration: number;
+        uuid: string;
       }
     | Record<string, never>;
   important: boolean;

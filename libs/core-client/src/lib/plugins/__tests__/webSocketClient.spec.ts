@@ -191,12 +191,18 @@ describe('webSocketClient', () => {
         createSocket,
         port,
       });
-      client.captureApiRequest('someMethod', 'someUrl');
+      client.captureApiRequest({
+        method: 'someMethod',
+        url: 'someUrl',
+        data: null,
+        headers: null,
+        params: null,
+      });
       await waitForMessageLength(2);
       expect(messages[1].type).toBe('api.request');
-      expect(messages[1].payload.method).toBe('someMethod');
-      expect(messages[1].payload.url).toBe('someUrl');
-      expect(messages[1].payload.guid).toBeDefined();
+      expect(messages[1].payload.request.method).toBe('someMethod');
+      expect(messages[1].payload.request.url).toBe('someUrl');
+      expect(messages[1].payload.uuid).toBeDefined();
       expect(messages[1].important).toBe(false);
       expect(messages[1].deltaTime).toBeDefined();
       expect(messages[1].date).toBeDefined();

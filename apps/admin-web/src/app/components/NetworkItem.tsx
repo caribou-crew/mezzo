@@ -77,7 +77,7 @@ const NetworkItem = ({
             {deltaTime} ms
           </TableCell>
           <TableCell padding="checkbox" align="right">
-            {duration.toFixed(2)}
+            {duration?.toFixed(2)}
           </TableCell>
         </>
       )}

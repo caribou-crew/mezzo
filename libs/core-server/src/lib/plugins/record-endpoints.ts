@@ -77,12 +77,34 @@ function broadcastJSON(message: any, type?: string) {
   });
 }
 
-function processRequestResponseMessage(message: SocketRequestResponseMessage) {
-  logger.debug('Processing message: ');
+function processRequestMessage(message: SocketRequestResponseMessage) {
+  logger.debug('[record-endpoints] Processing request message: ');
   if (message.type != null) {
-    const { request, response } = message.payload;
+    const { request, uuid } = message.payload;
     const item: RecordedItem = {
-      uuid: generateGuid(),
+      uuid: uuid || generateGuid(),
+      url: request.url,
+      request,
+      response: null,
+      date: message.date,
+      deltaTime: message.deltaTime,
+      duration: null,
+    };
+    recordedItems.push(item);
+    broadcastJSON(item, 'api.request');
+  } else {
+    logger.warn(
+      "Received message but didn't add to data itmes as type was null"
+    );
+  }
+}
+
+function processResponseMessage(message: SocketRequestResponseMessage) {
+  logger.debug('Processing response message: ');
+  if (message.type != null) {
+    const { request, response, uuid } = message.payload;
+    const item: RecordedItem = {
+      uuid: uuid || generateGuid(),
       url: request.url,
       request,
       response,
@@ -98,6 +120,7 @@ function processRequestResponseMessage(message: SocketRequestResponseMessage) {
     );
   }
 }
+
 function ping(client: Client) {
   const { ws } = client;
   if (ws.readyState === WebSocket.OPEN) {
@@ -126,7 +149,10 @@ function processMessage(message, client: Client) {
     logger.debug('Message received', data?.type);
     if (data?.type === 'api.response') {
       logger.debug('Received api response');
-      processRequestResponseMessage(data);
+      processResponseMessage(data);
+    } else if (data?.type === 'api.request') {
+      logger.debug('Received api request');
+      processRequestMessage(data);
     } else if (data?.type === 'pong') {
       clearTimeout(client.disconnectTimeout);
       client.pingTimeout = setTimeout(() => {

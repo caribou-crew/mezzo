@@ -3,7 +3,10 @@ import * as queryString from 'query-string';
 import { Reactotron, ReactotronCore } from 'reactotron-core-client';
 import MezzoClient from '@caribou-crew/mezzo-core-client';
 import connectionManager from './utils/connection-manager';
-import { IClientOptions } from '@caribou-crew/mezzo-interfaces';
+import {
+  IClientOptions,
+  MezzoRecordedRequest,
+} from '@caribou-crew/mezzo-interfaces';
 import * as log from 'loglevel';
 
 /**
@@ -59,10 +62,24 @@ export default <ReactotronSubtype = ReactotronCore>(
       // bump the counter
       xhrCounter++;
 
-      const guid = mezzoClient.captureApiRequest(method, url);
+      let params = null;
+      const queryParamIdx = url ? url.indexOf('?') : -1;
+
+      if (queryParamIdx > -1) {
+        params = queryString.parse(url.substr(queryParamIdx));
+      }
+      const mezzoRequest: MezzoRecordedRequest = {
+        url,
+        method,
+        data: undefined,
+        headers: undefined,
+        params,
+      };
+
+      const uuid = mezzoClient.captureApiRequest(mezzoRequest);
       // tag
       xhr._trackingName = xhrCounter;
-      xhr._guid = guid;
+      xhr._guid = uuid;
     }
 
     /**
@@ -125,13 +142,13 @@ export default <ReactotronSubtype = ReactotronCore>(
 
       // fetch and clear the request data from the cache
       const rid = xhr._trackingName;
-      const guid = xhr._guid;
+      const uuid = xhr._guid;
       const cachedRequest = requestCache[rid] || {};
       requestCache[rid] = null;
 
       // assemble the request object
       const { data, stopTimer } = cachedRequest;
-      const mezzoRequest = {
+      const mezzoRequest: MezzoRecordedRequest = {
         url: url || cachedRequest.xhr._url,
         method: xhr._method || null,
         data,
@@ -169,7 +186,7 @@ export default <ReactotronSubtype = ReactotronCore>(
           mezzoRequest,
           mezzoResponse,
           stopTime,
-          guid
+          uuid
         );
       };
 
