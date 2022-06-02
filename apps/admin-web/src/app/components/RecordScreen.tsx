@@ -43,6 +43,7 @@ export default function RecordScreen(props: Props) {
   const { width } = useWindowDimensions();
   const [selectedNetworkItem, setSelectedNetworkItem] =
     useState<RecordedItem>();
+  const [lastUuid, setLastUuid] = useState('');
   const { state, dispatch, mezzoClient } = useRecordingClient();
 
   const divRef = useRef<null | HTMLDivElement>(null);
@@ -82,10 +83,34 @@ export default function RecordScreen(props: Props) {
           variant="outlined"
           sx={{ mt: 2 }}
           onClick={() => {
-            mezzoClient.current?.send('api.response', dummyData, false);
+            const uuid =
+              mezzoClient.current?.captureApiRequest({
+                url: 'https://someUrl.com/a/b/c/',
+                method: 'POST',
+                data: null,
+                headers: null,
+                params: null,
+              }) ?? '';
+            setLastUuid(uuid);
+            log.debug('RecordScreen] sent guid', uuid);
           }}
         >
-          {width >= 960 ? 'Load dummy data' : <ClearAll />}
+          {width >= 960 ? 'Load dummy request' : <ClearAll />}
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ mt: 2 }}
+          onClick={() => {
+            mezzoClient.current?.captureApiResponse(
+              dummyData.request,
+              dummyData.response,
+              dummyData.duration,
+              lastUuid
+            );
+            setLastUuid('');
+          }}
+        >
+          {width >= 960 ? 'Load dummy response' : <ClearAll />}
         </Button>
         <Button
           variant="outlined"

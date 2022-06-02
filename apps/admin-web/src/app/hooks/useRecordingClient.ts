@@ -70,7 +70,7 @@ export default function useRecordingClient() {
   useEffect(() => {
     const onCommand = (data: any) => {
       log.debug('[useRecordingClient] received', data);
-      if (data.type === 'api.response') {
+      if (data.type === 'api.request' || data.type === 'api.response') {
         const message: RecordedItem = data;
         dispatch({ type: 'add', payload: message });
       }

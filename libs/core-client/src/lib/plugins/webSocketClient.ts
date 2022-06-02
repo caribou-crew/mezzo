@@ -234,31 +234,38 @@ export function webSocketClient(options: IWebSocketClientOptions) {
     }
   };
 
-  const captureApiRequest = (method: string, url: string) => {
-    const guid = generateGuid();
-    console.debug('Firing API request');
-    send(MEZZO_WS_API_REQUEST, { method, url, guid });
-    return guid;
+  const captureApiRequest = (request: MezzoRecordedRequest): string => {
+    const uuid = generateGuid();
+    log.debug('[webSocketClient.captureApiRequest] generated guid', uuid);
+    send(MEZZO_WS_API_REQUEST, {
+      request,
+      uuid,
+    });
+    return uuid;
   };
 
   const captureApiResponse = (
     request: MezzoRecordedRequest,
     response: MezzoRecordedResponse,
     duration: number,
-    guid = generateGuid()
+    uuid = generateGuid()
   ) => {
     const ok = response?.status >= 200 && response?.status <= 299;
     const important = !ok;
 
-    log.debug('[mezzo-core-cleint.captureApiResponse]', {
+    log.debug('[mezzo-core-client.captureApiResponse]', {
       type: MEZZO_WS_API_RESPONSE,
       request,
       response,
       duration,
       important,
-      guid,
+      uuid,
     });
-    send(MEZZO_WS_API_RESPONSE, { request, response, duration }, important);
+    send(
+      MEZZO_WS_API_RESPONSE,
+      { request, response, duration, uuid: uuid },
+      important
+    );
   };
 
   // Don't return strings, numbers as those won't change/update
