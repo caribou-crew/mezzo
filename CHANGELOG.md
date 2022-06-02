@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [0.10.0](https://github.com/caribou-crew/mezzo/compare/v0.9.0...v0.10.0) (2022-06-02)
+
+### Features
+
+- highlight selected network item on click ([#148](https://github.com/caribou-crew/mezzo/issues/148)) ([f49498f](https://github.com/caribou-crew/mezzo/commit/f49498feb43e7f8b2b33e447a1daed2b381c4a14))
+- show pending requests ([#149](https://github.com/caribou-crew/mezzo/issues/149)) ([d33f389](https://github.com/caribou-crew/mezzo/commit/d33f389aaf2cd76c069cadf7c03c0dddb28f8c4c))
+- suppress record & profiles if disabled ([#145](https://github.com/caribou-crew/mezzo/issues/145)) ([d37b1d1](https://github.com/caribou-crew/mezzo/commit/d37b1d1151c85253baaeec366cbf58f0d305b535))
+- update record screen styling ([#147](https://github.com/caribou-crew/mezzo/issues/147)) ([9ee800f](https://github.com/caribou-crew/mezzo/commit/9ee800fbe327011113d180c5f7ef1b8834054b0c))
+
 # [0.9.0](https://github.com/caribou-crew/mezzo/compare/v0.8.3...v0.9.0) (2022-05-27)
 
 ### Bug Fixes
