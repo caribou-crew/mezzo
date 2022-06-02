@@ -1,5 +1,6 @@
 import mezzo from './lib/core';
 export default mezzo;
+export * from './lib/plugins';
 import * as path from 'path';
 import { resourcesPath } from './lib/utils/pathHelpers';
 import { GLOBAL_VARIANT_CATEGORY } from '@caribou-crew/mezzo-constants';
