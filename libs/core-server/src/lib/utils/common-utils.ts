@@ -82,8 +82,15 @@ export class CommonUtils {
     const imageTypes = ['.png', '.gif', '.pdf', '.jpg', '.jpeg', '.svg'];
     const statusCode = options?.code ?? 200;
     const headers = options?.headers ?? {};
+    if (options?.delay ?? 0 > 0) {
+      logger.debug('Waiting for a delay of ', options?.delay);
+    }
     await timeout(options?.delay ?? 0);
-    if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
+
+    if (filePathInfo === null) {
+      logger.error('Failed to parse content, returning erraneous 500');
+      res.sendStatus(500);
+    } else if (imageTypes.includes(filePathInfo.mimeType.toLowerCase())) {
       res.status(statusCode).header(headers).sendFile(filePathInfo.filePath);
     } else {
       const rawFileData = await getFileContents(

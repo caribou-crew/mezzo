@@ -16,10 +16,15 @@ const filterActiveVariantsFromDirectory = async (
   dirLocation: string,
   variant?: string
 ): Promise<string[]> => {
-  const readDir = util.promisify(fs.readdir);
-  const filesInDir = await readDir(dirLocation);
-  logger.debug('Available variant files: ', filesInDir);
-  return filesInDir.filter((name) => name.match(variant));
+  try {
+    const readDir = util.promisify(fs.readdir);
+    const filesInDir = await readDir(dirLocation);
+    logger.debug('Available variant files: ', filesInDir);
+    return filesInDir.filter((name) => name.match(variant));
+  } catch (e) {
+    logger.error(`Error reading variant ${variant} from dir ${dirLocation}`, e);
+    return [];
+  }
 };
 
 export const getFilePathForRequest = async (
@@ -63,6 +68,7 @@ export const getFilePathForRequest = async (
     let fileToUse;
     if (activeVariantFiles.length === 0) {
       logger.error(`No files found at ${fileDir}`);
+      return null;
     } else if (activeVariantFiles.length === 1) {
       fileToUse = activeVariantFiles[0];
     } else {
