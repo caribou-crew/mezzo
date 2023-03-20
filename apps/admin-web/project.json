@@ -1,9 +1,11 @@
 {
+  "name": "admin-web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/admin-web/src",
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/web:webpack",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -52,7 +54,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/web:dev-server",
+      "executor": "@nrwl/webpack:dev-server",
       "options": {
         "buildTarget": "admin-web:build:development",
         "hmr": true
@@ -77,7 +79,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/admin-web"],
+      "outputs": ["{workspaceRoot}/coverage/apps/admin-web"],
       "options": {
         "jestConfig": "apps/admin-web/jest.config.ts",
         "passWithNoTests": true

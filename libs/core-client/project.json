@@ -1,4 +1,6 @@
 {
+  "name": "core-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/core-client/src",
   "projectType": "library",
   "targets": {
@@ -11,7 +13,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/core-client"],
+      "outputs": ["{workspaceRoot}/coverage/libs/core-client"],
       "options": {
         "jestConfig": "libs/core-client/jest.config.ts",
         "passWithNoTests": true

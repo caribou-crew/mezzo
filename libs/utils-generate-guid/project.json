@@ -1,0 +1,35 @@
+{
+  "name": "utils-generate-guid",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/utils-generate-guid/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/utils-generate-guid/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/utils-generate-guid"],
+      "options": {
+        "jestConfig": "libs/utils-generate-guid/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/utils-generate-guid",
+        "tsConfig": "libs/utils-generate-guid/tsconfig.lib.json",
+        "packageJson": "libs/utils-generate-guid/package.json",
+        "main": "libs/utils-generate-guid/src/index.ts",
+        "assets": ["libs/utils-generate-guid/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

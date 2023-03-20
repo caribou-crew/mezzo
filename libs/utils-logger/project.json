@@ -1,4 +1,6 @@
 {
+  "name": "utils-logger",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/utils-logger/src",
   "projectType": "library",
   "targets": {
@@ -11,7 +13,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/utils-logger"],
+      "outputs": ["{workspaceRoot}/coverage/libs/utils-logger"],
       "options": {
         "jestConfig": "libs/utils-logger/jest.config.ts",
         "passWithNoTests": true
