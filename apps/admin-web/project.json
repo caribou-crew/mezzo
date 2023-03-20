@@ -28,7 +28,7 @@
         ],
         "styles": ["apps/admin-web/src/styles.scss"],
         "scripts": [],
-        "webpackConfig": "apps/admin-web/custom-webpack-config.js"
+        "webpackConfig": "apps/admin-web/webpack.config.js"
       },
       "configurations": {
         "production": {

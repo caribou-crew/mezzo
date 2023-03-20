@@ -1,9 +1,10 @@
 // Helper for combining webpack config objects
 const { merge } = require('webpack-merge');
-const nrwlConfig = require('@nrwl/react/plugins/webpack.js'); // require the main @nrwl/react/plugins/webpack configuration function.
+const { composePlugins, withNx } = require('@nrwl/webpack');
+const { withReact } = require('@nrwl/react');
 
-module.exports = (config, context) => {
-  nrwlConfig(config); // first call it so that it @nrwl/react plugin adds its configs,
+// Nx plugins for webpack.
+module.exports = composePlugins(withNx(), withReact(), (config) => {
   return merge(config, {
     devServer: {
       historyApiFallback: {
@@ -18,4 +19,4 @@ module.exports = (config, context) => {
       ],
     },
   });
-};
+});
