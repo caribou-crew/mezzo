@@ -1,20 +1,22 @@
-module.exports = {
+/* eslint-disable */
+export default {
   displayName: 'core-server',
 
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
-    },
-  },
+  globals: {},
   testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
 
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest',
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+      },
+    ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/libs/core-server',
-  preset: '../../jest.preset.ts',
+  preset: '../../jest.preset.js',
   coveragePathIgnorePatterns: ['/__tests__/'],
   collectCoverageFrom: [
     'src/**/*.ts',

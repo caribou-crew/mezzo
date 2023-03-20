@@ -1,17 +1,19 @@
-module.exports = {
+/* eslint-disable */
+export default {
   displayName: 'interceptor-react-native-with-reactotron',
 
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
-    },
-  },
+  globals: {},
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest',
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+      },
+    ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory:
     '../../coverage/libs/interceptor-react-native-with-reactotron',
-  preset: '../../jest.preset.ts',
+  preset: '../../jest.preset.js',
 };

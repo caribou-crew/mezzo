@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import { Flipper, Flipped } from 'react-flip-toolkit';
 
 import {
@@ -21,6 +21,11 @@ import PacmanLoader from 'react-spinners/PacmanLoader';
 type SortProperty = 'method' | 'path' | '';
 
 type Props = Record<string, never>;
+
+const override: CSSProperties = {
+  display: 'block',
+  margin: '0 auto',
+};
 
 export default function Home(props: Props) {
   const [selectedItem, setSelectedItem] = useState('');
@@ -169,10 +174,7 @@ export default function Home(props: Props) {
           <PacmanLoader
             color={'#db851c'}
             loading={isLoading}
-            css={`
-              display: block;
-              margin: 0 auto;
-            `}
+            cssOverride={override}
             size={80}
           />
         </Container>

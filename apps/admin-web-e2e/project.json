@@ -1,4 +1,6 @@
 {
+  "name": "admin-web-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/admin-web-e2e/src",
   "projectType": "application",
   "targets": {

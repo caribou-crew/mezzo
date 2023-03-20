@@ -1,5 +1,5 @@
 import * as XHRInterceptor from 'react-native/Libraries/Network/XHRInterceptor';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { Reactotron, ReactotronCore } from 'reactotron-core-client';
 import MezzoClient from '@caribou-crew/mezzo-core-client';
 import connectionManager from './utils/connection-manager';

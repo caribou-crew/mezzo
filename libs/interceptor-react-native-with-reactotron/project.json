@@ -1,4 +1,6 @@
 {
+  "name": "interceptor-react-native-with-reactotron",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/interceptor-react-native-with-reactotron/src",
   "projectType": "library",
   "targets": {
@@ -13,7 +15,9 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/interceptor-react-native-with-reactotron"],
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/interceptor-react-native-with-reactotron"
+      ],
       "options": {
         "jestConfig": "libs/interceptor-react-native-with-reactotron/jest.config.ts",
         "passWithNoTests": true
