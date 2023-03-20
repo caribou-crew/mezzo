@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.10.3](https://github.com/caribou-crew/mezzo/compare/v0.10.2...v0.10.3) (2023-03-20)
+
+### Bug Fixes
+
+- fix file path logic in server's mocks used for development/testing ([#150](https://github.com/caribou-crew/mezzo/issues/150)) ([297920a](https://github.com/caribou-crew/mezzo/commit/297920af8ac775bac888660291ae92bfc1dee727))
+- **lcov:** fix lcov merger for use in ci test coveralls ([77399d5](https://github.com/caribou-crew/mezzo/commit/77399d526af429bac6c910ba75b5f3f4a8bd0fcd))
+- **npm update:** update all dependencies and fix breaking changes ([43745ef](https://github.com/caribou-crew/mezzo/commit/43745ef668b48d00553acb7c9d44080e282d97fb))
+- **nx workspace:** fix nx workspace configs around webpack post upgrade ([b0796a2](https://github.com/caribou-crew/mezzo/commit/b0796a2d0c4d057bc91bbad73cbfec7b83fe00f0))
+
 ## [0.10.2](https://github.com/caribou-crew/mezzo/compare/v0.10.1...v0.10.2) (2022-06-02)
 
 ### Bug Fixes
