@@ -19,6 +19,7 @@
     "test": "nx run-many --all --exclude=workspace --target=test --parallel",
     "test:coverage": "nx run-many --all --exclude=workspace --target=test --parallel --coverage --coverageReporters=lcov",
     "test:ci": "npm run test:coverage && node ./tools/coverageMerger.js",
+    "coverage:merge": "node ./tools/coverageMerger.js",
     "clean": "rm -rf node_modules/ && npm install",
     "lintAll": "nx run-many --all --exclude=workspace --target=lint --parallel",
     "testAll": "nx run-many --all --exclude=workspace --target=test --parallel",
