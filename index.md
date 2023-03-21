@@ -40,7 +40,7 @@ mezzo
   .route({
     id: 'GET /route1',
     path: '/route1',
-    callback: (req, res) => {
+    callback: (req, res, route) => {
       res.json({ someKey: 'A' });
     },
   })
@@ -49,13 +49,52 @@ mezzo
 ## Variants
 Variants let you setup alternate responses to your routes.
 ```js
-someRoute..variant({
+someRoute.variant({
   id: 'variantId1',
   callback: (req, res) => {
       res.json({ someKey: 'B' });
   },
 })
 ```
+
+## Routes are just Express routes
+Anything you can do in express, you can do here
+```js
+mezzo
+  .route({
+    id: 'GET /route1',
+    path: '/route1',
+    callback: async (req, res, route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Or make a network call
+      res.json({ someKey: 'A' });
+    },
+  })
+```
+
+## Handy utils to return files
+Given the directories, the following code will return the static content
+- mocked-data/respondWithJSONFile/GET/default.json
+- mocked-data/respondWithTextFile/GET/default.txt
+
+```js
+mezzo
+  .route({
+    id: 'GET /respondWithJSONFile',
+    path: '/respondWithJSONFile',
+    callback: async (req, res, route) => {
+      mezzo.util.respondWithFile(route, req, res);
+    },
+  })
+mezzo
+  .route({
+    id: 'GET /respondWithTextFile',
+    path: '/respondWithTextFile',
+    callback: async (req, res, route) => {
+      mezzo.util.respondWithFile(route, req, res);
+    },
+  })
+```
+Note that respondWithFile simply scans the directory for known file types (txt, html, png, gif, pdf, jpg, jpeg, svg).  Note the file names mirror the variant names.  So a default setup + variantId1 should involve default.json and variantId1.json (or any supported extension).
 
 ### Set variant for route
 
@@ -111,7 +150,7 @@ At the end of the day this is a node API that can be hosted anywhere node runs. 
 
 ## Profiles
 
-TODO - Coming soon.  The idea is to support a permutation of variants that you can easily swap between.
+Profiles are a premutation of pre-selected variants.  The simplest way to get started is the web admin page on the profiles tab.  You can configure the permutation of desired variants and save the profile locally (to browser's local storage), or "remotely" (a code snippet will be generated you can check in to source control so that anyone with the code can reference it).
 
 ## Icons
 
