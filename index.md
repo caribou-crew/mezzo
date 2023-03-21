@@ -72,10 +72,18 @@ mezzo
 ```
 
 ## Handy utils to return files
-Given the directories, the following code will return the static content
+
+Given you've started the mock server with the directory `mocked-data`
+```js
+await mezzo.start({
+  mockedDirectory: 'mocked-data',
+});
+```
+and given the following directories 
 - mocked-data/respondWithJSONFile/GET/default.json
 - mocked-data/respondWithTextFile/GET/default.txt
 
+You can use `mezzo.util.respondWithFile` to return static content
 ```js
 mezzo
   .route({
@@ -84,7 +92,8 @@ mezzo
     callback: async (req, res, route) => {
       mezzo.util.respondWithFile(route, req, res);
     },
-  })
+  });
+  
 mezzo
   .route({
     id: 'GET /respondWithTextFile',
