@@ -34,6 +34,10 @@ export class SessionState {
     payload: SetRouteVariant
   ) {
     payload.forEach((item) => {
+      if (!this.state[sessionId]) {
+        this.state[sessionId] = {};
+      }
+
       this.state[sessionId][item.routeID] = item.variantID;
     });
   }
